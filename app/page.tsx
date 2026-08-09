@@ -3,6 +3,7 @@ import Header from "@/components/Header";
 import SemesterExplorer from "@/components/SemesterExplorer";
 import StudyTools from "@/components/StudyTools";
 import PaletteButton from "@/components/PaletteButton";
+import HomeStudyStatus from "@/components/mastery/HomeStudyStatus";
 import { semesters } from "@/lib/content";
 import { BRANCH_NAME, BRANCH_RANGE, BRANCH_TAGLINE } from "@/lib/branch";
 
@@ -52,6 +53,9 @@ export default function HomePage() {
           </div>
           <SemesterExplorer initialSemester="s3" />
         </section>
+
+        {/* Study status / journey */}
+        <HomeStudyStatus />
 
         {/* Study tools */}
         <section className="space-y-4">

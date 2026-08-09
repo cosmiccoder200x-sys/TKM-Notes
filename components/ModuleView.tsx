@@ -9,6 +9,7 @@ import WorkedExampleCard from "./WorkedExampleCard";
 import ComparisonCard from "./ComparisonCard";
 import SelfCheck from "./SelfCheck";
 import interactiveRegistry from "./InteractiveDiagrams";
+import ModuleMasteryChip from "./mastery/ModuleMasteryChip";
 import { generatePromptLabUrl, MODULE_QUICK_ACTIONS, QUESTION_ACTIONS, SubjectCategory, getSubjectCategory } from "@/lib/prompts/context";
 
 const BASE_SECTIONS = [
@@ -234,6 +235,12 @@ export default function ModuleView({
         ))}
       </div>
 
+      {subjectCode && (
+        <div className="px-4 pb-2 border-b border-bg-border">
+          <ModuleMasteryChip subjectCode={subjectCode} moduleId={module.id} />
+        </div>
+      )}
+
       <div className="px-4 pb-5 pt-1">
         {active === "overview" && (
           <div className="space-y-3">
@@ -421,7 +428,7 @@ export default function ModuleView({
           <div className="space-y-2.5">
             {module.selfCheck.map((item, i) => (
               <div key={i} className="relative">
-                <SelfCheck item={item} index={i} />
+                <SelfCheck item={item} index={i} subjectCode={subjectCode} moduleId={module.id} />
                 <div className="mt-2 flex flex-wrap gap-2">
                   <QuestionActionButton
                     action={QUESTION_ACTIONS.find(a => a.id === "active-recall")!}

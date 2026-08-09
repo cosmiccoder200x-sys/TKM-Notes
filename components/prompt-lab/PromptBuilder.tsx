@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, ReactNode } from "react";
 import { StudyPrompt, StudyPromptVariable } from "@/lib/prompts/types";
 import { generatePrompt, populatePromptVariables, copyToClipboard, addRecent } from "@/lib/prompts/utils";
 import { StudyContext, getSubjectCategory, getSubjectEvaluationCriteria, getSubjectProblemGuidance, getSubjectAnswerStructure } from "@/lib/prompts/context";
@@ -135,9 +135,30 @@ export default function PromptBuilder({ prompt, initialVariables = {}, onBack, c
             aria-label={variable.label}
           >
             <option value="" disabled>{variable.placeholder || `Select ${variable.label}`}</option>
-            {variable.options?.map(opt => (
-              <option key={opt.value} value={opt.value}>{opt.label}</option>
-            ))}
+            {(() => {
+              const groups = new Map<string, { value: string; label: string }[]>();
+              for (const opt of variable.options ?? []) {
+                const key = opt.group ?? "";
+                if (!groups.has(key)) groups.set(key, []);
+                groups.get(key)!.push(opt);
+              }
+              const nodes: ReactNode[] = [];
+              groups.forEach((opts, groupLabel) => {
+                const options = opts.map((opt) => (
+                  <option key={opt.value} value={opt.value}>{opt.label}</option>
+                ));
+                if (groupLabel) {
+                  nodes.push(
+                    <optgroup key={groupLabel} label={groupLabel}>
+                      {options}
+                    </optgroup>
+                  );
+                } else {
+                  nodes.push(...options);
+                }
+              });
+              return nodes;
+            })()}
           </select>
         );
       case "textarea":

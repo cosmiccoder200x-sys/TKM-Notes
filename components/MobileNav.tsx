@@ -12,6 +12,9 @@ const ITEMS = [
 export default function MobileNav() {
   const pathname = usePathname();
 
+  // Focused modes: hide the bottom nav so nothing distracts from the study session.
+  if (pathname.startsWith("/night-before") || pathname.includes("/mastery")) return null;
+
   function isActive(href: string) {
     return href === "/" ? pathname === "/" : pathname.startsWith(href);
   }

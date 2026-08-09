@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import Header from "@/components/Header";
 import ModuleAccordion from "@/components/ModuleAccordion";
 import DeepDivePrompt from "@/components/DeepDivePrompt";
+import ModuleMasteryBadges from "@/components/mastery/ModuleMasteryBadges";
 import { subjects, findSubject } from "@/lib/content";
 import registry from "@/lib/notes";
 import { getSubjectCategoryMeta } from "@/lib/branch";
@@ -99,6 +100,22 @@ export default function SubjectPage({ params }: { params: { semester: string; su
               ? `${modules.length} modules · Exam-focused notes`
               : "Notes for this subject haven't been written yet."}
           </p>
+          {modules.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              <Link
+                href={`/${subject.semesterId}/${subject.slug}/mastery`}
+                className="font-mono text-[11px] uppercase tracking-wide px-3.5 py-2 rounded-card border border-bg-border text-ink-hi hover:border-signal hover:bg-signal/5 hover:text-signal transition-colors"
+              >
+                ▦ Mastery Map
+              </Link>
+              <Link
+                href={`/night-before?subject=${encodeURIComponent(subject.code)}&time=60`}
+                className="font-mono text-[11px] uppercase tracking-wide px-3.5 py-2 rounded-card border border-signal text-signal hover:bg-signal/10 transition-colors"
+              >
+                ⏱ Night-Before
+              </Link>
+            </div>
+          )}
         </div>
 
         {/* Subject overview strip */}
@@ -149,7 +166,10 @@ export default function SubjectPage({ params }: { params: { semester: string; su
         {/* Modules accordion — one open at a time */}
         {modules.length > 0 && (
           <section className="space-y-3">
-            <h2 className="font-display font-semibold text-lg text-ink-hi">Modules</h2>
+            <div className="flex items-center justify-between gap-3 flex-wrap">
+              <h2 className="font-display font-semibold text-lg text-ink-hi">Modules</h2>
+              <ModuleMasteryBadges subjectCode={subject.code} modules={modules} />
+            </div>
             <ModuleAccordion
               modules={modules}
               subjectCode={subject.code}

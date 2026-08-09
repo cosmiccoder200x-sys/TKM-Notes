@@ -8,6 +8,12 @@ const TOOLS = [
     icon: "⚡",
   },
   {
+    title: "Night-Before",
+    description: "High-value revision when time is limited",
+    href: "/night-before",
+    icon: "⏱",
+  },
+  {
     title: "PYQ Focus",
     description: "Important previous questions",
     href: "/prompt-lab?mode=pyq-intelligence",
@@ -29,7 +35,7 @@ const TOOLS = [
 
 export default function StudyTools() {
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
       {TOOLS.map((t) => (
         <Link
           key={t.title}

@@ -22,6 +22,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className="bg-bg text-ink-hi font-body antialiased min-h-screen pb-16 md:pb-0">
         {children}
+        <footer className="max-w-6xl mx-auto px-4 py-8 text-center">
+          <a
+            href="https://github.com/cosmiccoder200x-sys"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[11px] font-mono text-ink-faint hover:text-signal transition-colors"
+          >
+            Made by cosmiccoder200x-sys
+          </a>
+        </footer>
         <CommandPalette />
         <MobileNav />
       </body>

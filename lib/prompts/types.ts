@@ -19,7 +19,7 @@ export interface StudyPromptVariable {
   type: "text" | "textarea" | "select" | "number";
   required: boolean;
   placeholder?: string;
-  options?: { value: string; label: string }[];
+  options?: { value: string; label: string; group?: string }[];
   dependsOn?: string; // For conditional fields
 }
 

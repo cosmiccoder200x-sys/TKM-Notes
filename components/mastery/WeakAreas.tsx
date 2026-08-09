@@ -1,0 +1,42 @@
+import Link from "next/link";
+import { StudyRecommendation } from "@/lib/study";
+
+export default function WeakAreas({
+  recommendations,
+  subjectCode,
+}: {
+  recommendations: StudyRecommendation[];
+  subjectCode: string;
+}) {
+  const weak = recommendations.filter(
+    (r) => r.status === "weak" || r.status === "needs-practice" || r.status === "not-assessed"
+  ).slice(0, 5);
+
+  if (weak.length === 0) return null;
+
+  return (
+    <section className="card p-4 space-y-3">
+      <h2 className="font-display font-semibold text-ink-hi text-base">Your Next Focus</h2>
+      <ul className="space-y-1.5">
+        {weak.map((r) => {
+          const dot = r.status === "weak" ? "🔴" : r.status === "needs-practice" ? "🟠" : "⚪";
+          return (
+            <li key={r.moduleId} className="flex items-center gap-2 text-sm text-ink-hi">
+              <span aria-hidden>{dot}</span>
+              <span>{r.moduleTitle}</span>
+              <span className="ml-auto text-xs font-mono text-ink-lo">
+                {r.score === null ? "not assessed" : `${r.score}%`}
+              </span>
+            </li>
+          );
+        })}
+      </ul>
+      <Link
+        href={`/night-before?subject=${encodeURIComponent(subjectCode)}`}
+        className="inline-block font-mono text-xs uppercase tracking-wide px-4 py-2.5 rounded-card border border-signal text-signal hover:bg-signal/10 transition-colors"
+      >
+        Practice Weak Areas →
+      </Link>
+    </section>
+  );
+}

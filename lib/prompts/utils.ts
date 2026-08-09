@@ -2,7 +2,7 @@
 
 import { StudyPrompt, StudyPromptVariable, FavoritePrompt, RecentPrompt, StudyModeId } from "./types";
 import { Subject, Module } from "@/lib/types";
-import { subjects, findSubject } from "@/lib/content";
+import { semesters, subjects, findSubject } from "@/lib/content";
 import registry from "@/lib/notes";
 import { 
   StudyContext, 
@@ -33,12 +33,17 @@ export {
   QUESTION_ACTIONS
 };
 
-// Populate subject options for select dropdowns
-export function getSubjectOptions(): { value: string; label: string }[] {
-  return subjects.map(s => ({
-    value: s.code,
-    label: `${s.name} (${s.code})`,
-  }));
+// Populate subject options for select dropdowns, grouped by semester
+export function getSubjectOptions(): { value: string; label: string; group: string }[] {
+  return semesters.flatMap((sem) =>
+    subjects
+      .filter((s) => s.semesterId === sem.id)
+      .map((s) => ({
+        value: s.code,
+        label: s.name,
+        group: sem.label,
+      }))
+  );
 }
 
 // Get modules for a subject
