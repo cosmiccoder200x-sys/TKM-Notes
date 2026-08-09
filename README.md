@@ -247,3 +247,12 @@ If you ever want live multi-device admin editing:
 2. Add Prisma, paste in the connection string as a Vercel environment variable.
 3. Convert `lib/notes/*.ts` into seed data for a `modules` table.
 4. Admin panel writes to the DB via Next.js API routes.
+
+---
+
+<p align="center">
+  <a href="https://github.com/cosmiccoder200x-sys">
+    <img src="https://img.shields.io/badge/GitHub-cosmiccoder200x--sys-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub Profile" />
+  </a>
+</p>
+
