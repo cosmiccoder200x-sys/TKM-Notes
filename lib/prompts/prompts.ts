@@ -11,6 +11,7 @@ import {
 } from "./context";
 
 function getSubjectName(subjectCode: string): string {
+  if (!subjectCode) return "your subject";
   const subjectMap: Record<string, string> = {
     "24ERP304": "Data Structures and Algorithms",
     "24EST332": "Network Theory",
@@ -40,6 +41,13 @@ function getSubjectName(subjectCode: string): string {
     "24ERP702": "Energy Systems",
   };
   return subjectMap[subjectCode] || subjectCode;
+}
+
+// Opening line that stays coherent even when no subject is provided.
+function subjectLine(vars: Record<string, string>): string {
+  return vars.subject
+    ? `I'm a TKM College of Engineering (KTU, ECE, 2024 scheme) student studying "${getSubjectName(vars.subject)}" (${vars.subject}).`
+    : `I'm a TKM College of Engineering (KTU, ECE, 2024 scheme) student.`;
 }
 
 export function getSubjectCategory(subjectCode: string): SubjectCategory {
@@ -159,24 +167,26 @@ export const learnPrompt: StudyPrompt = {
   description: "Understand concepts deeply from fundamentals",
   icon: "📚",
   category: "learn",
+  bestFor: "Understanding a difficult concept from fundamentals to exam-ready depth.",
+  whenToUse: "When you need a clear explanation, intuition and worked examples of a topic.",
+  importance: "essential",
   variables: [
-    { key: "subject", label: "Subject", type: "select", required: true, placeholder: "Select subject", options: [] },
-    { key: "module", label: "Module", type: "select", required: true, placeholder: "Select module", options: [] },
+    { key: "subject", label: "Subject (optional)", type: "select", required: false, placeholder: "Select subject", options: [] },
+    { key: "module", label: "Module (optional)", type: "select", required: false, placeholder: "Select module", options: [] },
     { key: "topic", label: "Specific Topic (optional)", type: "text", required: false, placeholder: "e.g., Dijkstra's algorithm, K-map simplification" },
   ],
   template: (vars) => {
-    const subjectName = getSubjectName(vars.subject);
-    const subjectCategory = getSubjectCategory(vars.subject);
+    const subjectCategory = vars.subject ? getSubjectCategory(vars.subject) : "general";
     const subjectSpecific = getSubjectSpecificInstructions(subjectCategory);
     const moduleContent = vars.__moduleContent ? formatModuleContent(JSON.parse(vars.__moduleContent)) : "";
     
-    return `I'm a TKM College of Engineering (KTU, ECE, 2024 scheme) student studying "${subjectName}" (${vars.subject}).
+    return `${subjectLine(vars)}
 
-MODULE CONTEXT: ${vars.module}${vars.topic ? `\nFOCUS TOPIC: ${vars.topic}` : ""}${moduleContent}
+MODULE CONTEXT: ${vars.module || "your selected module"}${vars.topic ? `\nFOCUS TOPIC: ${vars.topic}` : ""}${moduleContent}
 
 ${subjectSpecific}
 
-YOUR TASK: Act as an expert professor who teaches this subject to engineering students. Explain the ${vars.topic ? `topic "${vars.topic}"` : `module "${vars.module}"`} from the ground up, optimized for KTU exam preparation.
+YOUR TASK: Act as an expert professor who teaches this subject to engineering students. Explain the ${vars.topic ? `topic "${vars.topic}"` : vars.module ? `module "${vars.module}"` : "topic I specify below"} from the ground up, optimized for KTU exam preparation.
 
 ${moduleContent ? "IMPORTANT: Use the provided TKM Notes module content above as your PRIMARY source. Do not introduce advanced or unrelated material unless clearly labeled as additional context." : ""}
 
@@ -221,20 +231,22 @@ export const activeRecallPrompt: StudyPrompt = {
   description: "Test what you actually remember — no passive reading",
   icon: "🧠",
   category: "learn",
+  bestFor: "Testing whether you actually remember a topic instead of relying on passive reading.",
+  whenToUse: "After studying a topic, or to find the gaps before an exam.",
+  importance: "essential",
   variables: [
-    { key: "subject", label: "Subject", type: "select", required: true, placeholder: "Select subject", options: [] },
-    { key: "module", label: "Module", type: "select", required: true, placeholder: "Select module", options: [] },
+    { key: "subject", label: "Subject (optional)", type: "select", required: false, placeholder: "Select subject", options: [] },
+    { key: "module", label: "Module (optional)", type: "select", required: false, placeholder: "Select module", options: [] },
     { key: "topic", label: "Specific Topic (optional)", type: "text", required: false, placeholder: "e.g., Red-Black trees, Frequency response" },
   ],
   template: (vars) => {
-    const subjectName = getSubjectName(vars.subject);
-    const subjectCategory = getSubjectCategory(vars.subject);
+    const subjectCategory = vars.subject ? getSubjectCategory(vars.subject) : "general";
     const subjectSpecific = getSubjectSpecificInstructions(subjectCategory);
     const moduleContent = vars.__moduleContent ? formatModuleContent(JSON.parse(vars.__moduleContent)) : "";
     
-    return `I'm a TKM College of Engineering (KTU, ECE, 2024 scheme) student studying "${subjectName}" (${vars.subject}).
+    return `${subjectLine(vars)}
 
-MODULE CONTEXT: ${vars.module}${vars.topic ? `\nFOCUS TOPIC: ${vars.topic}` : ""}${moduleContent}
+MODULE CONTEXT: ${vars.module || "your selected module"}${vars.topic ? `\nFOCUS TOPIC: ${vars.topic}` : ""}${moduleContent}
 
 ${subjectSpecific}
 
@@ -284,17 +296,19 @@ export const pyqIntelligencePrompt: StudyPrompt = {
   description: "Find high-priority exam patterns from previous years",
   icon: "🔍",
   category: "exam",
+  bestFor: "Finding which topics actually repeat in exams and what to prioritize.",
+  whenToUse: "Before planning your study — to focus effort where marks come from.",
+  importance: "high",
   variables: [
-    { key: "subject", label: "Subject", type: "select", required: true, placeholder: "Select subject", options: [] },
+    { key: "subject", label: "Subject (optional)", type: "select", required: false, placeholder: "Select subject", options: [] },
     { key: "module", label: "Module (optional — leave blank for all)", type: "select", required: false, placeholder: "Select module", options: [] },
   ],
   template: (vars) => {
-    const subjectName = getSubjectName(vars.subject);
-    const subjectCategory = getSubjectCategory(vars.subject);
+    const subjectCategory = vars.subject ? getSubjectCategory(vars.subject) : "general";
     const subjectSpecific = getSubjectSpecificInstructions(subjectCategory);
     const moduleContent = vars.__moduleContent ? formatModuleContent(JSON.parse(vars.__moduleContent)) : "";
     
-    return `I'm a TKM College of Engineering (KTU, ECE, 2024 scheme) student studying "${subjectName}" (${vars.subject}).
+    return `${subjectLine(vars)}
 
 MODULE SCOPE: ${vars.module || "ALL MODULES"}${moduleContent}
 
@@ -302,7 +316,7 @@ ${subjectSpecific}
 
 YOUR TASK: Act as a KTU exam pattern analyst. Analyze previous year questions (PYQs) for this subject${vars.module ? `, specifically Module ${vars.module}` : " across all modules"} and produce a strategic intelligence report.
 
-DO NOT invent questions. If you don't have verified PYQ data for this exact subject/code, clearly state: "I don't have access to verified KTU PYQs for ${vars.subject}. The analysis below is based on standard KTU 2024-scheme patterns for this subject." Then provide pattern-based guidance.
+DO NOT invent questions. If you don't have verified PYQ data for this exact subject/code, clearly state: "I don't have access to verified KTU PYQs for ${getSubjectName(vars.subject)}. The analysis below is based on standard KTU 2024-scheme patterns for this subject." Then provide pattern-based guidance.
 
 ${moduleContent ? "USE THE PROVIDED TKM NOTES EXAM FOCUS QUESTIONS as the basis for your analysis. These are the documented high-priority questions from the repository." : ""}
 
@@ -353,30 +367,33 @@ export const examAnswerPrompt: StudyPrompt = {
   description: "Generate marks-focused university answers",
   icon: "📝",
   category: "exam",
+  bestFor: "Preparing structured answers when you know the exam format or marks.",
+  whenToUse: "When you need a ready-to-write, keyword-rich answer for a specific question.",
+  importance: "essential",
   variables: [
-    { key: "subject", label: "Subject", type: "select", required: true, placeholder: "Select subject", options: [] },
-    { key: "module", label: "Module", type: "select", required: true, placeholder: "Select module", options: [] },
-    { key: "marks", label: "Marks", type: "select", required: true, placeholder: "Select marks", options: [
+    { key: "subject", label: "Subject (optional)", type: "select", required: false, placeholder: "Select subject", options: [] },
+    { key: "module", label: "Module (optional)", type: "select", required: false, placeholder: "Select module", options: [] },
+    { key: "marks", label: "Marks (optional)", type: "select", required: false, placeholder: "Select marks", options: [
       { value: "2", label: "2 marks" },
       { value: "5", label: "5 marks" },
       { value: "8", label: "8 marks" },
       { value: "10", label: "10 marks" },
     ]},
-    { key: "question", label: "Question", type: "textarea", required: true, placeholder: "Paste the exact exam question here..." },
+    { key: "question", label: "Question (optional)", type: "textarea", required: false, placeholder: "Paste the exact exam question here..." },
   ],
   template: (vars) => {
-    const subjectName = getSubjectName(vars.subject);
-    const subjectCategory = getSubjectCategory(vars.subject);
+    const subjectCategory = vars.subject ? getSubjectCategory(vars.subject) : "general";
     const subjectSpecific = getSubjectSpecificInstructions(subjectCategory);
-    const marksStructure = getMarksStructureInstructions(vars.marks);
-    const answerStructure = getSubjectAnswerStructure(subjectCategory, parseInt(vars.marks) || 8);
+    const marks = vars.marks || "8";
+    const marksStructure = getMarksStructureInstructions(marks);
+    const answerStructure = getSubjectAnswerStructure(subjectCategory, parseInt(marks) || 8);
     const moduleContent = vars.__moduleContent ? formatModuleContent(JSON.parse(vars.__moduleContent)) : "";
     
-    return `I'm a TKM College of Engineering (KTU, ECE, 2024 scheme) student studying "${subjectName}" (${vars.subject}).
+    return `${subjectLine(vars)}
 
-MODULE: ${vars.module}
-QUESTION: ${vars.question}
-TARGET MARKS: ${vars.marks}${moduleContent}
+MODULE: ${vars.module || "Not specified"}
+QUESTION: ${vars.question || "the question I paste below in our conversation"}
+TARGET MARKS: ${vars.marks || `${marks} (default — adjust as needed)`}${moduleContent}
 
 ${subjectSpecific}
 
@@ -386,16 +403,16 @@ SUBJECT-SPECIFIC ANSWER STRUCTURE: ${answerStructure}
 
 YOUR TASK: Generate a high-scoring university exam answer optimized for KTU evaluation. This answer should be written AS IF I am writing it in the exam hall — structured, concise, and keyword-rich.
 
-REQUIRED ANSWER STRUCTURE (adapt based on ${vars.marks} marks):
+REQUIRED ANSWER STRUCTURE (adapt based on ${marks} marks):
 
-${vars.marks === "2" ? `
+${marks === "2" ? `
 1. **Definition** (precise, 1 sentence)
 2. **Key Point / Formula / Diagram reference** (1 line)
-→ Total: ~30-40 words` : vars.marks === "5" ? `
+→ Total: ~30-40 words` : marks === "5" ? `
 1. **Definition** (1 mark)
 2. **Principle / Explanation** (2 marks) — 3-4 sentences
 3. **Diagram / Formula / Mini Example** (2 marks) — labeled sketch or key equation
-→ Total: ~100-150 words` : vars.marks === "8" ? `
+→ Total: ~100-150 words` : marks === "8" ? `
 1. **Definition** (1 mark)
 2. **Principle** (1 mark)
 3. **Detailed Explanation** (3 marks) — Step-by-step, logical flow
@@ -440,33 +457,36 @@ export const strictExaminerPrompt: StudyPrompt = {
   title: "Strict Examiner",
   description: "Get your answer evaluated like a university examiner",
   icon: "👨‍🏫",
-  category: "exam",
+  category: "analyze",
+  bestFor: "Finding out exactly where you lose marks on a written answer.",
+  whenToUse: "After writing an answer — to get a harsh, honest evaluation before the real exam.",
+  importance: "high",
   variables: [
-    { key: "subject", label: "Subject", type: "select", required: true, placeholder: "Select subject", options: [] },
-    { key: "module", label: "Module", type: "select", required: true, placeholder: "Select module", options: [] },
-    { key: "marks", label: "Maximum Marks", type: "select", required: true, placeholder: "Select marks", options: [
+    { key: "subject", label: "Subject (optional)", type: "select", required: false, placeholder: "Select subject", options: [] },
+    { key: "module", label: "Module (optional)", type: "select", required: false, placeholder: "Select module", options: [] },
+    { key: "marks", label: "Maximum Marks (optional)", type: "select", required: false, placeholder: "Select marks", options: [
       { value: "2", label: "2 marks" },
       { value: "5", label: "5 marks" },
       { value: "8", label: "8 marks" },
       { value: "10", label: "10 marks" },
     ]},
-    { key: "question", label: "Question", type: "textarea", required: true, placeholder: "Paste the exact exam question here..." },
-    { key: "answer", label: "Your Answer", type: "textarea", required: true, placeholder: "Paste your written answer here..." },
+    { key: "question", label: "Question (optional)", type: "textarea", required: false, placeholder: "Paste the exact exam question here..." },
+    { key: "answer", label: "Your Answer (optional)", type: "textarea", required: false, placeholder: "Paste your written answer here..." },
   ],
   template: (vars) => {
-    const subjectName = getSubjectName(vars.subject);
-    const subjectCategory = getSubjectCategory(vars.subject);
+    const subjectCategory = vars.subject ? getSubjectCategory(vars.subject) : "general";
     const subjectSpecific = getSubjectSpecificInstructions(subjectCategory);
     const evaluationCriteria = getSubjectEvaluationCriteria(subjectCategory);
+    const marks = vars.marks || "8";
     const moduleContent = vars.__moduleContent ? formatModuleContent(JSON.parse(vars.__moduleContent)) : "";
     
-    return `I'm a TKM College of Engineering (KTU, ECE, 2024 scheme) student studying "${subjectName}" (${vars.subject}).
+    return `${subjectLine(vars)}
 
-MODULE: ${vars.module}
-QUESTION (${vars.marks} marks): ${vars.question}
+MODULE: ${vars.module || "Not specified"}
+QUESTION (${vars.marks || "—"} marks): ${vars.question || "the question I provide in our conversation"}
 
 MY ANSWER:
-${vars.answer}${moduleContent}
+${vars.answer || "[I will paste my written answer below after this prompt.]"}${moduleContent}
 
 ${subjectSpecific}
 
@@ -478,7 +498,7 @@ RETURN YOUR EVALUATION IN THIS EXACT FORMAT:
 
 ---
 
-**ESTIMATED MARKS: X / ${vars.marks}**
+**ESTIMATED MARKS: X / ${marks}**
 
 ---
 
@@ -514,7 +534,7 @@ RETURN YOUR EVALUATION IN THIS EXACT FORMAT:
 
 ---
 
-**FULL-MARK MODEL ANSWER** (${vars.marks} marks, KTU-optimized):
+**FULL-MARK MODEL ANSWER** (${marks} marks, KTU-optimized):
 [Complete answer showing exactly what a full-mark response looks like — same structure as Exam Answer mode]
 
 ---
@@ -537,27 +557,29 @@ export const problemSolverPrompt: StudyPrompt = {
   description: "Develop actual problem-solving ability — no spoon-feeding",
   icon: "⚙️",
   category: "practice",
+  bestFor: "Developing problem-solving ability through guided questions and hints.",
+  whenToUse: "When you want to learn by doing — not by reading solutions.",
+  importance: "high",
   variables: [
-    { key: "subject", label: "Subject", type: "select", required: true, placeholder: "Select subject", options: [] },
-    { key: "module", label: "Module", type: "select", required: true, placeholder: "Select module", options: [] },
-    { key: "topic", label: "Topic / Problem Type", type: "text", required: true, placeholder: "e.g., Graph shortest path, RLC transient, K-map minimization" },
-    { key: "difficulty", label: "Difficulty", type: "select", required: false, placeholder: "Select difficulty", options: [
+    { key: "subject", label: "Subject (optional)", type: "select", required: false, placeholder: "Select subject", options: [] },
+    { key: "module", label: "Module (optional)", type: "select", required: false, placeholder: "Select module", options: [] },
+    { key: "topic", label: "Topic / Problem Type (optional)", type: "text", required: false, placeholder: "e.g., Graph shortest path, RLC transient, K-map minimization" },
+    { key: "difficulty", label: "Difficulty (optional)", type: "select", required: false, placeholder: "Select difficulty", options: [
       { value: "easy", label: "Easy — Basic application" },
       { value: "medium", label: "Medium — Standard exam level" },
       { value: "hard", label: "Hard — Tricky / multi-concept" },
     ]},
   ],
   template: (vars) => {
-    const subjectName = getSubjectName(vars.subject);
-    const subjectCategory = getSubjectCategory(vars.subject);
+    const subjectCategory = vars.subject ? getSubjectCategory(vars.subject) : "general";
     const subjectSpecific = getSubjectSpecificInstructions(subjectCategory);
     const problemGuidance = getSubjectProblemGuidance(subjectCategory);
     const moduleContent = vars.__moduleContent ? formatModuleContent(JSON.parse(vars.__moduleContent)) : "";
     
-    return `I'm a TKM College of Engineering (KTU, ECE, 2024 scheme) student studying "${subjectName}" (${vars.subject}).
+    return `${subjectLine(vars)}
 
-MODULE: ${vars.module}
-TOPIC: ${vars.topic}
+MODULE: ${vars.module || "your selected module"}
+TOPIC: ${vars.topic || "the problem type I specify below"}
 DIFFICULTY: ${vars.difficulty || "Medium (standard exam level)"}${moduleContent}
 
 ${subjectSpecific}
@@ -600,12 +622,15 @@ export const mockExamPrompt: StudyPrompt = {
   description: "Simulate a real university exam",
   icon: "📋",
   category: "exam",
+  bestFor: "Simulating the real exam under timed, realistic conditions.",
+  whenToUse: "When you want to test your full-syllabus readiness before the actual exam.",
+  importance: "useful",
   variables: [
-    { key: "subject", label: "Subject", type: "select", required: true, placeholder: "Select subject", options: [] },
-    { key: "modules", label: "Modules (comma-separated, e.g., 1,3,4)", type: "text", required: true, placeholder: "1,2,3 or leave blank for all" },
-    { key: "duration", label: "Duration (minutes)", type: "number", required: true, placeholder: "120" },
-    { key: "totalMarks", label: "Total Marks", type: "number", required: true, placeholder: "100" },
-    { key: "difficulty", label: "Difficulty", type: "select", required: true, placeholder: "Select difficulty", options: [
+    { key: "subject", label: "Subject (optional)", type: "select", required: false, placeholder: "Select subject", options: [] },
+    { key: "modules", label: "Modules (optional — comma-separated, e.g., 1,3,4)", type: "text", required: false, placeholder: "1,2,3 or leave blank for all" },
+    { key: "duration", label: "Duration in minutes (optional)", type: "number", required: false, placeholder: "120" },
+    { key: "totalMarks", label: "Total Marks (optional)", type: "number", required: false, placeholder: "100" },
+    { key: "difficulty", label: "Difficulty (optional)", type: "select", required: false, placeholder: "Select difficulty", options: [
       { value: "easy", label: "Easy — Basics focus" },
       { value: "medium", label: "Medium — Standard university" },
       { value: "hard", label: "Hard — Tough / comprehensive" },
@@ -613,21 +638,21 @@ export const mockExamPrompt: StudyPrompt = {
     ]},
   ],
   template: (vars) => {
-    const subjectName = getSubjectName(vars.subject);
-    const subjectCategory = getSubjectCategory(vars.subject);
+    const subjectCategory = vars.subject ? getSubjectCategory(vars.subject) : "general";
     const subjectSpecific = getSubjectSpecificInstructions(subjectCategory);
     const moduleContent = vars.__moduleContent ? formatModuleContent(JSON.parse(vars.__moduleContent)) : "";
     
     const modulesText = vars.modules ? `Modules: ${vars.modules.split(",").map(m => m.trim()).join(", ")}` : "All modules";
     const totalMarks = parseInt(vars.totalMarks) || 100;
     const duration = parseInt(vars.duration) || 120;
+    const difficulty = vars.difficulty || "medium";
     
-    return `I'm a TKM College of Engineering (KTU, ECE, 2024 scheme) student studying "${subjectName}" (${vars.subject}).
+    return `${subjectLine(vars)}
 
 SCOPE: ${modulesText}
 DURATION: ${duration} minutes
 TOTAL MARKS: ${totalMarks}
-DIFFICULTY: ${vars.difficulty}${moduleContent}
+DIFFICULTY: ${difficulty}${moduleContent}
 
 ${subjectSpecific}
 
@@ -657,7 +682,7 @@ OUTPUT FORMAT:
 
 ---
 **TKM CE / KTU 2024 Scheme — Mock Exam**
-**Subject:** ${subjectName} (${vars.subject})
+**Subject:** ${getSubjectName(vars.subject)}${vars.subject ? ` (${vars.subject})` : ""}
 **Duration:** ${duration} min | **Max Marks:** ${totalMarks}
 **Modules Covered:** ${modulesText}
 ---
@@ -705,10 +730,13 @@ export const revisionPrompt: StudyPrompt = {
   description: "Rapid revision — what matters most",
   icon: "⚡",
   category: "revision",
+  bestFor: "Quickly reviewing a topic when time is limited.",
+  whenToUse: "The night before an exam, or any time you need maximum yield in minimum minutes.",
+  importance: "essential",
   variables: [
-    { key: "subject", label: "Subject", type: "select", required: true, placeholder: "Select subject", options: [] },
+    { key: "subject", label: "Subject (optional)", type: "select", required: false, placeholder: "Select subject", options: [] },
     { key: "module", label: "Module (optional — blank for all)", type: "select", required: false, placeholder: "Select module", options: [] },
-    { key: "duration", label: "Time Available", type: "select", required: true, placeholder: "Select duration", options: [
+    { key: "duration", label: "Time Available (optional)", type: "select", required: false, placeholder: "Select duration", options: [
       { value: "15", label: "15 minutes — Ultra-quick" },
       { value: "30", label: "30 minutes — Quick review" },
       { value: "60", label: "1 hour — Thorough revision" },
@@ -716,22 +744,22 @@ export const revisionPrompt: StudyPrompt = {
     ]},
   ],
   template: (vars) => {
-    const subjectName = getSubjectName(vars.subject);
-    const subjectCategory = getSubjectCategory(vars.subject);
+    const subjectCategory = vars.subject ? getSubjectCategory(vars.subject) : "general";
     const subjectSpecific = getSubjectSpecificInstructions(subjectCategory);
     const moduleContent = vars.__moduleContent ? formatModuleContent(JSON.parse(vars.__moduleContent)) : "";
     
+    const durationKey = vars.duration || "60";
     const durationGuide = {
       "15": "PRIORITY: Only the absolute highest-yield items. 5 concepts max. No derivations. Keywords + formulas + 1 diagram.",
       "30": "PRIORITY: High-frequency concepts + formulas + 2-3 key diagrams + top 5 PYQ patterns. Skip derivations unless they're the ONLY way a topic is asked.",
       "60": "PRIORITY: All important concepts, all formulas, key diagrams, top 10 PYQs, common mistakes. One worked example per major topic type.",
       "night-before": "PRIORITY: Everything that could appear tomorrow. Ranked by probability. Formulas sheet. Definitions sheet. Diagram checklist. PYQ patterns. Trap warnings. Sleep plan.",
-    }[vars.duration];
+    }[durationKey];
     
-    return `I'm a TKM College of Engineering (KTU, ECE, 2024 scheme) student studying "${subjectName}" (${vars.subject}).
+    return `${subjectLine(vars)}
 
 MODULE SCOPE: ${vars.module || "ALL MODULES"}
-TIME AVAILABLE: ${vars.duration === "night-before" ? "Night before exam" : `${vars.duration} minutes`}${moduleContent}
+TIME AVAILABLE: ${durationKey === "night-before" ? "Night before exam" : `${durationKey} minutes`}${moduleContent}
 
 ${subjectSpecific}
 
@@ -759,7 +787,7 @@ For each: **Concept** → **One-line exam-ready definition** → **Key formula/d
 
 1. 
 2. 
-... (${vars.duration === "15" ? "5" : vars.duration === "30" ? "8" : "12-15"} items max)
+... (${durationKey === "15" ? "5" : durationKey === "30" ? "8" : "12-15"} items max)
 
 ---
 
@@ -783,7 +811,7 @@ For each: **Concept** → **One-line exam-ready definition** → **Key formula/d
 
 ---
 
-### 🎪 ${vars.duration === "night-before" ? "NIGHT-BEFORE CHECKLIST" : "LAST 5 MINUTES BEFORE EXAM"}
+### 🎪 ${durationKey === "night-before" ? "NIGHT-BEFORE CHECKLIST" : "LAST 5 MINUTES BEFORE EXAM"}
 [Final mental checklist: Formulas memorized? Diagrams visualizable? Keywords ready? Water? Hall ticket?]
 
 ---
@@ -803,26 +831,28 @@ export const mistakeFixerPrompt: StudyPrompt = {
   description: "Turn mistakes into learning — find the exact error",
   icon: "🔧",
   category: "practice",
+  bestFor: "Finding the exact error in a wrong answer and understanding why it failed.",
+  whenToUse: "After a test or mock exam — to turn every mistake into permanent learning.",
+  importance: "useful",
   variables: [
-    { key: "subject", label: "Subject", type: "select", required: true, placeholder: "Select subject", options: [] },
-    { key: "module", label: "Module", type: "select", required: false, placeholder: "Select module", options: [] },
-    { key: "question", label: "Original Question", type: "textarea", required: true, placeholder: "Paste the exact question..." },
-    { key: "myAnswer", label: "My Answer", type: "textarea", required: true, placeholder: "Paste what I wrote..." },
+    { key: "subject", label: "Subject (optional)", type: "select", required: false, placeholder: "Select subject", options: [] },
+    { key: "module", label: "Module (optional)", type: "select", required: false, placeholder: "Select module", options: [] },
+    { key: "question", label: "Original Question (optional)", type: "textarea", required: false, placeholder: "Paste the exact question..." },
+    { key: "myAnswer", label: "My Answer (optional)", type: "textarea", required: false, placeholder: "Paste what I wrote..." },
     { key: "correctAnswer", label: "Correct Answer (optional)", type: "textarea", required: false, placeholder: "If you have the model answer..." },
   ],
   template: (vars) => {
-    const subjectName = getSubjectName(vars.subject);
-    const subjectCategory = getSubjectCategory(vars.subject);
+    const subjectCategory = vars.subject ? getSubjectCategory(vars.subject) : "general";
     const subjectSpecific = getSubjectSpecificInstructions(subjectCategory);
     const moduleContent = vars.__moduleContent ? formatModuleContent(JSON.parse(vars.__moduleContent)) : "";
     
-    return `I'm a TKM College of Engineering (KTU, ECE, 2024 scheme) student studying "${subjectName}" (${vars.subject}).
+    return `${subjectLine(vars)}
 
 MODULE: ${vars.module || "Not specified"}
-QUESTION: ${vars.question}
+QUESTION: ${vars.question || "the question I paste below in our conversation"}
 
 MY ANSWER:
-${vars.myAnswer}
+${vars.myAnswer || "[I will paste my attempted answer below after this prompt.]"}
 
 ${vars.correctAnswer ? `CORRECT ANSWER (reference):
 ${vars.correctAnswer}` : ""}${moduleContent}
@@ -875,17 +905,19 @@ export const score90PlusPrompt: StudyPrompt = {
   title: "Score 90+",
   description: "Build a marks-focused study strategy",
   icon: "🎯",
-  category: "score",
+  category: "exam",
+  bestFor: "Building a day-by-day strategy to maximize your final exam score.",
+  whenToUse: "When you have an exam coming and want every study hour to earn maximum marks.",
+  importance: "specialized",
   variables: [
-    { key: "subject", label: "Subject", type: "select", required: true, placeholder: "Select subject", options: [] },
-    { key: "currentScore", label: "Current Expected Score (%)", type: "number", required: true, placeholder: "50" },
-    { key: "targetScore", label: "Target Score (%)", type: "number", required: true, placeholder: "90" },
-    { key: "daysRemaining", label: "Days Until Exam", type: "number", required: true, placeholder: "14" },
-    { key: "dailyStudyTime", label: "Daily Study Time (hours)", type: "number", required: true, placeholder: "3" },
+    { key: "subject", label: "Subject (optional)", type: "select", required: false, placeholder: "Select subject", options: [] },
+    { key: "currentScore", label: "Current Expected Score % (optional)", type: "number", required: false, placeholder: "50" },
+    { key: "targetScore", label: "Target Score % (optional)", type: "number", required: false, placeholder: "90" },
+    { key: "daysRemaining", label: "Days Until Exam (optional)", type: "number", required: false, placeholder: "14" },
+    { key: "dailyStudyTime", label: "Daily Study Time in hours (optional)", type: "number", required: false, placeholder: "3" },
   ],
   template: (vars) => {
-    const subjectName = getSubjectName(vars.subject);
-    const subjectCategory = getSubjectCategory(vars.subject);
+    const subjectCategory = vars.subject ? getSubjectCategory(vars.subject) : "general";
     const subjectSpecific = getSubjectSpecificInstructions(subjectCategory);
     const moduleContent = vars.__moduleContent ? formatModuleContent(JSON.parse(vars.__moduleContent)) : "";
     
@@ -896,7 +928,7 @@ export const score90PlusPrompt: StudyPrompt = {
     const gap = targetScore - currentScore;
     const totalHours = daysRemaining * dailyStudyTime;
     
-    return `I'm a TKM College of Engineering (KTU, ECE, 2024 scheme) student studying "${subjectName}" (${vars.subject}).
+    return `${subjectLine(vars)}
 
 CURRENT STATE:
 - Expected score if exam today: ${currentScore}%

@@ -19,7 +19,6 @@ export default function PromptLabPage() {
   const [selectedPrompt, setSelectedPrompt] = useState<StudyPrompt | null>(null);
   const [builderVariables, setBuilderVariables] = useState<Record<string, string>>({});
   const [favorites, setFavorites] = useState<FavoritePrompt[]>([]);
-  const [showWizard, setShowWizard] = useState(false);
   const [context, setContext] = useState<StudyContext | null>(null);
   const searchParams = useSearchParams();
   
@@ -62,6 +61,8 @@ export default function PromptLabPage() {
     const matchesSearch = searchQuery === "" || 
       prompt.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       prompt.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      prompt.bestFor.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      prompt.whenToUse.toLowerCase().includes(searchQuery.toLowerCase()) ||
       prompt.category.toLowerCase().includes(searchQuery.toLowerCase());
     
     const matchesCategory = activeCategory === "all" || prompt.category === activeCategory;
@@ -111,7 +112,6 @@ export default function PromptLabPage() {
     const prompt = getPromptById(modeId);
     if (prompt) {
       handlePromptClick(prompt, defaultVars);
-      setShowWizard(false);
     }
   };
   
@@ -169,6 +169,7 @@ export default function PromptLabPage() {
   if (selectedPrompt) {
     return (
       <PromptBuilder
+        key={selectedPrompt.id}
         prompt={selectedPrompt}
         initialVariables={builderVariables}
         onBack={handleBack}
@@ -185,7 +186,8 @@ export default function PromptLabPage() {
           PROMPT LAB
         </h1>
         <p className="text-sm text-ink-lo leading-relaxed mb-4">
-          AI-powered study modes — Learn smarter. Practice harder. Score better.
+          Find the best prompt for whatever you need to do with AI. Copy it, use it with any AI,
+          and add TKM notes as optional context.
         </p>
         {renderContextBreadcrumb()}
       </div>
@@ -221,7 +223,7 @@ export default function PromptLabPage() {
                 <h3 className="font-display font-semibold text-ink-hi text-base">
                   {categoryInfo?.label || catId.toUpperCase()}
                 </h3>
-                <span className="text-xs font-mono text-ink-faint">{prompts.length} mode{prompts.length !== 1 ? 's' : ''}</span>
+                <span className="text-xs font-mono text-ink-faint">{prompts.length} prompt{prompts.length !== 1 ? 's' : ''}</span>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {prompts.map((prompt) => (
@@ -242,7 +244,7 @@ export default function PromptLabPage() {
       {/* Empty state */}
       {filteredPrompts.length === 0 && (
         <div className="card p-6 text-center">
-          <p className="text-sm text-ink-hi mb-1">No study modes match your search.</p>
+          <p className="text-sm text-ink-hi mb-1">No prompts match your search.</p>
           <p className="text-xs text-ink-lo">Try a different keyword or filter.</p>
         </div>
       )}

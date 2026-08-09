@@ -12,7 +12,7 @@ export default function QuickPrompts({ onQuickSelect }: QuickPromptsProps) {
     <div className="space-y-3">
       <h4 className="font-display font-semibold text-ink-hi">Quick Start</h4>
       <p className="text-xs text-ink-lo leading-relaxed">
-        Common tasks — opens the builder with sensible defaults.
+        Common tasks — opens the prompt with sensible defaults.
       </p>
       <div className="grid grid-cols-2 gap-2">
         {QUICK_PROMPTS.map((quick, i) => (

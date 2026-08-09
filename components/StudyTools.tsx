@@ -3,39 +3,45 @@ import Link from "next/link";
 const TOOLS = [
   {
     title: "Prompt Lab",
-    description: "AI-powered study modes",
+    description: "The best prompt for whatever you need to do with AI",
     href: "/prompt-lab",
     icon: "⚡",
   },
   {
-    title: "Night-Before",
-    description: "High-value revision when time is limited",
-    href: "/night-before",
-    icon: "⏱",
-  },
-  {
-    title: "PYQ Focus",
-    description: "Important previous questions",
-    href: "/prompt-lab?mode=pyq-intelligence",
-    icon: "🔍",
-  },
-  {
     title: "Quick Revision",
-    description: "High-value revision",
+    description: "Rapid review when time is limited",
     href: "/prompt-lab?mode=revision",
     icon: "📌",
   },
   {
+    title: "Exam Answer",
+    description: "Marks-focused answer for any question",
+    href: "/prompt-lab?mode=exam-answer",
+    icon: "📝",
+  },
+  {
+    title: "PYQ Intelligence",
+    description: "What actually repeats in exams",
+    href: "/prompt-lab?mode=pyq-intelligence",
+    icon: "🔍",
+  },
+  {
     title: "Mock Exam",
-    description: "Test yourself",
+    description: "Simulate the real exam",
     href: "/prompt-lab?mode=mock-exam",
     icon: "📋",
+  },
+  {
+    title: "Night-Before",
+    description: "High-value revision plan from your notes",
+    href: "/night-before",
+    icon: "⏱",
   },
 ];
 
 export default function StudyTools() {
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
       {TOOLS.map((t) => (
         <Link
           key={t.title}

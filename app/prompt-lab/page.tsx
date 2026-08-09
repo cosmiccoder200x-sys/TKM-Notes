@@ -3,9 +3,9 @@ import Header from "@/components/Header";
 import PromptLabWrapper from "@/components/prompt-lab/PromptLabWrapper";
 
 export const metadata: Metadata = {
-  title: "Prompt Lab — Electrical & Computer Engineering · TKM Notes",
+  title: "Prompt Lab — TKM Notes",
   description:
-    "AI-powered study modes for learning, practicing, revising, and scoring better in KTU exams. Built for Electrical & Computer Engineering.",
+    "Find the best prompt for whatever you need to do with AI — learn, practice, revise, evaluate or prepare for KTU exams. Copy it, use it with any AI, add notes as optional context.",
 };
 
 export default function PromptLabPage() {

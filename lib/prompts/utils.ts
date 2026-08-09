@@ -90,6 +90,16 @@ export function generatePrompt(prompt: StudyPrompt, variables: Record<string, st
   return prompt.template(variables);
 }
 
+// Short, single-line preview of the actual prompt text for cards
+export function renderPromptPreview(prompt: StudyPrompt, maxChars = 200): string {
+  try {
+    const text = prompt.template({});
+    return text.replace(/\s+/g, " ").trim().slice(0, maxChars).trim();
+  } catch {
+    return prompt.description;
+  }
+}
+
 // LocalStorage keys
 const FAVORITES_KEY = "tkm-prompt-favorites";
 const RECENTS_KEY = "tkm-prompt-recents";
@@ -190,7 +200,7 @@ export const QUICK_PROMPTS: { label: string; modeId: StudyModeId; defaultVars: R
   { label: "Generate an 8-mark answer", modeId: "exam-answer", defaultVars: { marks: "8" } },
   { label: "Evaluate my answer", modeId: "strict-examiner", defaultVars: { marks: "8" } },
   { label: "Give me a mock test", modeId: "mock-exam", defaultVars: { duration: "120", totalMarks: "100", difficulty: "university" } },
-  { label: "Revise in 20 minutes", modeId: "revision", defaultVars: { duration: "30" } },
+  { label: "Revise in 30 minutes", modeId: "revision", defaultVars: { duration: "30" } },
   { label: "Build my 90% strategy", modeId: "score-90-plus", defaultVars: { currentScore: "50", targetScore: "90", daysRemaining: "14", dailyStudyTime: "3" } },
 ];
 

@@ -1,6 +1,7 @@
 // Prompt Lab Types
 
-export type StudyModeCategory = "learn" | "exam" | "practice" | "revision" | "score";
+export type StudyModeCategory = "learn" | "practice" | "exam" | "revision" | "analyze";
+export type PromptImportance = "essential" | "high" | "useful" | "specialized";
 export type StudyModeId = 
   | "learn"
   | "active-recall"
@@ -30,6 +31,9 @@ export interface StudyPrompt {
   description: string;
   icon: string;
   category: StudyModeCategory;
+  bestFor: string;
+  whenToUse: string;
+  importance: PromptImportance;
   variables: StudyPromptVariable[];
   template: (vars: Record<string, string>) => string;
   defaultSubject?: string;
@@ -74,16 +78,16 @@ export const CATEGORIES: CategoryInfo[] = [
     modes: ["learn", "active-recall"],
   },
   {
-    id: "exam",
-    label: "EXAM",
-    description: "Exam preparation & answers",
-    modes: ["pyq-intelligence", "exam-answer", "strict-examiner", "mock-exam"],
-  },
-  {
     id: "practice",
     label: "PRACTICE",
-    description: "Hands-on problem solving",
+    description: "Solve problems & fix mistakes",
     modes: ["problem-solver", "mistake-fixer"],
+  },
+  {
+    id: "exam",
+    label: "EXAM",
+    description: "Prepare for the actual exam",
+    modes: ["pyq-intelligence", "exam-answer", "mock-exam", "score-90-plus"],
   },
   {
     id: "revision",
@@ -92,11 +96,18 @@ export const CATEGORIES: CategoryInfo[] = [
     modes: ["revision"],
   },
   {
-    id: "score",
-    label: "SCORE BOOST",
-    description: "Target high marks",
-    modes: ["score-90-plus"],
+    id: "analyze",
+    label: "ANALYZE",
+    description: "Evaluate, compare & improve",
+    modes: ["strict-examiner"],
   },
 ];
 
-export const CATEGORY_ORDER: StudyModeCategory[] = ["score", "learn", "exam", "practice", "revision"];
+export const CATEGORY_ORDER: StudyModeCategory[] = ["learn", "practice", "exam", "revision", "analyze"];
+
+export const IMPORTANCE_META: Record<PromptImportance, { label: string; hint: string }> = {
+  essential: { label: "ESSENTIAL", hint: "Core prompt every student should use" },
+  high: { label: "HIGH VALUE", hint: "Delivers strong results in most situations" },
+  useful: { label: "USEFUL", hint: "Helpful for specific study goals" },
+  specialized: { label: "SPECIALIZED", hint: "Best when you need a very specific outcome" },
+};

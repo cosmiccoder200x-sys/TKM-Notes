@@ -1,6 +1,6 @@
 # TKM S3–S8 Interactive Notes
 
-Exam-focused, subject-wise interactive study workspace for TKM College of Engineering (EC Engineering, 2024 scheme), S3–S8. One job only: help you score full marks. No chatbots, no trackers, no fluff.
+Prompt-first study workspace for TKM College of Engineering (EC Engineering, 2024 scheme), S3–S8. **Prompt Lab is the primary product** — find the best prompt for whatever you need to do with AI, copy it, and use it with ChatGPT, Gemini, Claude or any AI. Exam-focused notes are the optional context that makes responses more specific. One job only: help you score full marks. No chatbots, no trackers, no fluff.
 
 ---
 
@@ -8,7 +8,7 @@ Exam-focused, subject-wise interactive study workspace for TKM College of Engine
 
 ### The 30-second version
 
-> Open TKM Notes → pick your semester → pick a subject → open a module → study the sections → use Prompt Lab with AI → revise → score.
+> Open TKM Notes → open Prompt Lab → pick a prompt → copy it → use it with any AI → optionally attach a subject/module/notes for more specific answers → revise → score.
 
 ### Step-by-step study workflow
 
@@ -16,11 +16,12 @@ Exam-focused, subject-wise interactive study workspace for TKM College of Engine
 
 The homepage is your study dashboard. You'll see:
 
+- **Prompt Lab** (primary) — find the best prompt for what you need, copy it, use it with any AI
 - **Current Semester** (S3 by default) with all subjects listed
-- **Study Tools** — quick links to Prompt Lab, PYQ Focus, Quick Revision, and Mock Exam modes
+- **Study Tools** — quick links to Prompt Lab modes and Night-Before revision
 - **All Semesters** — switch to S3–S8 with one click
 
-Click **"Continue Studying"** to jump straight to the current semester, or **"Browse Subjects"** to explore.
+Click **"Open Prompt Lab"** to find a prompt, or **"Browse Notes"** to explore the semester.
 
 #### 2. Open a subject
 
@@ -58,25 +59,30 @@ Every module has up to 9 sections. Work through them in this order for best resu
 
 #### 5. Use Prompt Lab for AI-powered study
 
-Prompt Lab is the most powerful feature. Access it from:
+Prompt Lab is the primary feature — a library of copy-ready prompts for any AI (Claude, ChatGPT, Gemini, etc.). Every prompt works standalone: open a prompt, copy it, paste it into your AI. No subject, module or notes required. Add your notes as **optional context** (via semester → subject → module → topic) to make responses more specific.
+
+Access it from:
+- The **Prompt Lab** section at the top of the homepage
 - The **Study Tools** section on the homepage
-- The **Learn / Practice / Exam / Revise** buttons on any module
-- The **"Open Prompt Lab"** CTA card on the homepage
+- The **Learn / Practice / Exam / Revise** buttons on any module (auto-fills context)
 - The navigation bar
 
-Prompt Lab generates copy-ready prompts for any AI (Claude, ChatGPT, Gemini, etc.) that are **context-aware** — they know which subject, module, and topic you're studying. Study modes include:
+Study prompts include:
 
-| Mode | What it does |
-|---|---|
-| **Learn** | Explains a topic from scratch, step by step |
-| **Active Recall** | Generates questions for you to answer from memory |
-| **Exam Answer** | Writes a model answer for a specific question + mark allocation |
-| **Revision** | Creates a compressed revision summary |
-| **Problem Solver** | Walks through a numerical/derivation step by step |
-| **PYQ Intelligence** | Analyzes previous year question patterns |
-| **Mock Exam** | Generates a full mock question paper |
+| Category | Prompt | What it does |
+|---|---|---|
+| LEARN | **Learn** | Explains a topic from scratch, step by step |
+| LEARN | **Active Recall** | Tests what you remember with one question at a time |
+| PRACTICE | **Problem Solver** | Builds problem-solving ability with guided hints |
+| PRACTICE | **Mistake Fixer** | Finds the exact error in a wrong answer |
+| EXAM | **PYQ Intelligence** | Analyzes previous year question patterns |
+| EXAM | **Exam Answer** | Writes a marks-focused model answer for a question |
+| EXAM | **Mock Exam** | Generates a full mock question paper |
+| EXAM | **Score 90+** | Builds a day-by-day marks-maximization strategy |
+| REVISION | **Revision** | Creates a compressed, time-boxed revision plan |
+| ANALYZE | **Strict Examiner** | Evaluates your answer like a university examiner |
 
-**Pro tip:** Use the module-level buttons (Learn / Practice / Exam / Revise) — they pre-fill the subject and module so you don't have to type anything.
+**Pro tip:** Use the module-level buttons (Learn / Practice / Exam / Revise) — they pre-fill the subject and module as optional context so the prompt is already tailored.
 
 #### 6. Use keyboard search (Ctrl+K / ⌘K)
 
@@ -204,8 +210,8 @@ Add a new function + registry entry in `components/Diagrams.tsx`, then reference
 Every subject page has context-aware AI study tools. The Prompt Lab system:
 
 - Lives in `lib/prompts/` — prompt definitions are separate from UI
-- Generates copy-ready prompts that include the exact subject, module, topic, and question context
-- Supports 7 study modes (Learn, Active Recall, Exam Answer, Revision, Problem Solver, PYQ Intelligence, Mock Exam)
+- Is the primary product: a library of 10 copy-ready prompts that work standalone with any AI (no subject or module required)
+- Injects the exact subject, module, topic, and question context when provided as optional context
 - Can be accessed from module-level buttons, subject-level AI actions, or the dedicated `/prompt-lab` page
 
 ## Understanding features

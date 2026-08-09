@@ -1,9 +1,16 @@
 "use client";
 
 import { useState, useEffect, useCallback, ReactNode } from "react";
-import { StudyPrompt, StudyPromptVariable } from "@/lib/prompts/types";
+import { StudyPrompt, StudyPromptVariable, CATEGORIES, IMPORTANCE_META } from "@/lib/prompts/types";
 import { generatePrompt, populatePromptVariables, copyToClipboard, addRecent } from "@/lib/prompts/utils";
-import { StudyContext, getSubjectCategory, getSubjectEvaluationCriteria, getSubjectProblemGuidance, getSubjectAnswerStructure } from "@/lib/prompts/context";
+import { StudyContext } from "@/lib/prompts/context";
+
+const IMPORTANCE_STYLES: Record<string, string> = {
+  essential: "text-signal border-signal-dim bg-signal/10",
+  high: "text-weight border-weight-dim bg-weight/10",
+  useful: "text-ink-lo border-bg-border",
+  specialized: "text-ink-faint border-bg-border",
+};
 
 interface PromptBuilderProps {
   prompt: StudyPrompt;
@@ -14,73 +21,64 @@ interface PromptBuilderProps {
 
 export default function PromptBuilder({ prompt, initialVariables = {}, onBack, context }: PromptBuilderProps) {
   const [variables, setVariables] = useState<Record<string, string>>(initialVariables);
-  const [generatedPrompt, setGeneratedPrompt] = useState<string>("");
   const [copied, setCopied] = useState(false);
-  const [isGenerating, setIsGenerating] = useState(false);
   const [populatedVariables, setPopulatedVariables] = useState<StudyPromptVariable[]>([]);
-  
-  // Populate variables with dynamic options on mount
-  useEffect(() => {
-    const subjectCode = variables.subject || initialVariables.subject;
-    const populated = populatePromptVariables(prompt, subjectCode);
-    setPopulatedVariables(populated);
-  }, [prompt, variables.subject, initialVariables.subject]);
-  
-  // Update populated variables when subject changes
-  useEffect(() => {
-    if (variables.subject) {
-      const populated = populatePromptVariables(prompt, variables.subject);
-      setPopulatedVariables(populated);
-    }
-  }, [variables.subject, prompt]);
-  
-  const handleVariableChange = useCallback((key: string, value: string) => {
-    setVariables(prev => ({ ...prev, [key]: value }));
-  }, []);
-  
-  const handleGenerate = useCallback(async () => {
-    setIsGenerating(true);
-    try {
-      // Inject module content if available
-      const varsWithContext = { ...variables };
-      if (context?.moduleContent) {
+
+  const category = CATEGORIES.find((c) => c.id === prompt.category);
+  const importance = IMPORTANCE_META[prompt.importance];
+
+  const renderPrompt = useCallback(
+    (vars: Record<string, string>) => {
+      const varsWithContext = { ...vars };
+      if (context?.moduleContent && vars.subject) {
         varsWithContext.__moduleContent = JSON.stringify(context.moduleContent);
       }
-      const promptText = generatePrompt(prompt, varsWithContext);
-      setGeneratedPrompt(promptText);
-      // Add to recents
-      addRecent({
-        modeId: prompt.id,
-        title: prompt.title,
-        variables,
-      });
-    } finally {
-      setIsGenerating(false);
-    }
-  }, [prompt, variables, context]);
-  
+      return generatePrompt(prompt, varsWithContext);
+    },
+    [prompt, context]
+  );
+
+  // Prompt is visible immediately — never requires any field to be filled.
+  const [generatedPrompt, setGeneratedPrompt] = useState<string>(() => renderPrompt(initialVariables));
+
+  // Populate dynamic options (subject list, module list, marks)
+  useEffect(() => {
+    const populated = populatePromptVariables(prompt, variables.subject);
+    setPopulatedVariables(populated);
+  }, [prompt, variables.subject]);
+
+  const handleVariableChange = useCallback((key: string, value: string) => {
+    setVariables((prev) => {
+      const next = { ...prev, [key]: value };
+      if (key === "subject") delete next.module; // module options depend on subject
+      return next;
+    });
+    setCopied(false);
+  }, []);
+
+  const handleUpdate = useCallback(() => {
+    setGeneratedPrompt(renderPrompt(variables));
+    setCopied(false);
+  }, [renderPrompt, variables]);
+
+  const handleReset = useCallback(() => {
+    setVariables({});
+    setGeneratedPrompt(renderPrompt({}));
+    setCopied(false);
+  }, [renderPrompt]);
+
   const handleCopy = useCallback(async () => {
     const success = await copyToClipboard(generatedPrompt);
     if (success) {
       setCopied(true);
+      addRecent({ modeId: prompt.id, title: prompt.title, variables });
       setTimeout(() => setCopied(false), 2000);
     }
-  }, [generatedPrompt]);
-  
-  const handleReset = useCallback(() => {
-    setVariables(initialVariables);
-    setGeneratedPrompt("");
-    setCopied(false);
-  }, [initialVariables]);
-  
-  const handleEdit = useCallback(() => {
-    setGeneratedPrompt("");
-  }, []);
-  
-  // Render context breadcrumb in builder
+  }, [generatedPrompt, prompt, variables]);
+
+  // Render context breadcrumb in the optional-context panel
   const renderContextInfo = () => {
     if (!context) return null;
-    
     const parts = [];
     if (context.semesterLabel) parts.push(context.semesterLabel);
     if (context.subjectName) parts.push(context.subjectName);
@@ -88,13 +86,11 @@ export default function PromptBuilder({ prompt, initialVariables = {}, onBack, c
     if (context.topic) parts.push(context.topic);
     if (context.question) parts.push(`Q: ${context.question.substring(0, 50)}...`);
     if (context.marks) parts.push(`${context.marks} marks`);
-    
     if (parts.length === 0) return null;
-    
     return (
-      <div className="mb-4 p-3 bg-signal/5 border border-signal-dim rounded-card">
+      <div className="p-3 bg-signal/5 border border-signal-dim rounded-card">
         <div className="flex flex-wrap items-center gap-1.5 text-xs font-mono">
-          <span className="text-signal">Context:</span>
+          <span className="text-signal">Auto-filled:</span>
           {parts.map((part, i) => (
             <span key={i} className="flex items-center gap-1 text-ink-hi">
               {i > 0 && <span className="text-ink-faint">→</span>}
@@ -118,20 +114,18 @@ export default function PromptBuilder({ prompt, initialVariables = {}, onBack, c
       </div>
     );
   };
-  
-  // Render input for a variable
+
+  // Render input for a variable (all optional — never blocks)
   const renderInput = (variable: StudyPromptVariable) => {
     const value = variables[variable.key] || "";
-    const isRequired = variable.required;
-    
+    const baseClass = "w-full bg-bg-surface border border-bg-border rounded-card px-3 py-2 text-sm text-ink-hi focus:border-signal outline-none";
     switch (variable.type) {
       case "select":
         return (
           <select
             value={value}
             onChange={(e) => handleVariableChange(variable.key, e.target.value)}
-            required={isRequired}
-            className="w-full bg-bg-surface border border-bg-border rounded-card px-3 py-2 text-sm text-ink-hi focus:border-signal outline-none"
+            className={baseClass}
             aria-label={variable.label}
           >
             <option value="" disabled>{variable.placeholder || `Select ${variable.label}`}</option>
@@ -166,10 +160,9 @@ export default function PromptBuilder({ prompt, initialVariables = {}, onBack, c
           <textarea
             value={value}
             onChange={(e) => handleVariableChange(variable.key, e.target.value)}
-            required={isRequired}
             placeholder={variable.placeholder}
             rows={4}
-            className="w-full bg-bg-surface border border-bg-border rounded-card px-3 py-2 text-sm text-ink-hi focus:border-signal outline-none resize-y font-mono text-[12px]"
+            className={`${baseClass} resize-y font-mono text-[12px]`}
             aria-label={variable.label}
           />
         );
@@ -179,9 +172,8 @@ export default function PromptBuilder({ prompt, initialVariables = {}, onBack, c
             type="number"
             value={value}
             onChange={(e) => handleVariableChange(variable.key, e.target.value)}
-            required={isRequired}
             placeholder={variable.placeholder}
-            className="w-full bg-bg-surface border border-bg-border rounded-card px-3 py-2 text-sm text-ink-hi focus:border-signal outline-none font-mono"
+            className={`${baseClass} font-mono`}
             aria-label={variable.label}
           />
         );
@@ -191,105 +183,132 @@ export default function PromptBuilder({ prompt, initialVariables = {}, onBack, c
             type="text"
             value={value}
             onChange={(e) => handleVariableChange(variable.key, e.target.value)}
-            required={isRequired}
             placeholder={variable.placeholder}
-            className="w-full bg-bg-surface border border-bg-border rounded-card px-3 py-2 text-sm text-ink-hi focus:border-signal outline-none"
+            className={baseClass}
             aria-label={variable.label}
           />
         );
     }
   };
-  
+
   return (
-    <div className="max-w-4xl mx-auto px-4 py-6">
-      <div className="card overflow-hidden">
-      {/* Header */}
+    <div className="max-w-4xl mx-auto px-4 py-6 space-y-5">
+      {/* Back */}
       <button
         onClick={onBack}
-        className="w-full flex items-center justify-between gap-3 px-4 py-3.5 text-left"
+        className="font-mono text-xs text-ink-lo hover:text-signal transition-colors"
       >
-        <div>
-          <div className="eyebrow mb-0.5">{prompt.icon} {prompt.category.toUpperCase()}</div>
-          <div className="text-sm font-display font-semibold text-ink-hi">{prompt.title}</div>
-        </div>
-        <span className="text-ink-lo text-lg shrink-0">←</span>
+        ← All prompts
       </button>
-      
-      {/* Form or Preview */}
-      {generatedPrompt ? (
-        // Preview mode
-        <div className="px-4 pb-4">
-          {renderContextInfo()}
-          <div className="flex items-center justify-between mb-3">
-            <h4 className="font-display font-semibold text-ink-hi">YOUR PROMPT</h4>
-            <div className="flex gap-2">
-              <button
-                onClick={handleEdit}
-                className="text-sm font-mono py-1.5 px-3 rounded-card border border-bg-border text-ink-hi hover:border-signal hover:text-signal transition-colors"
-              >
-                Edit
-              </button>
-              <button
-                onClick={handleReset}
-                className="text-sm font-mono py-1.5 px-3 rounded-card border border-bg-border text-ink-lo hover:border-critical hover:text-critical transition-colors"
-              >
-                Reset
-              </button>
-            </div>
+
+      {/* Prompt header */}
+      <div className="card p-5 space-y-4">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-2xl leading-none" aria-hidden="true">{prompt.icon}</span>
+          <span className="eyebrow">{category?.label || prompt.category.toUpperCase()}</span>
+          <span
+            className={`font-mono text-[9px] uppercase tracking-[0.12em] px-1.5 py-0.5 rounded-card border ${IMPORTANCE_STYLES[prompt.importance]}`}
+            title={importance?.hint}
+          >
+            {importance?.label}
+          </span>
+        </div>
+
+        <div>
+          <h1 className="font-display font-bold text-2xl sm:text-3xl text-ink-hi leading-tight tracking-tight">
+            {prompt.title}
+          </h1>
+          <p className="text-sm text-ink-lo leading-relaxed mt-1.5">{prompt.description}</p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+          <div>
+            <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-ink-faint mb-1">BEST FOR</div>
+            <p className="text-ink-hi leading-relaxed">{prompt.bestFor}</p>
           </div>
-          
-          <pre className="bg-bg-raised border border-bg-border rounded-card p-3 text-[11px] text-ink-lo leading-relaxed whitespace-pre-wrap max-h-[50vh] overflow-y-auto font-mono">
+          <div>
+            <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-ink-faint mb-1">WHEN TO USE</div>
+            <p className="text-ink-hi leading-relaxed">{prompt.whenToUse}</p>
+          </div>
+        </div>
+
+        <div className="text-xs font-mono text-ink-faint">
+          WORKS WITH: <span className="text-ink-lo">ChatGPT · Gemini · Claude · Other AI</span>
+        </div>
+      </div>
+
+      {/* Optional context */}
+      <div className="card p-5 space-y-4">
+        <div>
+          <div className="eyebrow mb-1">OPTIONAL CONTEXT</div>
+          <p className="text-sm text-ink-lo leading-relaxed">
+            Add a topic, subject or notes to make the response more specific. The prompt works perfectly without any of this.
+          </p>
+        </div>
+
+        {renderContextInfo()}
+
+        <div className="space-y-4">
+          {populatedVariables.length > 0 ? (
+            populatedVariables.map((variable) => (
+              <div key={variable.key} className="space-y-1.5">
+                <label className="flex items-center gap-1.5 text-sm font-mono text-ink-hi">
+                  <span>{variable.label}</span>
+                  {!variable.required && <span className="text-[10px] text-ink-faint">optional</span>}
+                </label>
+                {renderInput(variable)}
+                {variable.dependsOn && !variables[variable.dependsOn] && (
+                  <p className="text-xs text-ink-faint">Select {variable.dependsOn} first</p>
+                )}
+              </div>
+            ))
+          ) : (
+            <p className="text-sm text-ink-lo text-center py-2">Loading options…</p>
+          )}
+        </div>
+
+        <div className="flex flex-wrap gap-2">
+          <button
+            onClick={handleUpdate}
+            className="flex-1 text-center font-mono text-xs uppercase tracking-wide py-2.5 rounded-card border border-signal text-signal hover:bg-signal/10 transition-colors min-w-[160px]"
+          >
+            Update Prompt
+          </button>
+          <button
+            onClick={handleReset}
+            className="text-center font-mono text-xs uppercase tracking-wide py-2.5 px-4 rounded-card border border-bg-border text-ink-lo hover:text-critical hover:border-critical transition-colors"
+          >
+            Continue Without Context
+          </button>
+        </div>
+      </div>
+
+      {/* The prompt */}
+      <div className="card overflow-hidden">
+        <div className="flex items-center justify-between gap-3 px-5 pt-5">
+          <div>
+            <div className="eyebrow mb-0.5">YOUR PROMPT</div>
+            <p className="text-xs text-ink-lo">
+              Copy this and paste it into any AI. It updates when you change the optional context above.
+            </p>
+          </div>
+        </div>
+        <div className="p-5">
+          <pre className="bg-bg-raised border border-bg-border rounded-card p-4 text-[12px] text-ink-hi leading-relaxed whitespace-pre-wrap max-h-[55vh] overflow-y-auto font-mono">
             {generatedPrompt}
           </pre>
-          
           <button
             onClick={handleCopy}
             disabled={copied}
-            className={`mt-3 w-full text-center text-sm font-mono py-2 rounded-card border transition-colors ${
+            className={`mt-4 w-full text-center font-mono text-sm uppercase tracking-wide py-3 rounded-card transition-colors disabled:cursor-default ${
               copied
-                ? "border-signal text-signal bg-signal/10 cursor-default"
-                : "border-bg-border text-ink-hi hover:border-signal hover:text-signal"
+                ? "bg-signal text-bg"
+                : "bg-signal text-bg hover:bg-signal/90"
             }`}
           >
-            {copied ? "Copied ✓" : "Copy Prompt"}
+            {copied ? "Copied — paste it into your AI ✓" : "Copy Prompt"}
           </button>
         </div>
-      ) : (
-        // Builder form mode
-        <div className="px-4 pb-4">
-          {renderContextInfo()}
-          <p className="text-xs text-ink-lo leading-relaxed mb-4">
-            Fill in the details below to generate a tailored AI prompt for this study mode.
-          </p>
-          
-          <div className="space-y-4 max-h-[60vh] overflow-y-auto">
-            {populatedVariables.length > 0 ? (
-              populatedVariables.map((variable) => (
-                <div key={variable.key} className="space-y-1.5">
-                  <label className="flex items-center gap-1.5 text-sm font-mono text-ink-hi">
-                    <span>{variable.label}</span>
-                    {variable.required && <span className="text-critical text-xs">*</span>}
-                  </label>
-                  {renderInput(variable)}
-                  {variable.dependsOn && !variables[variable.dependsOn] && (
-                    <p className="text-xs text-ink-faint">Select {variable.dependsOn} first</p>
-                  )}
-                </div>
-              ))
-            ) : (
-              <p className="text-sm text-ink-lo text-center py-4">Loading variables...</p>
-            )}
-          </div>
-          
-          <button
-            onClick={handleGenerate}
-            disabled={isGenerating}
-            className="mt-4 w-full text-center text-sm font-mono py-2.5 rounded-card border border-signal text-signal hover:bg-signal/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isGenerating ? "Generating…" : "Generate Prompt"}
-          </button>
-        </div>
-      )}
       </div>
     </div>
   );
