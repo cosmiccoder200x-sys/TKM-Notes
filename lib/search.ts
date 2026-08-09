@@ -8,7 +8,7 @@ export interface SearchHit {
   subjectSlug: string;
   moduleId?: string;
   moduleTitle?: string;
-  matchType: "subject" | "module" | "definition" | "concept";
+  matchType: "subject" | "module" | "definition" | "concept" | "formula" | "question";
   snippet: string;
 }
 
@@ -77,8 +77,42 @@ export function searchAll(query: string): SearchHit[] {
           });
         }
       }
+
+      for (const f of mod.formulas) {
+        if (
+          f.name.toLowerCase().includes(q) ||
+          f.expression.toLowerCase().includes(q) ||
+          (f.note ?? "").toLowerCase().includes(q)
+        ) {
+          hits.push({
+            subjectCode: subject.code,
+            subjectName: subject.name,
+            semesterId: subject.semesterId,
+            subjectSlug: subject.slug,
+            moduleId: mod.id,
+            moduleTitle: mod.title,
+            matchType: "formula",
+            snippet: `${f.name}: ${f.expression}`,
+          });
+        }
+      }
+
+      for (const qItem of mod.examFocus) {
+        if (qItem.question.toLowerCase().includes(q)) {
+          hits.push({
+            subjectCode: subject.code,
+            subjectName: subject.name,
+            semesterId: subject.semesterId,
+            subjectSlug: subject.slug,
+            moduleId: mod.id,
+            moduleTitle: mod.title,
+            matchType: "question",
+            snippet: qItem.question,
+          });
+        }
+      }
     }
   }
 
-  return hits.slice(0, 30);
+  return hits.slice(0, 40);
 }

@@ -76,7 +76,7 @@ export function InteractiveResonance() {
         </div>
       </div>
       <p className="text-xs text-ink-lo leading-relaxed mt-2">
-        Drag R down — watch the peak get taller and narrower (higher Q, smaller bandwidth). That's the whole "Q vs bandwidth tradeoff" in one motion.
+        Drag R down — watch the peak get taller and narrower (higher Q, smaller bandwidth). That&apos;s the whole &quot;Q vs bandwidth tradeoff&quot; in one motion.
       </p>
     </div>
   );

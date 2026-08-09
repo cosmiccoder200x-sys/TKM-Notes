@@ -409,7 +409,7 @@ function NeutralShiftPhasor() {
       <text x="118" y="108" fill="#8A93A1" fontSize="8">N (source)</text>
       <circle cx="130" cy="90" r="3" fill="#FB7185" />
       <line x1="110" y1="110" x2="130" y2="90" stroke="#FB7185" strokeWidth="1.5" strokeDasharray="3 2" />
-      <text x="135" y="85" fill="#FB7185" fontSize="8">N' (shifted, load)</text>
+      <text x="135" y="85" fill="#FB7185" fontSize="8">N&apos; (shifted, load)</text>
     </svg>
   );
 }
@@ -520,7 +520,7 @@ function DaqSystemArchitecture() {
 
       <rect x="230" y="20" width="80" height="34" rx="4" fill="none" stroke="#FB7185" strokeWidth="1.5" />
       <text x="270" y="40" fill="#EDEFF2" fontSize="8" textAnchor="middle">PC + software</text>
-      <text x="270" y="70" fill="#8A93A1" fontSize="7" textAnchor="middle">software = "the instrument"</text>
+      <text x="270" y="70" fill="#8A93A1" fontSize="7" textAnchor="middle">software = &quot;the instrument&quot;</text>
     </svg>
   );
 }

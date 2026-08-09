@@ -1,31 +1,52 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import type { Metadata } from "next";
 import Header from "@/components/Header";
-import SubjectCard from "@/components/SubjectCard";
-import { semesters, subjectsForSemester } from "@/lib/content";
+import SemesterExplorer from "@/components/SemesterExplorer";
+import { semesters } from "@/lib/content";
 
 export function generateStaticParams() {
   return semesters.map((s) => ({ semester: s.id }));
 }
 
-export default function SemesterPage({ params }: { params: { semester: string } }) {
+export function generateMetadata({
+  params,
+}: {
+  params: { semester: string };
+}): Metadata {
+  const semester = semesters.find((s) => s.id === params.semester);
+  if (!semester) return {};
+  return {
+    title: `${semester.label} — TKM Notes`,
+    description: `Exam-focused notes and study tools for ${semester.label} of Electrical & Computer Engineering at TKM College. Subjects, modules, important questions and AI study modes.`,
+  };
+}
+
+export default function SemesterPage({
+  params,
+}: {
+  params: { semester: string };
+}) {
   const semester = semesters.find((s) => s.id === params.semester);
   if (!semester) notFound();
-
-  const subjects = subjectsForSemester(semester.id);
 
   return (
     <>
       <Header />
-      <main className="max-w-2xl mx-auto px-4 py-6">
-        <Link href="/" className="eyebrow inline-block mb-3">← all semesters</Link>
-        <h1 className="font-display font-semibold text-2xl text-ink-hi mb-5">{semester.label}</h1>
+      <main className="max-w-6xl mx-auto px-4 py-6">
+        <nav aria-label="Breadcrumb" className="mb-5">
+          <ol className="flex flex-wrap items-center gap-1.5 text-xs font-mono text-ink-faint">
+            <li>
+              <Link href="/" className="hover:text-signal transition-colors">
+                TKM Notes
+              </Link>
+            </li>
+            <li>/</li>
+            <li className="text-ink-hi">{semester.label}</li>
+          </ol>
+        </nav>
 
-        <div className="flex flex-col gap-3">
-          {subjects.map((subj) => (
-            <SubjectCard key={subj.code} subject={subj} />
-          ))}
-        </div>
+        <SemesterExplorer initialSemester={semester.id} />
       </main>
     </>
   );
