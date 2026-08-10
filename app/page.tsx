@@ -4,31 +4,62 @@ import SemesterExplorer from "@/components/SemesterExplorer";
 import StudyTools from "@/components/StudyTools";
 import PaletteButton from "@/components/PaletteButton";
 import HomeStudyStatus from "@/components/mastery/HomeStudyStatus";
+import QuickPlannerForm from "@/components/planner/QuickPlannerForm";
 import { semesters } from "@/lib/content";
-import { BRANCH_NAME, BRANCH_RANGE, BRANCH_TAGLINE } from "@/lib/branch";
+import { BRANCH_NAME, BRANCH_RANGE, PRODUCT_NAME, PRODUCT_POSITIONING, PRODUCT_TAGLINE } from "@/lib/branch";
+
+const STEPS = [
+  {
+    title: "Prioritize",
+    body: "Every module ranked by real exam weightage — know exactly what the paper rewards.",
+  },
+  {
+    title: "Plan",
+    body: "Tell us the time you have. Get a step-by-step plan with reasons, not generic advice.",
+  },
+  {
+    title: "Practice",
+    body: "Attack HIGH PRIORITY questions first, grouped by type so you spot the pattern.",
+  },
+  {
+    title: "Revise",
+    body: "Speed-revise with formulas, definitions and night-before bullets that actually stick.",
+  },
+];
 
 export default function HomePage() {
   return (
     <>
       <Header showSearch />
       <main className="max-w-6xl mx-auto px-4 py-6 space-y-10">
-        {/* Compact hero */}
+        {/* Hero */}
         <section className="space-y-4">
-          <div className="eyebrow">{BRANCH_NAME} · {BRANCH_RANGE}</div>
-          <h1 className="font-display font-bold text-3xl sm:text-4xl text-ink-hi leading-tight tracking-tight">
-            Find the best prompt for what you need to do with AI.
+          <div className="eyebrow">
+            {PRODUCT_NAME} · {BRANCH_NAME} · {BRANCH_RANGE}
+          </div>
+          <h1 className="font-display font-bold text-3xl sm:text-4xl md:text-5xl text-ink-hi leading-tight tracking-tight max-w-2xl">
+            {PRODUCT_POSITIONING}
           </h1>
-          <p className="text-sm sm:text-base text-ink-lo leading-relaxed max-w-xl">
-            Learn, practice, revise or prepare for exams with ready-made prompts for any AI.
-            TKM notes are the optional context that makes responses even more specific —{" "}
-            {BRANCH_TAGLINE}.
+          <p className="text-sm sm:text-base text-ink-lo leading-relaxed max-w-2xl">
+            {PRODUCT_NAME} — {PRODUCT_TAGLINE.toLowerCase()} It ranks every topic by exam
+            weightage, builds a prioritized study plan from your available time, and points you at
+            exactly the questions, formulas and revision bullets that matter.
           </p>
+
+          {/* Quick planner */}
+          <div className="max-w-2xl space-y-2">
+            <div className="flex items-center gap-2 text-xs font-mono text-ink-faint uppercase tracking-wide">
+              <span className="text-signal">✱</span> What should I study now?
+            </div>
+            <QuickPlannerForm />
+          </div>
+
           <div className="flex flex-wrap gap-2">
             <Link
-              href="/prompt-lab"
-              className="font-mono text-xs uppercase tracking-wide px-4 py-2.5 rounded-card bg-signal text-bg font-semibold hover:bg-signal/90 transition-colors"
+              href="/planner"
+              className="font-mono text-xs uppercase tracking-wide px-4 py-2.5 rounded-card border border-bg-border text-ink-hi hover:border-signal hover:text-signal transition-colors"
             >
-              Open Prompt Lab →
+              Open full planner →
             </Link>
             <a
               href="#current-semester"
@@ -36,50 +67,21 @@ export default function HomePage() {
             >
               Browse Notes
             </a>
-          </div>
-          <div className="max-w-xl">
-            <PaletteButton label="Search subjects, topics, questions, formulas…" large />
+            <div className="max-w-md">
+              <PaletteButton label="Search subjects, topics, questions, formulas…" large />
+            </div>
           </div>
         </section>
 
-        {/* Prompt Lab — the primary product */}
-        <section className="space-y-4">
-          <div className="flex items-baseline justify-between gap-3 flex-wrap">
-            <span className="eyebrow">Prompt Lab</span>
-            <Link href="/prompt-lab" className="font-mono text-xs text-ink-lo hover:text-signal transition-colors">
-              Open →
-            </Link>
-          </div>
-          <div className="card p-6 space-y-3">
-            <h2 className="font-display font-semibold text-xl text-ink-hi">
-              Copy a prompt. Use it with ChatGPT, Gemini, Claude or any AI.
-            </h2>
-            <p className="text-sm text-ink-lo leading-relaxed max-w-2xl">
-              Learn · Practice · Revise · Evaluate · Prepare. Every prompt works on its own —
-              no subject or module required. Add your notes as optional context for more
-              specific answers.
-            </p>
-            <div className="flex flex-wrap gap-2 pt-1">
-              <Link
-                href="/prompt-lab"
-                className="font-mono text-xs uppercase tracking-wide px-5 py-3 rounded-card bg-signal text-bg font-semibold hover:bg-signal/90 transition-colors"
-              >
-                Find a Prompt
-              </Link>
-              <Link
-                href="/prompt-lab?mode=revision"
-                className="font-mono text-xs uppercase tracking-wide px-5 py-3 rounded-card border border-signal text-signal hover:bg-signal/10 transition-colors"
-              >
-                Quick Revision
-              </Link>
-              <Link
-                href="/prompt-lab?mode=exam-answer"
-                className="font-mono text-xs uppercase tracking-wide px-5 py-3 rounded-card border border-signal text-signal hover:bg-signal/10 transition-colors"
-              >
-                Exam Answer
-              </Link>
+        {/* How it works */}
+        <section className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          {STEPS.map((s, i) => (
+            <div key={s.title} className="card p-4 flex flex-col gap-1.5">
+              <span className="font-mono text-[10px] text-signal">0{i + 1}</span>
+              <span className="font-display font-semibold text-ink-hi">{s.title}</span>
+              <span className="text-xs text-ink-lo leading-relaxed">{s.body}</span>
             </div>
-          </div>
+          ))}
         </section>
 
         {/* Current semester */}

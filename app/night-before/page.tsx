@@ -3,7 +3,7 @@ import { Metadata } from "next";
 import NightBeforeMode from "@/components/night-before/NightBeforeMode";
 
 export const metadata: Metadata = {
-  title: "Night-Before Mode — TKM Notes",
+  title: "Night-Before Mode",
   description: "High-value revision when time is limited. Build a focused revision plan from existing notes.",
 };
 

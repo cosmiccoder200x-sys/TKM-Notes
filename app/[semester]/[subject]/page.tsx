@@ -3,12 +3,14 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import Header from "@/components/Header";
 import ModuleAccordion from "@/components/ModuleAccordion";
+import StudyModeSwitcher from "@/components/StudyModeSwitcher";
 import DeepDivePrompt from "@/components/DeepDivePrompt";
 import ModuleMasteryBadges from "@/components/mastery/ModuleMasteryBadges";
 import { subjects, findSubject } from "@/lib/content";
 import registry from "@/lib/notes";
-import { getSubjectCategoryMeta } from "@/lib/branch";
+import { getSubjectCategoryMeta, PRODUCT_NAME } from "@/lib/branch";
 import { generatePromptLabUrl } from "@/lib/prompts/context";
+import { estimatedSubjectMinutes, rankModulesForStudy } from "@/lib/study";
 
 export function generateStaticParams() {
   return subjects.map((s) => ({ semester: s.semesterId, subject: s.slug }));
@@ -22,7 +24,7 @@ export function generateMetadata({
   const subject = findSubject(params.semester, params.subject);
   if (!subject) return {};
   return {
-    title: `${subject.name} — ${params.semester.toUpperCase()} — TKM Notes`,
+    title: `${subject.name} — ${params.semester.toUpperCase()} — ${PRODUCT_NAME}`,
     description: `Exam-focused notes for ${subject.name} (${subject.code}). Modules, definitions, formulas, exam questions, revision notes and AI study tools.`,
   };
 }
@@ -46,6 +48,11 @@ export default function SubjectPage({ params }: { params: { semester: string; su
     { questions: 0, formulas: 0, revision: 0, definitions: 0 }
   );
 
+  const estimatedMinutes = estimatedSubjectMinutes(modules);
+  const rankedCounts = {
+    mustLearn: rankModulesForStudy(modules).filter((r) => r.priority.tier === "must-learn").length,
+  };
+
   const subjectCtx = {
     subjectCode: subject.code,
     subjectSlug: subject.slug,
@@ -67,7 +74,7 @@ export default function SubjectPage({ params }: { params: { semester: string; su
           <ol className="flex flex-wrap items-center gap-1.5 text-xs font-mono text-ink-faint">
             <li>
               <Link href="/" className="hover:text-signal transition-colors">
-                TKM Notes
+                {PRODUCT_NAME}
               </Link>
             </li>
             <li>/</li>
@@ -121,7 +128,7 @@ export default function SubjectPage({ params }: { params: { semester: string; su
         {/* Subject overview strip */}
         {modules.length > 0 && (
           <section className="space-y-4">
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
               <div className="card p-4">
                 <div className="text-2xl font-display font-bold text-ink-hi">{modules.length}</div>
                 <div className="text-xs font-mono uppercase tracking-wide text-ink-lo mt-1">Modules</div>
@@ -138,6 +145,21 @@ export default function SubjectPage({ params }: { params: { semester: string; su
                 <div className="text-2xl font-display font-bold text-ink-hi">{stats.revision}</div>
                 <div className="text-xs font-mono uppercase tracking-wide text-ink-lo mt-1">Revision notes</div>
               </div>
+              <div className="card p-4">
+                <div className="text-2xl font-display font-bold text-ink-hi">
+                  ≈ {estimatedMinutes >= 60 ? `${Math.round(estimatedMinutes / 60)}h` : `${estimatedMinutes}m`}
+                </div>
+                <div className="text-xs font-mono uppercase tracking-wide text-ink-lo mt-1">Study time</div>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 flex-wrap">
+              <Link
+                href={`/planner?subject=${encodeURIComponent(subject.code)}&minutes=60`}
+                className="font-mono text-[11px] uppercase tracking-wide px-3.5 py-2 rounded-card bg-signal text-bg font-semibold hover:bg-signal/90 transition-colors"
+              >
+                ✱ Build My Study Plan
+              </Link>
             </div>
 
             {/* Quick AI actions */}
@@ -170,6 +192,13 @@ export default function SubjectPage({ params }: { params: { semester: string; su
               <h2 className="font-display font-semibold text-lg text-ink-hi">Modules</h2>
               <ModuleMasteryBadges subjectCode={subject.code} modules={modules} />
             </div>
+            <StudyModeSwitcher
+              modules={modules}
+              subjectCode={subject.code}
+              subjectName={subject.name}
+              subjectSlug={subject.slug}
+              semesterId={subject.semesterId}
+            />
             <ModuleAccordion
               modules={modules}
               subjectCode={subject.code}

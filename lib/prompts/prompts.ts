@@ -144,7 +144,7 @@ function formatModuleContent(moduleContent: any): string {
   }
   
   return sections.length > 0 
-    ? `\n\n--- MODULE CONTENT (from TKM Notes) ---\n${sections.join("\n\n")}\n--- END MODULE CONTENT ---\n`
+    ? `\n\n--- MODULE CONTENT (from PrepPilot) ---\n${sections.join("\n\n")}\n--- END MODULE CONTENT ---\n`
     : "";
 }
 
@@ -188,7 +188,7 @@ ${subjectSpecific}
 
 YOUR TASK: Act as an expert professor who teaches this subject to engineering students. Explain the ${vars.topic ? `topic "${vars.topic}"` : vars.module ? `module "${vars.module}"` : "topic I specify below"} from the ground up, optimized for KTU exam preparation.
 
-${moduleContent ? "IMPORTANT: Use the provided TKM Notes module content above as your PRIMARY source. Do not introduce advanced or unrelated material unless clearly labeled as additional context." : ""}
+${moduleContent ? "IMPORTANT: Use the provided PrepPilot module content above as your PRIMARY source. Do not introduce advanced or unrelated material unless clearly labeled as additional context." : ""}
 
 STRUCTURE YOUR RESPONSE AS FOLLOWS:
 
@@ -260,7 +260,7 @@ RULES:
 - Repeat concepts I missed in different ways
 - Track what I've mastered vs. what needs review
 
-${moduleContent ? "BASE YOUR QUESTIONS ON THE PROVIDED TKM NOTES MODULE CONTENT. Do not invent questions outside this scope." : ""}
+${moduleContent ? "BASE YOUR QUESTIONS ON THE PROVIDED PrepPilot MODULE CONTENT. Do not invent questions outside this scope." : ""}
 
 FIRST QUESTION: Start with a fundamental concept from this module/topic. Make it specific and answerable in 2-3 sentences.
 
@@ -318,7 +318,7 @@ YOUR TASK: Act as a KTU exam pattern analyst. Analyze previous year questions (P
 
 DO NOT invent questions. If you don't have verified PYQ data for this exact subject/code, clearly state: "I don't have access to verified KTU PYQs for ${getSubjectName(vars.subject)}. The analysis below is based on standard KTU 2024-scheme patterns for this subject." Then provide pattern-based guidance.
 
-${moduleContent ? "USE THE PROVIDED TKM NOTES EXAM FOCUS QUESTIONS as the basis for your analysis. These are the documented high-priority questions from the repository." : ""}
+${moduleContent ? "USE THE PROVIDED PrepPilot EXAM FOCUS QUESTIONS as the basis for your analysis. These are the documented high-priority questions from the repository." : ""}
 
 STRUCTURE YOUR REPORT:
 
@@ -434,7 +434,7 @@ ADDITIONAL REQUIREMENTS:
 - Highlight **bold keywords** that carry marks
 - Do NOT include unnecessary background or "introduction/conclusion" fluff
 - If the question asks "Explain", focus on explanation. If "Derive", focus on derivation. If "Compare", use a table.
-- ${moduleContent ? "PRIORITIZE the provided TKM Notes module content. Use definitions, formulas, and examples from it directly." : ""}
+- ${moduleContent ? "PRIORITIZE the provided PrepPilot module content. Use definitions, formulas, and examples from it directly." : ""}
 
 OUTPUT FORMAT:
 **[ANSWER START]**
@@ -593,7 +593,7 @@ RULES OF ENGAGEMENT:
 4. Give PROGRESSIVE HINTS only when I explicitly ask ("Hint 1", "Hint 2", etc.)
 5. After I solve (or give up), analyze my reasoning — not just the final answer
 ${problemGuidance}
-${moduleContent ? "USE THE PROVIDED TKM NOTES WORKED EXAMPLES AND CORE CONCEPTS as reference material for generating problems." : ""}
+${moduleContent ? "USE THE PROVIDED PrepPilot WORKED EXAMPLES AND CORE CONCEPTS as reference material for generating problems." : ""}
 
 INTERACTION FLOW:
 - **Problem 1** → [Wait for my approach] → [My approach] → You evaluate reasoning → Give hint if needed → [My solution attempt] → You analyze → Discuss complexity/pitfalls → **Problem 2** (variant)
@@ -767,7 +767,7 @@ REVISION STRATEGY: ${durationGuide}
 
 YOUR TASK: Generate a TIME-BOXED REVISION PLAN that maximizes marks per minute. Every item must be exam-actionable.
 
-${moduleContent ? "USE THE PROVIDED TKM NOTES MODULE CONTENT as your PRIMARY source. Prioritize exam focus questions, revision notes, formulas, and worked examples from it." : ""}
+${moduleContent ? "USE THE PROVIDED PrepPilot MODULE CONTENT as your PRIMARY source. Prioritize exam focus questions, revision notes, formulas, and worked examples from it." : ""}
 
 STRUCTURE YOUR OUTPUT:
 
@@ -952,7 +952,7 @@ STRATEGY PILLARS (prioritize in this order):
 7. **Mistake correction** → Fix each error permanently
 8. **Revision** → Spaced, compressed, keyword-focused
 
-${moduleContent ? "USE THE PROVIDED TKM NOTES MODULE CONTENT to identify specific high-priority topics, exam focus questions, and worked examples for your strategy." : ""}
+${moduleContent ? "USE THE PROVIDED PrepPilot MODULE CONTENT to identify specific high-priority topics, exam focus questions, and worked examples for your strategy." : ""}
 
 OUTPUT FORMAT:
 
@@ -1015,11 +1015,11 @@ OUTPUT FORMAT:
 - Reading textbook chapters cover-to-cover
 - Topics with <10% PYQ frequency AND <5 marks potential
 - Re-solving problems I already get right
-- Making pretty notes (use existing TKM Notes instead)
+- Making pretty notes (use existing PrepPilot instead)
 
 ---
 
-**REMEMBER**: This strategy assumes I use TKM Notes as my primary reference. The notes already contain: definitions, formulas, diagrams, exam focus, revision bullets. Don't duplicate — APPLY.`;
+**REMEMBER**: This strategy assumes I use PrepPilot as my primary reference. The notes already contain: definitions, formulas, diagrams, exam focus, revision bullets. Don't duplicate — APPLY.`;
   },
 };
 

@@ -187,7 +187,7 @@ export default function PromptLabPage() {
         </h1>
         <p className="text-sm text-ink-lo leading-relaxed mb-4">
           Find the best prompt for whatever you need to do with AI. Copy it, use it with any AI,
-          and add TKM notes as optional context.
+          and add PrepPilot notes as optional context.
         </p>
         {renderContextBreadcrumb()}
       </div>

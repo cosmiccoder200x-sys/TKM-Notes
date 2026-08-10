@@ -7,6 +7,7 @@ import { BRANCH_SHORT, BRANCH_RANGE } from "@/lib/branch";
 
 const NAV = [
   { href: "/", label: "Home" },
+  { href: "/planner", label: "Planner" },
   { href: "/s3", label: "Subjects" },
   { href: "/prompt-lab", label: "Prompt Lab" },
 ];
@@ -32,7 +33,7 @@ export default function Header({
         {/* Brand */}
         <Link href="/" className="flex flex-col leading-tight min-w-0" onClick={() => setMenuOpen(false)}>
           <span className="font-display font-semibold text-ink-hi text-[15px] tracking-tight whitespace-nowrap">
-            TKM <span className="text-signal">Notes</span>
+            Prep<span className="text-signal">Pilot</span>
           </span>
           <span className="text-[10px] font-mono uppercase tracking-[0.12em] text-ink-faint whitespace-nowrap">
             {BRANCH_SHORT} · {BRANCH_RANGE}

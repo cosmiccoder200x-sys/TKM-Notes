@@ -5,8 +5,9 @@ import { usePathname } from "next/navigation";
 
 const ITEMS = [
   { href: "/", label: "Home", icon: "⌂" },
+  { href: "/planner", label: "Plan", icon: "✱" },
   { href: "/s3", label: "Subjects", icon: "▤" },
-  { href: "/prompt-lab", label: "Prompt Lab", icon: "⚡" },
+  { href: "/prompt-lab", label: "Prompts", icon: "⚡" },
 ];
 
 export default function MobileNav() {

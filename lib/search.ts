@@ -8,7 +8,18 @@ export interface SearchHit {
   subjectSlug: string;
   moduleId?: string;
   moduleTitle?: string;
-  matchType: "subject" | "module" | "definition" | "concept" | "formula" | "question";
+  matchType:
+    | "subject"
+    | "module"
+    | "definition"
+    | "concept"
+    | "formula"
+    | "question"
+    | "revision"
+    | "worked-example"
+    | "selfcheck"
+    | "comparison"
+    | "intuition";
   snippet: string;
 }
 
@@ -110,6 +121,79 @@ export function searchAll(query: string): SearchHit[] {
             snippet: qItem.question,
           });
         }
+      }
+
+      for (const r of mod.revisionNotes) {
+        if (r.toLowerCase().includes(q)) {
+          hits.push({
+            subjectCode: subject.code,
+            subjectName: subject.name,
+            semesterId: subject.semesterId,
+            subjectSlug: subject.slug,
+            moduleId: mod.id,
+            moduleTitle: mod.title,
+            matchType: "revision",
+            snippet: r,
+          });
+        }
+      }
+
+      for (const w of mod.workedExamples ?? []) {
+        if (w.title.toLowerCase().includes(q) || w.problem.toLowerCase().includes(q)) {
+          hits.push({
+            subjectCode: subject.code,
+            subjectName: subject.name,
+            semesterId: subject.semesterId,
+            subjectSlug: subject.slug,
+            moduleId: mod.id,
+            moduleTitle: mod.title,
+            matchType: "worked-example",
+            snippet: `${w.title}: ${w.problem}`,
+          });
+        }
+      }
+
+      for (const sc of mod.selfCheck ?? []) {
+        if (sc.question.toLowerCase().includes(q) || sc.answer.toLowerCase().includes(q)) {
+          hits.push({
+            subjectCode: subject.code,
+            subjectName: subject.name,
+            semesterId: subject.semesterId,
+            subjectSlug: subject.slug,
+            moduleId: mod.id,
+            moduleTitle: mod.title,
+            matchType: "selfcheck",
+            snippet: `${sc.question} — ${sc.answer}`,
+          });
+        }
+      }
+
+      for (const c of mod.comparisons ?? []) {
+        if (c.title.toLowerCase().includes(q)) {
+          hits.push({
+            subjectCode: subject.code,
+            subjectName: subject.name,
+            semesterId: subject.semesterId,
+            subjectSlug: subject.slug,
+            moduleId: mod.id,
+            moduleTitle: mod.title,
+            matchType: "comparison",
+            snippet: `${c.title}: ${c.takeaway}`,
+          });
+        }
+      }
+
+      if (mod.intuition && mod.intuition.toLowerCase().includes(q)) {
+        hits.push({
+          subjectCode: subject.code,
+          subjectName: subject.name,
+          semesterId: subject.semesterId,
+          subjectSlug: subject.slug,
+          moduleId: mod.id,
+          moduleTitle: mod.title,
+          matchType: "intuition",
+          snippet: mod.intuition,
+        });
       }
     }
   }

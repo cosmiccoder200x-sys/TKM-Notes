@@ -5,6 +5,10 @@
 import { subjects } from "./content";
 import { Subject } from "./types";
 
+export const PRODUCT_NAME = "PrepPilot";
+export const PRODUCT_TAGLINE = "Your AI exam preparation system.";
+export const PRODUCT_POSITIONING = "Study less. Prioritize better.";
+
 export const BRANCH_NAME = "Electrical & Computer Engineering";
 export const BRANCH_SHORT = "EC Engineering";
 export const BRANCH_RANGE = "S3–S8";

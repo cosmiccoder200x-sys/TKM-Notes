@@ -1,4 +1,4 @@
-// Student study-progress model for TKM Notes.
+// Student study-progress model for PrepPilot.
 // Kept fully separate from the academic content model (lib/types.ts, lib/notes/).
 // Everything is stored locally; stable subject codes + module ids are used as keys.
 

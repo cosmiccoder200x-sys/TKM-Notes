@@ -2,14 +2,15 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import CommandPalette from "@/components/CommandPalette";
 import MobileNav from "@/components/MobileNav";
+import { PRODUCT_NAME, PRODUCT_TAGLINE } from "@/lib/branch";
 
 export const metadata: Metadata = {
   title: {
-    default: "TKM Notes — Electrical & Computer Engineering · S3–S8",
-    template: "%s — TKM Notes",
+    default: `${PRODUCT_NAME} — Your AI exam preparation system`,
+    template: `%s — ${PRODUCT_NAME}`,
   },
   description:
-    "Exam-focused study workspace for Electrical & Computer Engineering at TKM College of Engineering. S3–S8 notes, PYQs, revision tools and AI-powered study modes.",
+    `${PRODUCT_NAME}: ${PRODUCT_TAGLINE} Study less, prioritize better. Exam-focused notes, AI study planner, revision tools and mastery tracking for Electrical & Computer Engineering at TKM College of Engineering (S3–S8).`,
 };
 
 export const viewport: Viewport = {
@@ -23,6 +24,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="bg-bg text-ink-hi font-body antialiased min-h-screen pb-16 md:pb-0">
         {children}
         <footer className="max-w-6xl mx-auto px-4 py-8 text-center">
+          <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint mb-2">
+            {PRODUCT_NAME} · {PRODUCT_TAGLINE}
+          </div>
           <a
             href="https://github.com/cosmiccoder200x-sys"
             target="_blank"

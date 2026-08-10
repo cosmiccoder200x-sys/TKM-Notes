@@ -32,7 +32,7 @@ const KIND_TO_FIELD: Record<RevisionItemKind, keyof Module> = {
 };
 
 // Mastery-based adjustment: weak modules float to the top, strong ones sink.
-const MASTERY_ADJUST: Record<MasteryStatus, number> = {
+export const MASTERY_ADJUST: Record<MasteryStatus, number> = {
   strong: 0.6,
   good: 0.85,
   "needs-practice": 1.2,

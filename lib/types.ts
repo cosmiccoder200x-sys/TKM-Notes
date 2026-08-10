@@ -1,4 +1,4 @@
-// Core content model for TKM S3-S8 Interactive Notes.
+// Core content model for PrepPilot S3-S8 Interactive Notes.
 // Every subject is broken into Modules. Every Module carries the
 // 7 fixed exam-prep sections (A-G from the spec). Nothing else.
 

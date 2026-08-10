@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import Header from "@/components/Header";
 import SemesterExplorer from "@/components/SemesterExplorer";
 import { semesters } from "@/lib/content";
+import { PRODUCT_NAME } from "@/lib/branch";
 
 export function generateStaticParams() {
   return semesters.map((s) => ({ semester: s.id }));
@@ -17,8 +18,8 @@ export function generateMetadata({
   const semester = semesters.find((s) => s.id === params.semester);
   if (!semester) return {};
   return {
-    title: `${semester.label} — TKM Notes`,
-    description: `Exam-focused notes and study tools for ${semester.label} of Electrical & Computer Engineering at TKM College. Subjects, modules, important questions and AI study modes.`,
+    title: `${semester.label} — ${PRODUCT_NAME}`,
+    description: `Exam-focused notes and study tools for ${semester.label} of Electrical & Computer Engineering at TKM College. Subjects, modules, important questions, study planner and AI study modes.`,
   };
 }
 
@@ -38,7 +39,7 @@ export default function SemesterPage({
           <ol className="flex flex-wrap items-center gap-1.5 text-xs font-mono text-ink-faint">
             <li>
               <Link href="/" className="hover:text-signal transition-colors">
-                TKM Notes
+                {PRODUCT_NAME}
               </Link>
             </li>
             <li>/</li>

@@ -1,4 +1,4 @@
-// Study Context - Deep integration with TKM Notes content
+// Study Context - Deep integration with PrepPilot notes content
 
 import { Subject, Module } from "@/lib/types";
 import { subjects, semesters, findSubject, subjectsForSemester } from "@/lib/content";

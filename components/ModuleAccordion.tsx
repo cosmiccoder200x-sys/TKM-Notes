@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Module } from "@/lib/types";
 import ModuleView from "@/components/ModuleView";
+import ModulePriorityBadge from "@/components/ModulePriorityBadge";
 import { generatePromptLabUrl } from "@/lib/prompts/context";
 
 interface Props {
@@ -18,6 +19,19 @@ export default function ModuleAccordion({
   subjectName,
 }: Props) {
   const [activeIndex, setActiveIndex] = useState(0);
+
+  // Deep links like #m3 open the right module (used by the Study Planner).
+  useEffect(() => {
+    function openFromHash() {
+      const hash = window.location.hash.replace("#", "");
+      if (!hash) return;
+      const idx = modules.findIndex((m) => m.id === hash);
+      if (idx >= 0) setActiveIndex(idx);
+    }
+    openFromHash();
+    window.addEventListener("hashchange", openFromHash);
+    return () => window.removeEventListener("hashchange", openFromHash);
+  }, [modules]);
 
   return (
     <div className="space-y-2">
@@ -59,13 +73,16 @@ export default function ModuleAccordion({
                 </span>
               </div>
 
-              <span
-                className={`shrink-0 font-mono text-xs transition-colors ${
-                  isOpen ? "text-signal" : "text-ink-faint"
-                }`}
-                aria-hidden
-              >
-                {isOpen ? "▲" : "▼"}
+              <span className="flex items-center gap-2 shrink-0">
+                <ModulePriorityBadge module={m} index={i} totalModules={modules.length} />
+                <span
+                  className={`font-mono text-xs transition-colors ${
+                    isOpen ? "text-signal" : "text-ink-faint"
+                  }`}
+                  aria-hidden
+                >
+                  {isOpen ? "▲" : "▼"}
+                </span>
               </span>
             </button>
 

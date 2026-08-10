@@ -11,6 +11,11 @@ const TYPE_LABEL: Record<SearchHit["matchType"], string> = {
   concept: "Concept",
   formula: "Formula",
   question: "Exam Q",
+  revision: "Revision",
+  "worked-example": "Example",
+  selfcheck: "Self-Check",
+  comparison: "Compare",
+  intuition: "Intuition",
 };
 
 export default function CommandPalette() {
@@ -92,7 +97,7 @@ export default function CommandPalette() {
               setActive(0);
             }}
             onKeyDown={onKeyDown}
-            placeholder="Search subjects, modules, questions, formulas, concepts…"
+            placeholder="Search subjects, modules, questions, formulas, revision…"
             className="w-full bg-transparent py-3 text-sm text-ink-hi placeholder:text-ink-faint outline-none"
             aria-label="Search query"
           />
@@ -143,7 +148,7 @@ export default function CommandPalette() {
           <div className="border-t border-bg-border px-3 py-1.5 flex items-center gap-3 text-[10px] font-mono text-ink-faint">
             <span>↑↓ navigate</span>
             <span>↵ open</span>
-            <span className="ml-auto">TKM Notes search</span>
+            <span className="ml-auto">PrepPilot search</span>
           </div>
         )}
       </div>

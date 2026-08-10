@@ -1,6 +1,8 @@
-# TKM S3–S8 Interactive Notes
+# PrepPilot
 
-Prompt-first study workspace for TKM College of Engineering (EC Engineering, 2024 scheme), S3–S8. **Prompt Lab is the primary product** — find the best prompt for whatever you need to do with AI, copy it, and use it with ChatGPT, Gemini, Claude or any AI. Exam-focused notes are the optional context that makes responses more specific. One job only: help you score full marks. No chatbots, no trackers, no fluff.
+**Your AI exam preparation system.** Study less. Prioritize better.
+
+AI exam preparation workspace for TKM College of Engineering (EC Engineering, 2024 scheme), S3–S8. **PrepPilot ranks every topic by real exam weightage** and turns your available time into a prioritized, reason-backed study plan. Prompt Lab supplies the AI prompts — find the best prompt for whatever you need to do, copy it, and use it with ChatGPT, Gemini, Claude or any AI. Exam-focused notes are the verified context that makes everything specific. One job only: help you score full marks. No chatbots, no trackers, no fluff.
 
 ---
 
@@ -8,7 +10,7 @@ Prompt-first study workspace for TKM College of Engineering (EC Engineering, 202
 
 ### The 30-second version
 
-> Open TKM Notes → open Prompt Lab → pick a prompt → copy it → use it with any AI → optionally attach a subject/module/notes for more specific answers → revise → score.
+> Open PrepPilot → answer "what should I study now?" → get a prioritized plan with reasons → open the modules in order → practice the HIGH PRIORITY questions → revise → score.
 
 ### Step-by-step study workflow
 
@@ -16,12 +18,11 @@ Prompt-first study workspace for TKM College of Engineering (EC Engineering, 202
 
 The homepage is your study dashboard. You'll see:
 
-- **Prompt Lab** (primary) — find the best prompt for what you need, copy it, use it with any AI
+- **Hero planner** — pick a subject + time, hit **Generate My Plan** for an instant prioritized plan
+- **My Preparation** — overall mastery %, weak areas, and how many hours it'll take to close them
 - **Current Semester** (S3 by default) with all subjects listed
 - **Study Tools** — quick links to Prompt Lab modes and Night-Before revision
 - **All Semesters** — switch to S3–S8 with one click
-
-Click **"Open Prompt Lab"** to find a prompt, or **"Browse Notes"** to explore the semester.
 
 #### 2. Open a subject
 
@@ -53,18 +54,25 @@ Every module has up to 9 sections. Work through them in this order for best resu
 | **Formulas** | Copy-friendly, monospace formula sheet | Keep this tab open during numerical practice |
 | **Practice** | Step-by-step worked examples (reveal one step at a time) | Try to predict each step before revealing it |
 | **Compare** | Side-by-side cards for confusing pairs (Mealy vs Moore, etc.) | Use when you keep mixing up two similar concepts |
-| **Exam Focus** | Real KTU-style questions, tagged **HIGH PRIORITY** / **IMPORTANT** / Low | This is the most important tab before an exam |
+| **Exam Focus** | Real KTU-style questions, tagged **HIGH PRIORITY** / **IMPORTANT** / Low, grouped by question type | This is the most important tab before an exam |
 | **Self-Check** | Tap-to-reveal questions to test yourself | Final check — if you can answer these, you're ready |
 | **Revision** | Ultra-short one-page night-before-the-exam bullets | Last day before the exam, go through these |
 
+#### 4b. Study Planner (the core PrepPilot feature)
+
+- **Priority system** — every module shows a **Must Learn / Core / Support** badge. Click it for *why*: real exam weightage, module position, and high-priority question counts. Never a guess.
+- **AI Study Planner** (`/planner` or "Generate My Plan" anywhere) — pick a subject, tick the modules, choose time available and how far along you are. PrepPilot returns a time-boxed plan: what to learn, which HIGH PRIORITY questions to practice, what to revise, and honest reasons for each step — based on verified syllabus data plus your own mastery marks.
+- **Study Modes** — on every subject page: **Learn / Exam / Last-Minute / Revision**. Each mode re-curates the module list for that goal (Last-Minute shows only modules the paper actually rewards).
+- **Exam Focus grouping** — questions are grouped by answer type (Explain, Derive, Calculate, Compare, Design…) so you spot the pattern before the exam.
+
 #### 5. Use Prompt Lab for AI-powered study
 
-Prompt Lab is the primary feature — a library of copy-ready prompts for any AI (Claude, ChatGPT, Gemini, etc.). Every prompt works standalone: open a prompt, copy it, paste it into your AI. No subject, module or notes required. Add your notes as **optional context** (via semester → subject → module → topic) to make responses more specific.
+Prompt Lab is a library of copy-ready prompts for any AI (Claude, ChatGPT, Gemini, etc.). Every prompt works standalone: open a prompt, copy it, paste it into your AI. No subject, module or notes required. Add your notes as **optional context** (via semester → subject → module → topic) to make responses more specific.
 
 Access it from:
-- The **Prompt Lab** section at the top of the homepage
-- The **Study Tools** section on the homepage
-- The **Learn / Practice / Exam / Revise** buttons on any module (auto-fills context)
+- **Prompt Lab** section at the top of the homepage
+- **Study Tools** section on the homepage
+- **Learn / Practice / Exam / Revise** buttons on any module (auto-fills context)
 - The navigation bar
 
 Study prompts include:
@@ -94,6 +102,11 @@ Press `Ctrl+K` (Windows) or `⌘K` (Mac) anywhere on the site to open the comman
 - Concepts
 - Formulas
 - Exam questions
+- Revision bullets
+- Worked examples
+- Self-check questions
+- Comparison cards
+- Intuition analogies
 
 Type a keyword like "flip flop" or "Thevenin" and jump directly to the relevant module.
 
@@ -119,20 +132,23 @@ If you have limited time, follow this priority order for each subject:
 
 ```
 app/
-  page.tsx                         → homepage: study dashboard
+  page.tsx                         → homepage: study dashboard + quick planner
   error.tsx                        → error boundary
   not-found.tsx                    → 404 page
   loading.tsx                      → homepage skeleton
+  planner/page.tsx                 → AI study planner ("what should I study now?")
   [semester]/page.tsx              → subject list for a semester
-  [semester]/[subject]/page.tsx    → subject workspace with module accordion
+  [semester]/[subject]/page.tsx    → subject workspace with module accordion + study modes
   prompt-lab/page.tsx              → AI study prompt builder
   layout.tsx, globals.css          → dark theme shell, fonts
 
 components/
   Header.tsx                       → sticky header with nav + search
   MobileNav.tsx                    → bottom tab bar (mobile)
-  ModuleAccordion.tsx              → one-module-at-a-time accordion
-  ModuleView.tsx                   → renders all section tabs for a module
+  ModuleAccordion.tsx              → one-module-at-a-time accordion (hash-aware deep links)
+  ModuleView.tsx                   → renders all section tabs for a module (question-type groups)
+  ModulePriorityBadge.tsx          → Must Learn / Core / Support badge with "why" reasons
+  StudyModeSwitcher.tsx            → Learn / Exam / Last-Minute / Revision modes
   SemesterExplorer.tsx             → semester tab selector + subject grid
   StudyTools.tsx                   → study tool cards
   SubjectCard.tsx                  → subject card with code, name, modules
@@ -146,14 +162,23 @@ components/
   ComparisonCard.tsx               → side-by-side concept comparisons
   SelfCheck.tsx                    → tap-to-reveal self-check questions
   prompt-lab/                      → Prompt Lab UI components
+  planner/                         → Study Planner UI components
+  mastery/                         → mastery map + preparation dashboard components
 
 lib/
   types.ts                         → content data model
   content.ts                       → semester + subject metadata (S3–S8)
-  branch.ts                        → branch identity + subject categories
-  search.ts                        → search logic
+  branch.ts                        → product identity + branch + subject categories
+  search.ts                        → search logic (all content types)
   notes/                           → ONE FILE PER SUBJECT (content data)
     index.ts                       → registry: subject code → content
+  study/                           → exam-preparation engine (pure, deterministic)
+    priority.ts                    → topic priority + study-time estimates
+    questionTypes.ts               → exam-question grouping by answer type
+    planner.ts                     → AI study plan generator
+    nightBefore.ts                 → night-before revision plan generator
+    mastery.ts, progress.ts        → mastery scoring + localStorage progress
+    recommendations.ts             → "what should I study next"
   prompts/                         → AI prompt system
     prompts.ts                     → prompt definitions
     context.ts                     → context-aware URL generation
@@ -210,7 +235,7 @@ Add a new function + registry entry in `components/Diagrams.tsx`, then reference
 Every subject page has context-aware AI study tools. The Prompt Lab system:
 
 - Lives in `lib/prompts/` — prompt definitions are separate from UI
-- Is the primary product: a library of 10 copy-ready prompts that work standalone with any AI (no subject or module required)
+- Is a library of 10 copy-ready prompts that work standalone with any AI (no subject or module required)
 - Injects the exact subject, module, topic, and question context when provided as optional context
 - Can be accessed from module-level buttons, subject-level AI actions, or the dedicated `/prompt-lab` page
 
@@ -230,6 +255,11 @@ These are all optional fields on `Module` — a module renders fine with just th
 ## Current content status
 
 - ✅ **All 7 S3 subjects — fully written** (Advanced Linear Algebra/Complex Analysis/PDE, Network Theory, Digital Electronics & Logic Design, Data Structures and Algorithms, Sensor & Sensor Circuits, Life Skills and Professional Ethics, System Simulation & VI Lab)
+- ✅ **Topic priority system** — Must Learn / Core / Support badges with reasons, everywhere modules are listed
+- ✅ **AI Study Planner** — prioritized, reason-backed study plans from verified syllabus data + your mastery marks
+- ✅ **Study Modes** — Learn / Exam / Last-Minute / Revision on every subject page
+- ✅ **Exam Focus grouping** — questions grouped by answer type
+- ✅ **My Preparation dashboard** — mastery %, weak areas, hours to close the gap
 - ✅ **Prompt Lab** — context-aware AI study modes across all subjects
 - ✅ **AI deep-dive prompt** — live on every subject page, syllabus-accurate for 29/38 subjects
 - ✅ **Module accordion** — one module at a time, focused study

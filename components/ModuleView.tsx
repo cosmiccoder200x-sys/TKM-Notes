@@ -10,6 +10,7 @@ import ComparisonCard from "./ComparisonCard";
 import SelfCheck from "./SelfCheck";
 import interactiveRegistry from "./InteractiveDiagrams";
 import ModuleMasteryChip from "./mastery/ModuleMasteryChip";
+import { groupQuestionsByType } from "@/lib/study";
 import { generatePromptLabUrl, MODULE_QUICK_ACTIONS, QUESTION_ACTIONS, SubjectCategory, getSubjectCategory } from "@/lib/prompts/context";
 
 const BASE_SECTIONS = [
@@ -386,37 +387,57 @@ export default function ModuleView({
         )}
 
         {active === "examfocus" && (
-          <div className="space-y-2.5">
-            {module.examFocus.map((q, i) => (
-              <div key={i} className="border border-bg-border rounded-card p-3 relative">
-                <div className="flex items-start justify-between gap-2 mb-1.5">
-                  <span className="text-sm text-ink-hi leading-relaxed">{q.question}</span>
-                  <div className="flex flex-col items-end gap-1 shrink-0">
-                    <WeightMeter level={q.weightage} />
-                    {q.weightage === "high" && (
-                      <span className="font-mono text-[10px] uppercase tracking-wide px-2 py-0.5 rounded border border-critical/40 text-critical bg-critical/10">
-                        High Priority
-                      </span>
-                    )}
-                    {q.weightage === "medium" && (
-                      <span className="font-mono text-[10px] uppercase tracking-wide px-2 py-0.5 rounded border border-weight-dim text-weight bg-weight/10">
-                        Important
-                      </span>
-                    )}
+          <div className="space-y-4">
+            {groupQuestionsByType(module.examFocus).map((group) => (
+              <div key={group.id} className="space-y-2">
+                <div className="flex items-baseline justify-between gap-2 flex-wrap">
+                  <div className="flex items-center gap-2">
+                    <span className="eyebrow">{group.label}</span>
+                    <span className="font-mono text-[10px] text-ink-faint uppercase tracking-wide">
+                      {group.count} q
+                    </span>
                   </div>
+                  {group.high > 0 && (
+                    <span className="font-mono text-[10px] uppercase tracking-wide text-critical">
+                      {group.high} high priority
+                    </span>
+                  )}
                 </div>
-                {q.note && <div className="text-xs text-ink-lo leading-relaxed">{q.note}</div>}
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {QUESTION_ACTIONS.map((action) => (
-                    <QuestionActionButton
-                      key={action.id}
-                      action={action}
-                      subjectCode={subjectCode}
-                      moduleId={module.id}
-                      moduleName={module.title}
-                      question={q.question}
-                      marks={q.weightage === "high" ? 8 : q.weightage === "medium" ? 5 : 2}
-                    />
+                <p className="text-xs text-ink-lo -mt-1">{group.description}</p>
+                <div className="space-y-2.5">
+                  {group.questions.map((q, i) => (
+                    <div key={i} className="border border-bg-border rounded-card p-3 relative">
+                      <div className="flex items-start justify-between gap-2 mb-1.5">
+                        <span className="text-sm text-ink-hi leading-relaxed">{q.question}</span>
+                        <div className="flex flex-col items-end gap-1 shrink-0">
+                          <WeightMeter level={q.weightage} />
+                          {q.weightage === "high" && (
+                            <span className="font-mono text-[10px] uppercase tracking-wide px-2 py-0.5 rounded border border-critical/40 text-critical bg-critical/10">
+                              High Priority
+                            </span>
+                          )}
+                          {q.weightage === "medium" && (
+                            <span className="font-mono text-[10px] uppercase tracking-wide px-2 py-0.5 rounded border border-weight-dim text-weight bg-weight/10">
+                              Important
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      {q.note && <div className="text-xs text-ink-lo leading-relaxed">{q.note}</div>}
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        {QUESTION_ACTIONS.map((action) => (
+                          <QuestionActionButton
+                            key={action.id}
+                            action={action}
+                            subjectCode={subjectCode}
+                            moduleId={module.id}
+                            moduleName={module.title}
+                            question={q.question}
+                            marks={q.weightage === "high" ? 8 : q.weightage === "medium" ? 5 : 2}
+                          />
+                        ))}
+                      </div>
+                    </div>
                   ))}
                 </div>
               </div>
