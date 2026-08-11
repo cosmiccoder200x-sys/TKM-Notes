@@ -1,8 +1,12 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import ThemeScript from "@/components/ThemeScript";
 import CommandPalette from "@/components/CommandPalette";
 import MobileNav from "@/components/MobileNav";
 import { PRODUCT_NAME, PRODUCT_TAGLINE } from "@/lib/branch";
+import AppShell from "@/components/layout/AppShell";
+import ThemeToggle from "@/components/ThemeToggle";
+import SearchBar from "@/components/SearchBar";
 
 export const metadata: Metadata = {
   title: {
@@ -21,8 +25,11 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="bg-bg text-ink-hi font-body antialiased min-h-screen pb-16 md:pb-0">
-        {children}
+      <head>
+        <ThemeScript />
+      </head>
+      <body className="font-body antialiased min-h-screen pb-16 md:pb-0">
+        <AppShell>{children}</AppShell>
         <footer className="max-w-6xl mx-auto px-4 py-8 text-center">
           <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint mb-2">
             {PRODUCT_NAME} · {PRODUCT_TAGLINE}

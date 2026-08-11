@@ -7,7 +7,7 @@ const ITEMS = [
   { href: "/", label: "Home", icon: "⌂" },
   { href: "/planner", label: "Plan", icon: "✱" },
   { href: "/s3", label: "Subjects", icon: "▤" },
-  { href: "/prompt-lab", label: "Prompts", icon: "⚡" },
+  { href: "/prompt-lab", label: "Practice", icon: "⚡" },
 ];
 
 export default function MobileNav() {

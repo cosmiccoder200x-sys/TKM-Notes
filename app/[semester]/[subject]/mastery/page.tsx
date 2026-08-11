@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
-import Header from "@/components/Header";
 import MasteryMap from "@/components/mastery/MasteryMap";
 import { subjects, findSubject } from "@/lib/content";
 
@@ -20,16 +19,13 @@ export default function MasteryPage({ params }: { params: { semester: string; su
   if (!subject) notFound();
 
   return (
-    <>
-      <Header />
-      <main className="max-w-6xl mx-auto px-4 py-6">
-        <MasteryMap
-          subjectCode={subject.code}
-          subjectName={subject.name}
-          subjectSlug={subject.slug}
-          semesterId={subject.semesterId}
-        />
-      </main>
-    </>
+    <main className="max-w-6xl mx-auto px-4 py-8">
+      <MasteryMap
+        subjectCode={subject.code}
+        subjectName={subject.name}
+        subjectSlug={subject.slug}
+        semesterId={subject.semesterId}
+      />
+    </main>
   );
 }

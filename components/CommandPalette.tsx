@@ -108,10 +108,26 @@ export default function CommandPalette() {
 
         <div className="max-h-[50vh] overflow-y-auto">
           {hits.length === 0 && (
-            <div className="px-4 py-6 text-sm text-ink-lo text-center">
-              {query.trim()
-                ? "No matches in notes added so far."
-                : "Start typing to search across all subjects."}
+            <div className="px-4 py-6 text-center">
+              {query.trim() ? (
+                <div className="space-y-2">
+                  <p className="text-sm text-ink-hi">No results for &ldquo;{query}&rdquo;</p>
+                  <p className="text-xs text-ink-faint">Try searching for:</p>
+                  <div className="flex flex-wrap gap-1.5 justify-center">
+                    {["span", "basis", "eigenvalues", "thevenin", "flip flop", "complex analysis"].map((s) => (
+                      <button
+                        key={s}
+                        onClick={() => setQuery(s)}
+                        className="font-mono text-[11px] uppercase tracking-wide px-2.5 py-1 rounded-md border border-bg-border text-ink-faint hover:border-signal hover:text-ink-hi transition-colors"
+                      >
+                        {s}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="text-sm text-ink-lo">Start typing to search across all subjects.</div>
+              )}
             </div>
           )}
 

@@ -50,11 +50,11 @@ export function InteractiveResonance() {
   return (
     <div>
       <svg viewBox="0 0 300 150" className="w-full h-auto mb-3">
-        <line x1="20" y1="130" x2="280" y2="130" stroke="#232A35" />
-        <line x1="20" y1="130" x2="20" y2="10" stroke="#232A35" />
-        <path d={path} stroke="#4FD1C5" strokeWidth="2" fill="none" />
-        <text x="270" y="144" fill="#8A93A1" fontSize="8" textAnchor="end">f</text>
-        <text x="6" y="16" fill="#8A93A1" fontSize="8">I</text>
+        <line x1="20" y1="130" x2="280" y2="130" stroke="var(--color-border)" />
+        <line x1="20" y1="130" x2="20" y2="10" stroke="var(--color-border)" />
+        <path d={path} stroke="var(--color-signal)" strokeWidth="2" fill="none" />
+        <text x="270" y="144" fill="var(--color-ink-lo)" fontSize="8" textAnchor="end">f</text>
+        <text x="6" y="16" fill="var(--color-ink-lo)" fontSize="8">I</text>
       </svg>
       <div className="flex flex-col gap-2 mb-3">
         <Slider label="R" value={R} min={2} max={50} step={1} unit="Ω" onChange={setR} />
@@ -104,14 +104,14 @@ export function InteractiveRlStep() {
   return (
     <div>
       <svg viewBox="0 0 300 150" className="w-full h-auto mb-3">
-        <line x1="20" y1="130" x2="280" y2="130" stroke="#232A35" />
-        <line x1="20" y1="130" x2="20" y2="10" stroke="#232A35" />
-        <line x1="20" y1="20" x2="280" y2="20" stroke="#5A6372" strokeDasharray="3 3" />
-        <text x="282" y="24" fill="#5A6372" fontSize="7">V/R</text>
-        <path d={path} stroke="#4FD1C5" strokeWidth="2" fill="none" />
-        <line x1={tauX} y1="20" x2={tauX} y2="130" stroke="#F5B544" strokeDasharray="3 3" />
-        <text x={tauX} y="144" fill="#F5B544" fontSize="8" textAnchor="middle">τ</text>
-        <text x="270" y="144" fill="#8A93A1" fontSize="8" textAnchor="end">t</text>
+        <line x1="20" y1="130" x2="280" y2="130" stroke="var(--color-border)" />
+        <line x1="20" y1="130" x2="20" y2="10" stroke="var(--color-border)" />
+        <line x1="20" y1="20" x2="280" y2="20" stroke="var(--color-ink-faint)" strokeDasharray="3 3" />
+        <text x="282" y="24" fill="var(--color-ink-faint)" fontSize="7">V/R</text>
+        <path d={path} stroke="var(--color-signal)" strokeWidth="2" fill="none" />
+        <line x1={tauX} y1="20" x2={tauX} y2="130" stroke="var(--color-weight)" strokeDasharray="3 3" />
+        <text x={tauX} y="144" fill="var(--color-weight)" fontSize="8" textAnchor="middle">τ</text>
+        <text x="270" y="144" fill="var(--color-ink-lo)" fontSize="8" textAnchor="end">t</text>
       </svg>
       <div className="flex flex-col gap-2 mb-3">
         <Slider label="R" value={R} min={1} max={20} step={1} unit="Ω" onChange={setR} />

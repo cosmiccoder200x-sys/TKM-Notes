@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
-import Header from "@/components/Header";
 import SemesterExplorer from "@/components/SemesterExplorer";
 import { semesters } from "@/lib/content";
 import { PRODUCT_NAME } from "@/lib/branch";
@@ -32,23 +31,20 @@ export default function SemesterPage({
   if (!semester) notFound();
 
   return (
-    <>
-      <Header />
-      <main className="max-w-6xl mx-auto px-4 py-6">
-        <nav aria-label="Breadcrumb" className="mb-5">
-          <ol className="flex flex-wrap items-center gap-1.5 text-xs font-mono text-ink-faint">
-            <li>
-              <Link href="/" className="hover:text-signal transition-colors">
-                {PRODUCT_NAME}
-              </Link>
-            </li>
-            <li>/</li>
-            <li className="text-ink-hi">{semester.label}</li>
-          </ol>
-        </nav>
+    <main className="max-w-4xl mx-auto px-4 py-8">
+      <nav aria-label="Breadcrumb" className="mb-6">
+        <ol className="flex flex-wrap items-center gap-1.5 text-xs font-mono text-ink-faint">
+          <li>
+            <Link href="/" className="hover:text-signal transition-colors">
+              {PRODUCT_NAME}
+            </Link>
+          </li>
+          <li>/</li>
+          <li className="text-ink-hi">{semester.label}</li>
+        </ol>
+      </nav>
 
-        <SemesterExplorer initialSemester={semester.id} />
-      </main>
-    </>
+      <SemesterExplorer initialSemester={semester.id} />
+    </main>
   );
 }

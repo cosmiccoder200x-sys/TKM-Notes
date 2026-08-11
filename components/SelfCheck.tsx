@@ -29,9 +29,12 @@ export default function SelfCheck({
   return (
     <div className="border border-bg-border rounded-card p-3">
       <div className="flex items-start gap-2 mb-2">
-        <span className="font-mono text-[11px] text-ink-faint shrink-0 mt-0.5">Q{index + 1}</span>
+        <span className="font-mono text-[10px] uppercase tracking-wide text-signal shrink-0 mt-0.5">
+          Q{index + 1}
+        </span>
         <span className="text-sm text-ink-hi leading-relaxed">{item.question}</span>
       </div>
+
       {!revealed ? (
         <button
           onClick={() => setRevealed(true)}
@@ -40,23 +43,24 @@ export default function SelfCheck({
           Tap to check yourself →
         </button>
       ) : (
-        <div className="ml-6 bg-bg-raised border border-bg-border rounded-card p-2.5">
-          <div className="text-sm text-ink-hi leading-relaxed">{item.answer}</div>
-          <div className="flex items-center gap-1.5 mt-2 flex-wrap">
+        <div className="ml-6 space-y-2">
+          <div className="bg-bg-surface border border-bg-border rounded-md p-3">
+            <p className="text-sm text-ink-hi leading-relaxed">{item.answer}</p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2 text-xs font-mono">
             {canRecord && rated === null && (
               <>
-                <span className="text-[11px] font-mono text-ink-faint mr-1">How did you do?</span>
-                {(
-                  [
-                    { r: "correct", label: "Got it", cls: "border-signal-dim text-signal hover:bg-signal/10" },
-                    { r: "partial", label: "Almost", cls: "border-weight-dim text-weight hover:bg-weight/10" },
-                    { r: "incorrect", label: "Missed it", cls: "border-bg-border text-critical hover:bg-critical/10" },
-                  ] as { r: AttemptResult; label: string; cls: string }[]
-                ).map((opt) => (
+                <span className="text-ink-faint">How did you do?</span>
+                {([
+                  { r: "correct", label: "Got it", cls: "border-signal-dim text-signal hover:bg-signal/10" },
+                  { r: "partial", label: "Almost", cls: "border-weight-dim text-weight hover:bg-weight/10" },
+                  { r: "incorrect", label: "Missed it", cls: "border-critical/40 text-critical hover:bg-critical/10" },
+                ] as { r: AttemptResult; label: string; cls: string }[]).map((opt) => (
                   <button
                     key={opt.r}
                     onClick={() => rate(opt.r)}
-                    className={`text-xs font-mono px-2.5 py-1 rounded-card border transition-colors ${opt.cls}`}
+                    className={`px-2.5 py-1 rounded-md border transition-colors ${opt.cls}`}
                   >
                     {opt.label}
                   </button>
@@ -64,7 +68,7 @@ export default function SelfCheck({
               </>
             )}
             {canRecord && rated !== null && (
-              <span className="text-[11px] font-mono text-ink-lo">
+              <span className="text-ink-lo">
                 {rated === "correct" ? "Recorded ✓" : rated === "partial" ? "Recorded ~" : "Recorded ✗"} — mastery updated
               </span>
             )}
@@ -73,7 +77,7 @@ export default function SelfCheck({
                 setRevealed(false);
                 setRated(null);
               }}
-              className="text-xs text-ink-faint hover:text-ink-lo ml-auto"
+              className="ml-auto text-ink-faint hover:text-ink-hi"
             >
               Hide
             </button>

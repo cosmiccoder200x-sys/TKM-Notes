@@ -34,9 +34,9 @@ export default function NightBeforeSetup({
   return (
     <div className="space-y-6">
       <div>
-        <div className="eyebrow mb-1">night-before mode</div>
+        <div className="eyebrow mb-1">last-minute mode</div>
         <h1 className="font-display font-bold text-2xl sm:text-3xl text-ink-hi leading-tight tracking-tight">
-          Night-Before Mode
+          Last-Minute Mode
         </h1>
         <p className="text-sm text-ink-lo leading-relaxed mt-1.5 max-w-xl">
           High-value revision when time is limited. Pick a subject and how long you have —
@@ -52,7 +52,7 @@ export default function NightBeforeSetup({
           id="nb-subject"
           value={initialSubject}
           onChange={(e) => onSubjectChange(e.target.value)}
-          className="w-full bg-bg-surface border border-bg-border rounded-card px-3 py-2.5 text-sm text-ink-hi focus:border-signal outline-none"
+          className="w-full bg-bg-surface border border-bg-border rounded-md px-3 py-2.5 text-sm text-ink-hi focus:border-signal outline-none"
         >
           {withNotes.length === 0 && <option value="">No subjects with notes yet</option>}
           {groups.map((g) => (

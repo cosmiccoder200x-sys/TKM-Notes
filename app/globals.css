@@ -4,46 +4,160 @@
 
 @layer base {
   :root {
-    --font-display: "Inter", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
-    --font-body: "Inter", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
-    --font-mono: "JetBrains Mono", "Cascadia Code", ui-monospace, SFMono-Regular, Consolas, monospace;
+    /* Fonts */
+    --font-display: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+    --font-body: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, "Cascadia Code", SFMono-Regular, Consolas, monospace;
+
+    /* Light theme — calm editorial */
+    --color-bg:            248 248 246;  /* #F8F8F6 */
+    --color-bg-surface:    255 255 255;  /* #FFFFFF */
+    --color-bg-raised:     252 252 250;
+    --color-border:        232 232 227;  /* #E8E8E3 */
+    --color-ink-hi:        27 27 27;     /* #1B1B1B */
+    --color-ink-lo:        119 119 114;  /* #777772 */
+    --color-ink-faint:     150 150 145;
+    --color-ink-faintest:  200 200 195;
+    --color-signal:        107 92 255;   /* #6B5CFF */
+    --color-signal-dim:    134 124 255;
+    --color-weight:        197 145 23;
+    --color-weight-dim:    217 167 55;
+    --color-critical:      214 71 71;
   }
+
+  .dark {
+    /* Dark theme — own balanced hierarchy, not an inversion */
+    --color-bg:            14 14 17;     /* #0E0E11 */
+    --color-bg-surface:    19 19 24;     /* #131318 */
+    --color-bg-raised:     24 24 31;     /* #18181F */
+    --color-border:        41 41 47;     /* #29292F */
+    --color-ink-hi:        240 240 242;  /* #F0F0F2 */
+    --color-ink-lo:        148 148 158;  /* #94949E */
+    --color-ink-faint:     112 112 122;
+    --color-ink-faintest:  70 70 78;
+    --color-signal:        133 120 255;  /* #8578FF */
+    --color-signal-dim:    116 104 255;
+    --color-weight:        224 178 92;
+    --color-weight-dim:    196 148 64;
+    --color-critical:      235 111 108;
+  }
+
+  .dark body {
+    background-image: 
+      radial-gradient(ellipse 80% 50% at 50% -20%, rgb(var(--color-signal) / 0.12), transparent),
+      radial-gradient(ellipse 60% 40% at 80% 100%, rgb(139 92 246 / 0.1), transparent);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
   * {
     @apply border-bg-border;
   }
-  html {
-    scroll-behavior: smooth;
-  }
+
   body {
-    background-image: radial-gradient(circle at 20% 0%, rgba(79, 209, 197, 0.06), transparent 40%);
+    @apply bg-bg text-ink-hi font-body antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11", "ss01";
+    background-image: 
+      radial-gradient(ellipse 80% 50% at 50% -20%, rgb(var(--color-signal) / 0.08), transparent),
+      radial-gradient(ellipse 60% 40% at 80% 100%, rgb(139 92 246 / 0.06), transparent);
   }
+
   ::selection {
-    background-color: rgba(79, 209, 197, 0.25);
+    background-color: rgb(var(--color-signal) / 0.16);
   }
+
   :focus-visible {
-    outline: 2px solid #4FD1C5;
+    outline: 2px solid rgb(var(--color-signal) / 0.7);
     outline-offset: 2px;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
   }
 }
 
 @layer components {
+  /* Subtle editorial eyebrow label */
   .eyebrow {
-    @apply font-mono text-[11px] uppercase tracking-[0.14em] text-signal;
+    @apply font-mono text-[11px] uppercase tracking-[0.16em] text-ink-faint;
   }
+
+  /* Minimal surface block */
   .card {
-    @apply bg-bg-surface border border-bg-border rounded-card;
+    @apply bg-bg-surface border border-bg-border rounded-lg;
   }
+
   .chip {
-    @apply font-mono text-[11px] uppercase tracking-wide px-2.5 py-1 rounded-card border border-bg-border text-ink-lo;
+    @apply inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-wide px-2 py-0.5 rounded-md border border-bg-border text-ink-lo;
   }
+
   .no-scrollbar {
     scrollbar-width: none;
   }
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
+
   .pb-safe {
     padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* Thin minimal progress bar */
+  .progress-bar {
+    @apply block h-1 w-full overflow-hidden rounded-full bg-bg;
+  }
+  .progress-bar > span {
+    @apply block h-full rounded-full transition-[width] duration-300 ease-out;
+  }
+  .progress-signal {
+    background-color: rgb(var(--color-signal));
+  }
+  .progress-weight {
+    background-color: rgb(var(--color-weight));
+  }
+  .progress-critical {
+    background-color: rgb(var(--color-critical));
+  }
+  .progress-faint {
+    background-color: rgb(var(--color-ink-faintest));
+  }
+
+  /* Violet gradient utilities */
+  .gradient-violet {
+    background: linear-gradient(135deg, rgb(var(--color-signal)), #8B5CF6);
+  }
+  .gradient-violet-text {
+    background: linear-gradient(135deg, rgb(var(--color-signal)), #8B5CF6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .gradient-violet-border {
+    position: relative;
+    background: linear-gradient(135deg, rgb(var(--color-signal)), #8B5CF6);
+    border-radius: 8px;
+  }
+  .gradient-violet-border::before {
+    content: '';
+    position: absolute;
+    inset: 1px;
+    background: rgb(var(--color-bg-surface));
+    border-radius: 7px;
+  }
+  .dark .gradient-violet-border::before {
+    background: rgb(var(--color-bg-surface));
+  }
+
+  /* Note canvas element styles */
+  .note-body p {
+    @apply text-[15px] leading-[1.75] text-ink-hi;
+  }
+  .note-body > * + * {
+    margin-top: 0.875rem;
   }
 }
 
