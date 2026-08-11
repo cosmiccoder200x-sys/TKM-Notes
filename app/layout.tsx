@@ -1,12 +1,23 @@
 import type { Metadata, Viewport } from "next";
+import { Outfit, Inter } from "next/font/google";
 import "./globals.css";
 import ThemeScript from "@/components/ThemeScript";
 import CommandPalette from "@/components/CommandPalette";
 import MobileNav from "@/components/MobileNav";
 import { PRODUCT_NAME, PRODUCT_TAGLINE } from "@/lib/branch";
 import AppShell from "@/components/layout/AppShell";
-import ThemeToggle from "@/components/ThemeToggle";
-import SearchBar from "@/components/SearchBar";
+
+const outfit = Outfit({
+  subsets: ["latin"],
+  variable: "--font-display",
+  display: "swap",
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-body",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: {
@@ -24,7 +35,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${inter.variable} ${outfit.variable}`}>
       <head>
         <ThemeScript />
       </head>

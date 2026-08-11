@@ -5,47 +5,60 @@
 @layer base {
   :root {
     /* Fonts */
-    --font-display: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
-    --font-body: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
-    --font-mono: "JetBrains Mono", ui-monospace, "Cascadia Code", SFMono-Regular, Consolas, monospace;
+    --font-display: "Outfit", "Inter", ui-sans-serif, system-ui, sans-serif;
+    --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, monospace;
 
-    /* Light theme — calm editorial */
-    --color-bg:            248 248 246;  /* #F8F8F6 */
-    --color-bg-surface:    255 255 255;  /* #FFFFFF */
-    --color-bg-raised:     252 252 250;
-    --color-border:        232 232 227;  /* #E8E8E3 */
-    --color-ink-hi:        27 27 27;     /* #1B1B1B */
-    --color-ink-lo:        119 119 114;  /* #777772 */
-    --color-ink-faint:     150 150 145;
-    --color-ink-faintest:  200 200 195;
-    --color-signal:        107 92 255;   /* #6B5CFF */
-    --color-signal-dim:    134 124 255;
-    --color-weight:        197 145 23;
-    --color-weight-dim:    217 167 55;
-    --color-critical:      214 71 71;
+    /* Google Stitch Premium Palette — Crisp, Vibrant, Soft Glows */
+    --color-bg:            243 244 246;  /* Soft cool grey #F3F4F6 */
+    --color-bg-surface:    255 255 255;  /* Pure white */
+    --color-bg-raised:     249 250 251;  /* Off-white #F9FAFB */
+    --color-border:        224 226 232;  /* Smooth grey #E0E2E8 */
+    --color-ink-hi:        17 24 39;     /* Deep Slate #111827 */
+    --color-ink-lo:        75 85 99;     /* Slate grey #4B5563 */
+    --color-ink-faint:     107 114 128;  /* Muted grey #6B7280 */
+    --color-ink-faintest:  156 163 175;  /* Subtle grey */
+    --color-signal:        99 102 241;   /* Indigo Accent #6366F1 */
+    --color-signal-dim:    79 70 229;    /* Deep Indigo */
+    --color-weight:        245 158 11;   /* Golden Amber */
+    --color-weight-dim:    217 119 6;    /* Deep Amber */
+    --color-critical:      239 68 68;    /* Crimson Red */
   }
 
   .dark {
-    /* Dark theme — own balanced hierarchy, not an inversion */
-    --color-bg:            14 14 17;     /* #0E0E11 */
-    --color-bg-surface:    19 19 24;     /* #131318 */
-    --color-bg-raised:     24 24 31;     /* #18181F */
-    --color-border:        41 41 47;     /* #29292F */
-    --color-ink-hi:        240 240 242;  /* #F0F0F2 */
-    --color-ink-lo:        148 148 158;  /* #94949E */
-    --color-ink-faint:     112 112 122;
-    --color-ink-faintest:  70 70 78;
-    --color-signal:        133 120 255;  /* #8578FF */
-    --color-signal-dim:    116 104 255;
-    --color-weight:        224 178 92;
-    --color-weight-dim:    196 148 64;
-    --color-critical:      235 111 108;
+    /* Stitch Dark Theme — Glowing controls, deep slate space */
+    --color-bg:            8 8 11;       /* Deep space #08080B */
+    --color-bg-surface:    14 14 20;     /* Dark obsidian #0E0E14 */
+    --color-bg-raised:     20 20 28;     /* Surface obsidian #14141C */
+    --color-border:        31 32 41;     /* Charcoal #1F2029 */
+    --color-ink-hi:        243 244 246;  /* High contrast cool grey */
+    --color-ink-lo:        156 163 175;  /* Mid-tone grey */
+    --color-ink-faint:     107 114 128;  /* Darker grey */
+    --color-ink-faintest:  75 85 99;     /* Muted line grey */
+    --color-signal:        129 140 248;  /* Glowing Indigo #818CF8 */
+    --color-signal-dim:    99 102 241;   /* Indigo */
+    --color-weight:        251 191 36;   /* Amber Glow */
+    --color-weight-dim:    245 158 11;   /* Amber */
+    --color-critical:      248 113 113;  /* Bright Red */
   }
 
   .dark body {
     background-image: 
-      radial-gradient(ellipse 80% 50% at 50% -20%, rgb(var(--color-signal) / 0.12), transparent),
-      radial-gradient(ellipse 60% 40% at 80% 100%, rgb(139 92 246 / 0.1), transparent);
+      radial-gradient(ellipse 80% 60% at 50% -20%, rgb(var(--color-signal) / 0.18), transparent),
+      radial-gradient(ellipse 60% 50% at 90% 90%, rgb(139 92 246 / 0.14), transparent),
+      radial-gradient(ellipse 40% 40% at 10% 10%, rgb(245 158 11 / 0.06), transparent);
+  }
+
+  .dark body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: 
+      radial-gradient(circle at 20% 20%, rgb(var(--color-signal) / 0.03) 1px, transparent 1px),
+      radial-gradient(circle at 80% 80%, rgb(var(--color-weight) / 0.02) 1px, transparent 1px);
+    background-size: 80px 80px, 120px 120px;
+    pointer-events: none;
+    z-index: -1;
   }
 
   html {
@@ -54,23 +67,24 @@
   }
 
   * {
-    @apply border-bg-border;
+    @apply border-bg-border transition-colors duration-150;
   }
 
   body {
     @apply bg-bg text-ink-hi font-body antialiased;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11", "ss01";
     background-image: 
-      radial-gradient(ellipse 80% 50% at 50% -20%, rgb(var(--color-signal) / 0.08), transparent),
-      radial-gradient(ellipse 60% 40% at 80% 100%, rgb(139 92 246 / 0.06), transparent);
+      radial-gradient(ellipse 70% 60% at 50% -10%, rgb(var(--color-signal) / 0.06), transparent),
+      radial-gradient(ellipse 50% 50% at 90% 90%, rgb(139 92 246 / 0.04), transparent);
   }
 
   ::selection {
-    background-color: rgb(var(--color-signal) / 0.16);
+    background-color: rgb(var(--color-signal) / 0.2);
+    color: inherit;
   }
 
   :focus-visible {
-    outline: 2px solid rgb(var(--color-signal) / 0.7);
+    outline: 2px solid rgb(var(--color-signal) / 0.8);
     outline-offset: 2px;
   }
 
@@ -81,18 +95,34 @@
 }
 
 @layer components {
-  /* Subtle editorial eyebrow label */
-  .eyebrow {
-    @apply font-mono text-[11px] uppercase tracking-[0.16em] text-ink-faint;
+  /* Glassmorphism panel for cards/sidebars */
+  .glass-panel {
+    @apply bg-bg-surface/80 dark:bg-bg-surface/75 backdrop-blur-md border border-white/20 dark:border-white/5;
   }
 
-  /* Minimal surface block */
+  /* Eyebrows styling */
+  .eyebrow {
+    @apply font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.2em] text-ink-faint font-semibold;
+  }
+
+  /* Card styling with subtle elevations & hover effects */
   .card {
-    @apply bg-bg-surface border border-bg-border rounded-lg;
+    @apply bg-bg-surface border border-bg-border rounded-xl shadow-card transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:border-signal/40;
+  }
+
+  .dark .card {
+    @apply bg-bg-surface/95 border-bg-border/80;
+  }
+  .dark .card:hover {
+    @apply border-signal/50 shadow-[0_0_24px_rgb(var(--color-signal)/0.15)];
   }
 
   .chip {
-    @apply inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-wide px-2 py-0.5 rounded-md border border-bg-border text-ink-lo;
+    @apply inline-flex items-center gap-1.5 font-mono text-[10px] sm:text-[11px] uppercase tracking-wider px-2.5 py-1 rounded-full border border-bg-border text-ink-lo bg-bg-raised transition-all hover:border-signal/50 hover:text-signal;
+  }
+
+  .dark .chip:hover {
+    @apply bg-signal/10 shadow-[0_0_12px_rgb(var(--color-signal)/0.2)];
   }
 
   .no-scrollbar {
@@ -106,58 +136,64 @@
     padding-bottom: env(safe-area-inset-bottom);
   }
 
-  /* Thin minimal progress bar */
+  /* Thin progress bar */
   .progress-bar {
-    @apply block h-1 w-full overflow-hidden rounded-full bg-bg;
+    @apply block h-1.5 w-full overflow-hidden rounded-full bg-bg/50;
   }
   .progress-bar > span {
-    @apply block h-full rounded-full transition-[width] duration-300 ease-out;
+    @apply block h-full rounded-full transition-[width] duration-500 ease-out;
   }
   .progress-signal {
-    background-color: rgb(var(--color-signal));
+    background: linear-gradient(90deg, rgb(var(--color-signal-dim)), rgb(var(--color-signal)));
+    box-shadow: 0 0 8px rgb(var(--color-signal) / 0.4);
   }
   .progress-weight {
-    background-color: rgb(var(--color-weight));
+    background: linear-gradient(90deg, rgb(var(--color-weight-dim)), rgb(var(--color-weight)));
   }
   .progress-critical {
-    background-color: rgb(var(--color-critical));
+    background: rgb(var(--color-critical));
   }
   .progress-faint {
-    background-color: rgb(var(--color-ink-faintest));
+    background: rgb(var(--color-ink-faintest));
   }
 
   /* Violet gradient utilities */
   .gradient-violet {
-    background: linear-gradient(135deg, rgb(var(--color-signal)), #8B5CF6);
+    background: linear-gradient(135deg, rgb(var(--color-signal-dim)) 0%, rgb(var(--color-signal)) 50%, #a78bfa 100%);
   }
   .gradient-violet-text {
-    background: linear-gradient(135deg, rgb(var(--color-signal)), #8B5CF6);
+    background: linear-gradient(135deg, rgb(var(--color-signal-dim)) 0%, rgb(var(--color-signal)) 50%, #a78bfa 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
-  .gradient-violet-border {
+  
+  /* Glowing dynamic border */
+  .gradient-glow-border {
     position: relative;
-    background: linear-gradient(135deg, rgb(var(--color-signal)), #8B5CF6);
-    border-radius: 8px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, rgb(var(--color-signal-dim)) 0%, rgb(var(--color-signal)) 100%);
+    padding: 1px;
   }
-  .gradient-violet-border::before {
+  .gradient-glow-border::before {
     content: '';
     position: absolute;
     inset: 1px;
     background: rgb(var(--color-bg-surface));
-    border-radius: 7px;
+    border-radius: 11px;
+    z-index: 0;
   }
-  .dark .gradient-violet-border::before {
-    background: rgb(var(--color-bg-surface));
+  .gradient-glow-border > * {
+    position: relative;
+    z-index: 10;
   }
 
-  /* Note canvas element styles */
+  /* Note body typography */
   .note-body p {
-    @apply text-[15px] leading-[1.75] text-ink-hi;
+    @apply text-[15px] sm:text-[16px] leading-[1.8] text-ink-hi;
   }
   .note-body > * + * {
-    margin-top: 0.875rem;
+    margin-top: 1rem;
   }
 }
 
