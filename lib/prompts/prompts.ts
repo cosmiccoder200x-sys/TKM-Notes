@@ -1024,6 +1024,167 @@ OUTPUT FORMAT:
 };
 
 // ============================================
+// 11. SYLLABUS COMPLETE — Self-Study from Basic to Pro
+// ============================================
+
+export const syllabusCompletePrompt: StudyPrompt = {
+  id: "syllabus-complete",
+  mode: "syllabus-complete",
+  title: "Syllabus Complete",
+  description: "Complete entire syllabus from basic to pro — no classes needed",
+  icon: "🎓",
+  category: "learn",
+  bestFor: "Self-studying the full syllabus from fundamentals to exam-ready mastery without attending any lectures.",
+  whenToUse: "When you need a complete self-study roadmap covering every module from zero to 90+ score.",
+  importance: "specialized",
+  variables: [
+    { key: "subject", label: "Subject (optional)", type: "select", required: false, placeholder: "Select subject", options: [] },
+    { key: "currentLevel", label: "Current Level (optional)", type: "select", required: false, placeholder: "Select level", options: [
+      { value: "zero", label: "Zero — Never studied this subject" },
+      { value: "basic", label: "Basic — Know some definitions/concepts" },
+      { value: "intermediate", label: "Intermediate — Can solve simple problems" },
+      { value: "exam-ready", label: "Exam-ready — Just need polish" },
+    ]},
+    { key: "targetDays", label: "Target Days (optional)", type: "number", required: false, placeholder: "30" },
+    { key: "dailyHours", label: "Daily Study Hours (optional)", type: "number", required: false, placeholder: "3" },
+    { key: "includeAllModules", label: "Include all modules (optional)", type: "select", required: false, placeholder: "Select", options: [
+      { value: "true", label: "Yes — All modules" },
+      { value: "false", label: "No — Priority modules only" },
+    ]},
+  ],
+  template: (vars) => {
+    const subjectCategory = vars.subject ? getSubjectCategory(vars.subject) : "general";
+    const subjectSpecific = getSubjectSpecificInstructions(subjectCategory);
+    const moduleContent = vars.__moduleContent ? formatModuleContent(JSON.parse(vars.__moduleContent)) : "";
+    
+    const level = vars.currentLevel || "zero";
+    const targetDays = parseInt(vars.targetDays) || 30;
+    const dailyHours = parseInt(vars.dailyHours) || 3;
+    const totalHours = targetDays * dailyHours;
+    const includeAll = vars.includeAllModules === "true";
+    
+    return `${subjectLine(vars)}
+
+SELF-STUDY MISSION: Complete ENTIRE SYLLABUS from ${level === "zero" ? "absolute zero" : level === "basic" ? "basic concepts" : level === "intermediate" ? "intermediate level" : "exam-ready baseline"} to **exam mastery (90+ score ready)** in **${targetDays} days** with **${dailyHours}h/day** (${totalHours}h total).
+
+SCOPE: ${includeAll ? "ALL MODULES (full syllabus)" : vars.module ? `Module ${vars.module} only` : "Priority modules (based on exam weightage)"}${moduleContent}
+
+${subjectSpecific}
+
+YOUR TASK: Generate a COMPLETE SELF-STUDY MASTERPLAN that takes me from ${level} to exam mastery WITHOUT any classroom lectures. This is my only study resource — make it comprehensive, day-by-day, and self-sufficient.
+
+PHILOSOPHY:
+- Every day must have clear input (what to learn) + practice (how to test) + output (what to produce)
+- No passive reading — active recall, problem-solving, answer-writing every day
+- Leverage PrepPilot content as the textbook: definitions, formulas, diagrams, worked examples, PYQs
+- Build from FUNDAMENTALS → CONCEPTS → APPLICATIONS → EXAM PATTERNS → MASTERY
+
+OUTPUT FORMAT:
+
+---
+
+### 📅 MASTER TIMELINE (${targetDays} Days = ${totalHours}h)
+
+| Phase | Days | Focus | Outcome |
+|-------|------|-------|---------|
+| **Foundation** | 1-${Math.ceil(targetDays * 0.2)} | Core definitions, basic formulas, mental models | Can explain every concept in 1 sentence |
+| **Concept Building** | ${Math.ceil(targetDays * 0.2)+1}-${Math.ceil(targetDays * 0.5)} | Derivations, algorithms, circuit analysis, proofs | Can derive/solve standard problems |
+| **Exam Patterns** | ${Math.ceil(targetDays * 0.5)+1}-${Math.ceil(targetDays * 0.8)} | PYQ analysis, model answers, high-mark questions | Can write full-mark answers for top 20 PYQs |
+| **Mastery & Speed** | ${Math.ceil(targetDays * 0.8)+1}-${targetDays} | Mock exams, timed practice, mistake elimination | 90%+ on full mock under exam conditions |
+
+---
+
+### 📚 MODULE-BY-MODULE BREAKDOWN
+
+${includeAll ? "ALL MODULES (adapt below for each)" : vars.module ? `MODULE ${vars.module} ONLY` : "PRIORITY MODULES (by exam weightage)"}
+
+For EACH module, provide:
+| Module | Days | Core Concepts | Key Formulas | Diagrams | Worked Examples | PYQ Patterns | Priority |
+|--------|------|---------------|--------------|----------|-----------------|--------------|----------|
+| M1 | X | [list] | [list] | [list] | [count] | [top 3] | 🔴/🟡/🟢 |
+| M2 | X | ... | ... | ... | ... | ... | ... |
+
+---
+
+### 📅 DAY-BY-DAY TEMPLATE (Copy for each day)
+
+**Day N — [Module/Topic]**
+| Block | Duration | Activity | Resource | Output |
+|-------|----------|----------|----------|--------|
+| 1 | ${Math.round(dailyHours * 60 * 0.35)} min | **Learn** — New concept (definitions, intuition, derivation) | PrepPilot notes + video if needed | One-page concept summary |
+| 2 | ${Math.round(dailyHours * 60 * 0.25)} min | **Practice** — Solve 2-3 worked examples step-by-step | PrepPilot worked examples | Clean solutions with annotations |
+| 3 | ${Math.round(dailyHours * 60 * 0.25)} min | **Active Recall** — Explain concept without notes + PYQ | PrepPilot exam focus + self-check | Verbal explanation recorded |
+| 4 | ${Math.round(dailyHours * 60 * 0.15)} min | **Exam Writing** — Write 1 Part B answer from memory | PYQ Intelligence + Exam Answer mode | Full-mark model answer |
+
+---
+
+### 🎯 MILESTONE CHECKPOINTS (Non-negotiable)
+
+**Week 1 (Day ${Math.ceil(targetDays/4)}):** Can define every term in Module 1 without notes. Score 80%+ on Module 1 self-check.
+**Week 2 (Day ${Math.ceil(targetDays/2)}):** Can derive all key formulas, draw all diagrams from memory. Complete Module 2-3.
+**Week 3 (Day ${Math.ceil(targetDays * 0.75)}):** Full mock exam Part A: 18/20. Part B: 2 full answers in time limit.
+**Final Week (Day ${targetDays}):** Full mock exam ≥ 90%. Formula sheet memorized. Diagram checklist 100% clear.
+
+---
+
+### 🛠️ SELF-STUDY TOOLKIT (Use PrepPilot modes daily)
+
+| Mode | When | Purpose |
+|------|------|---------|
+| **Learn** | New concept days | Build intuition + technical depth |
+| **Problem Solver** | Practice blocks | Build solving ability, not just answers |
+| **Active Recall** | End of each session | Verify retention, find gaps |
+| **PYQ Intelligence** | Week 2-3 | Know exactly what repeats |
+| **Exam Answer** | Writing blocks | Master answer structure |
+| **Strict Examiner** | After mock tests | Brutal feedback on gaps |
+| **Revision** | Daily 15 min + weekly | Compressed knowledge access |
+| **Mistake Fixer** | After every error | Permanent correction |
+| **Score 90+** | Weekly strategy review | Keep macro on track |
+
+---
+
+### ⚠️ SELF-STUDY TRAPS TO AVOID
+
+1. **Reading without writing** → Always produce output (summary, solution, explanation)
+2. **Skipping "easy" fundamentals** → They're the foundation for hard problems
+3. **One-pass learning** → Schedule spaced recall: Day 1, 3, 7, 14, 30
+4. **Ignoring diagrams** → KTU awards marks for labeled diagrams in EVERY Part B
+5. **No mock exams** → Do at least 3 full timed papers before real exam
+5. **Passive re-reading** → Replace with active recall questions
+
+---
+
+### 📋 WEEKLY REVIEW TEMPLATE (Sunday)
+
+- [ ] Concepts mastered this week: [list]
+- [ ] Formulas memorized: [count] / [total]
+- [ ] Diagrams drawable from memory: [count] / [total]
+- [ ] PYQs solved: [count] / [target]
+- [ ] Mock score: [X%]
+- [ ] Biggest gap: [specific topic]
+- [ ] Next week focus: [top 3 priorities]
+
+---
+
+### 🏁 FINAL WEEK PROTOCOL (Days ${targetDays-6} to ${targetDays})
+
+1. **Day ${targetDays-6}**: Full syllabus rapid revision (Revision mode: "night-before" for ALL modules)
+2. **Day ${targetDays-5}**: Full mock exam #1 (timed) + Strict Examiner evaluation
+3. **Day ${targetDays-4}**: Mistake fixing from mock #1 + Formula sheet final pass
+4. **Day ${targetDays-3}**: Full mock exam #2 (timed) + Strict Examiner evaluation  
+5. **Day ${targetDays-2}**: PYQ Intelligence review — top 20 patterns verbatim
+6. **Day ${targetDays-1}**: Night-before revision pack + diagram checklist + formula sheet
+7. **Day ${targetDays} (Exam day)**: Light review only. Confidence walk.
+
+---
+
+**REMEMBER**: This plan replaces classroom lectures. The PrepPilot content IS your textbook. Your job is to TRANSFORM it into permanent knowledge through active output every single day. No passive consumption.
+
+BEGIN WITH: **Day 1 — Foundation: Module 1 Core Definitions + Intuition**`;
+  },
+};
+
+// ============================================
 // EXPORT ALL PROMPTS
 // ============================================
 
@@ -1038,6 +1199,7 @@ export const ALL_PROMPTS: StudyPrompt[] = [
   revisionPrompt,
   mistakeFixerPrompt,
   score90PlusPrompt,
+  syllabusCompletePrompt,
 ];
 
 export function getPromptById(id: StudyModeId): StudyPrompt | undefined {

@@ -12,7 +12,8 @@ export type StudyModeId =
   | "mock-exam"
   | "revision"
   | "mistake-fixer"
-  | "score-90-plus";
+  | "score-90-plus"
+  | "syllabus-complete";
 
 export interface StudyPromptVariable {
   key: string;
@@ -75,7 +76,7 @@ export const CATEGORIES: CategoryInfo[] = [
     id: "learn",
     label: "LEARN",
     description: "Build deep understanding",
-    modes: ["learn", "active-recall"],
+    modes: ["learn", "active-recall", "syllabus-complete"],
   },
   {
     id: "practice",

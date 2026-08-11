@@ -5,8 +5,8 @@
 import { subjects } from "./content";
 import { Subject } from "./types";
 
-export const PRODUCT_NAME = "PrepPilot";
-export const PRODUCT_TAGLINE = "Your AI exam preparation system.";
+export const PRODUCT_NAME = "TKM Notes";
+export const PRODUCT_TAGLINE = "Exam-focused notes & AI study tools for TKM CE.";
 export const PRODUCT_POSITIONING = "Study less. Prioritize better.";
 
 export const BRANCH_NAME = "Electrical & Computer Engineering";
