@@ -4,6 +4,7 @@ import { getRecents, clearRecents } from "@/lib/prompts/utils";
 import { RecentPrompt, StudyModeId } from "@/lib/prompts/types";
 import { getPromptById } from "@/lib/prompts/prompts";
 import { useState, useEffect } from "react";
+import { NavIcon } from "@/components/navigation/navItems";
 
 interface RecentPromptsProps {
   onRecentSelect: (recent: RecentPrompt) => void;
@@ -44,7 +45,9 @@ export default function RecentPrompts({ onRecentSelect }: RecentPromptsProps) {
               className="card p-3 text-left hover:border-signal transition-colors group flex items-center justify-between gap-3"
             >
               <div className="flex items-center gap-3 min-w-0">
-                <span className="text-xl shrink-0" aria-hidden="true">{prompt?.icon || "📝"}</span>
+                <span className="shrink-0 text-signal" aria-hidden="true">
+                  <NavIcon name="edit" className="w-4 h-4" />
+                </span>
                 <div className="min-w-0">
                   <div className="font-display font-semibold text-sm text-ink-hi truncate group-hover:text-signal transition-colors">
                     {prompt?.title || recent.title}

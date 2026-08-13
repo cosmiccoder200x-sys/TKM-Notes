@@ -28,23 +28,28 @@ export default function CommandPalette() {
   const hits = query.trim() ? searchAll(query) : [];
 
   useEffect(() => {
-    function onKey(e: KeyboardEvent) {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
-        e.preventDefault();
-        setOpen((v) => !v);
-      }
-      if (e.key === "Escape") setOpen(false);
-    }
-    window.addEventListener("keydown", onKey);
     function onOpen() {
       setOpen(true);
     }
+    function onClose() {
+      setOpen(false);
+    }
     window.addEventListener("tkm:open-palette", onOpen);
+    window.addEventListener("tkm:close-palette", onClose);
     return () => {
-      window.removeEventListener("keydown", onKey);
       window.removeEventListener("tkm:open-palette", onOpen);
+      window.removeEventListener("tkm:close-palette", onClose);
     };
   }, []);
+
+  useEffect(() => {
+    if (!open) return;
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setOpen(false);
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
 
   useEffect(() => {
     if (open) {
@@ -77,7 +82,7 @@ export default function CommandPalette() {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-start justify-center bg-black/70 backdrop-blur-sm p-4 pt-[10vh]"
+      className="fixed inset-0 z-50 flex items-start justify-center bg-black/60 p-4 pt-[10vh]"
       onClick={() => setOpen(false)}
       role="dialog"
       aria-modal="true"
@@ -164,7 +169,7 @@ export default function CommandPalette() {
           <div className="border-t border-bg-border px-3 py-1.5 flex items-center gap-3 text-[10px] font-mono text-ink-faint">
             <span>↑↓ navigate</span>
             <span>↵ open</span>
-            <span className="ml-auto">PrepPilot search</span>
+            <span className="ml-auto">TKM Notes search</span>
           </div>
         )}
       </div>

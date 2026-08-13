@@ -9,6 +9,7 @@ import {
   getSubjectRecommendations,
 } from "@/lib/study";
 import MasteryBar from "./MasteryBar";
+import { NavIcon } from "@/components/navigation/navItems";
 
 export default function SubjectMasteryBar({
   subjectCode,
@@ -82,9 +83,9 @@ export default function SubjectMasteryBar({
       {nextModule === null && overall === null && (
         <Link
           href={`/night-before?subject=${encodeURIComponent(subjectCode)}&time=60`}
-          className="inline-block font-mono text-xs uppercase tracking-wide px-3.5 py-2 rounded-md border border-bg-border text-ink-faint hover:border-signal hover:text-signal transition-colors"
+          className="inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-wide px-3.5 py-2 rounded-md border border-bg-border text-ink-faint hover:border-signal hover:text-signal transition-colors"
         >
-          ⏱ Start a 1-hour last-minute plan
+          <NavIcon name="revision" className="w-4 h-4" /> Start a 1-hour last-minute plan
         </Link>
       )}
     </div>

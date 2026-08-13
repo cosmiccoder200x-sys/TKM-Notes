@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import PaletteButton from "@/components/PaletteButton";
 
 export const metadata: Metadata = {
   title: "Page Not Found",
@@ -30,14 +31,9 @@ export default function NotFound() {
           >
             Back to home
           </Link>
-          <button
-            onClick={undefined}
-            id="not-found-search-btn"
-            className="font-mono text-xs uppercase tracking-wide px-4 py-2.5 rounded-card border border-bg-border text-ink-hi hover:border-signal hover:text-signal transition-colors"
-            aria-label="Open search"
-          >
-            Search notes
-          </button>
+          <div className="flex-1 sm:flex-none">
+            <PaletteButton label="Search notes" large />
+          </div>
         </div>
 
         <p className="text-xs font-mono text-ink-faint">

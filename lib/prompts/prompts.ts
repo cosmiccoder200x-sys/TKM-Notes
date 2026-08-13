@@ -144,7 +144,7 @@ function formatModuleContent(moduleContent: any): string {
   }
   
   return sections.length > 0 
-    ? `\n\n--- MODULE CONTENT (from PrepPilot) ---\n${sections.join("\n\n")}\n--- END MODULE CONTENT ---\n`
+    ? `\n\n--- MODULE CONTENT (from TKM Notes) ---\n${sections.join("\n\n")}\n--- END MODULE CONTENT ---\n`
     : "";
 }
 
@@ -165,7 +165,7 @@ export const learnPrompt: StudyPrompt = {
   mode: "learn",
   title: "Learn",
   description: "Understand concepts deeply from fundamentals",
-  icon: "📚",
+  icon: "◈",
   category: "learn",
   bestFor: "Understanding a difficult concept from fundamentals to exam-ready depth.",
   whenToUse: "When you need a clear explanation, intuition and worked examples of a topic.",
@@ -188,7 +188,7 @@ ${subjectSpecific}
 
 YOUR TASK: Act as an expert professor who teaches this subject to engineering students. Explain the ${vars.topic ? `topic "${vars.topic}"` : vars.module ? `module "${vars.module}"` : "topic I specify below"} from the ground up, optimized for KTU exam preparation.
 
-${moduleContent ? "IMPORTANT: Use the provided PrepPilot module content above as your PRIMARY source. Do not introduce advanced or unrelated material unless clearly labeled as additional context." : ""}
+${moduleContent ? "IMPORTANT: Use the provided TKM Notes module content above as your PRIMARY source. Do not introduce advanced or unrelated material unless clearly labeled as additional context." : ""}
 
 STRUCTURE YOUR RESPONSE AS FOLLOWS:
 
@@ -229,7 +229,7 @@ export const activeRecallPrompt: StudyPrompt = {
   mode: "active-recall",
   title: "Active Recall",
   description: "Test what you actually remember — no passive reading",
-  icon: "🧠",
+  icon: "⌘",
   category: "learn",
   bestFor: "Testing whether you actually remember a topic instead of relying on passive reading.",
   whenToUse: "After studying a topic, or to find the gaps before an exam.",
@@ -260,7 +260,7 @@ RULES:
 - Repeat concepts I missed in different ways
 - Track what I've mastered vs. what needs review
 
-${moduleContent ? "BASE YOUR QUESTIONS ON THE PROVIDED PrepPilot MODULE CONTENT. Do not invent questions outside this scope." : ""}
+${moduleContent ? "BASE YOUR QUESTIONS ON THE PROVIDED TKM Notes MODULE CONTENT. Do not invent questions outside this scope." : ""}
 
 FIRST QUESTION: Start with a fundamental concept from this module/topic. Make it specific and answerable in 2-3 sentences.
 
@@ -294,7 +294,7 @@ export const pyqIntelligencePrompt: StudyPrompt = {
   mode: "pyq-intelligence",
   title: "PYQ Intelligence",
   description: "Find high-priority exam patterns from previous years",
-  icon: "🔍",
+  icon: "◇",
   category: "exam",
   bestFor: "Finding which topics actually repeat in exams and what to prioritize.",
   whenToUse: "Before planning your study — to focus effort where marks come from.",
@@ -318,7 +318,7 @@ YOUR TASK: Act as a KTU exam pattern analyst. Analyze previous year questions (P
 
 DO NOT invent questions. If you don't have verified PYQ data for this exact subject/code, clearly state: "I don't have access to verified KTU PYQs for ${getSubjectName(vars.subject)}. The analysis below is based on standard KTU 2024-scheme patterns for this subject." Then provide pattern-based guidance.
 
-${moduleContent ? "USE THE PROVIDED PrepPilot EXAM FOCUS QUESTIONS as the basis for your analysis. These are the documented high-priority questions from the repository." : ""}
+${moduleContent ? "USE THE PROVIDED TKM Notes EXAM FOCUS QUESTIONS as the basis for your analysis. These are the documented high-priority questions from the repository." : ""}
 
 STRUCTURE YOUR REPORT:
 
@@ -365,7 +365,7 @@ export const examAnswerPrompt: StudyPrompt = {
   mode: "exam-answer",
   title: "Exam Answer",
   description: "Generate marks-focused university answers",
-  icon: "📝",
+  icon: "ƒ",
   category: "exam",
   bestFor: "Preparing structured answers when you know the exam format or marks.",
   whenToUse: "When you need a ready-to-write, keyword-rich answer for a specific question.",
@@ -434,7 +434,7 @@ ADDITIONAL REQUIREMENTS:
 - Highlight **bold keywords** that carry marks
 - Do NOT include unnecessary background or "introduction/conclusion" fluff
 - If the question asks "Explain", focus on explanation. If "Derive", focus on derivation. If "Compare", use a table.
-- ${moduleContent ? "PRIORITIZE the provided PrepPilot module content. Use definitions, formulas, and examples from it directly." : ""}
+- ${moduleContent ? "PRIORITIZE the provided TKM Notes module content. Use definitions, formulas, and examples from it directly." : ""}
 
 OUTPUT FORMAT:
 **[ANSWER START]**
@@ -456,7 +456,7 @@ export const strictExaminerPrompt: StudyPrompt = {
   mode: "strict-examiner",
   title: "Strict Examiner",
   description: "Get your answer evaluated like a university examiner",
-  icon: "👨‍🏫",
+  icon: "≜",
   category: "analyze",
   bestFor: "Finding out exactly where you lose marks on a written answer.",
   whenToUse: "After writing an answer — to get a harsh, honest evaluation before the real exam.",
@@ -555,7 +555,7 @@ export const problemSolverPrompt: StudyPrompt = {
   mode: "problem-solver",
   title: "Problem Solver",
   description: "Develop actual problem-solving ability — no spoon-feeding",
-  icon: "⚙️",
+  icon: "≈",
   category: "practice",
   bestFor: "Developing problem-solving ability through guided questions and hints.",
   whenToUse: "When you want to learn by doing — not by reading solutions.",
@@ -593,7 +593,7 @@ RULES OF ENGAGEMENT:
 4. Give PROGRESSIVE HINTS only when I explicitly ask ("Hint 1", "Hint 2", etc.)
 5. After I solve (or give up), analyze my reasoning — not just the final answer
 ${problemGuidance}
-${moduleContent ? "USE THE PROVIDED PrepPilot WORKED EXAMPLES AND CORE CONCEPTS as reference material for generating problems." : ""}
+${moduleContent ? "USE THE PROVIDED TKM Notes WORKED EXAMPLES AND CORE CONCEPTS as reference material for generating problems." : ""}
 
 INTERACTION FLOW:
 - **Problem 1** → [Wait for my approach] → [My approach] → You evaluate reasoning → Give hint if needed → [My solution attempt] → You analyze → Discuss complexity/pitfalls → **Problem 2** (variant)
@@ -620,7 +620,7 @@ export const mockExamPrompt: StudyPrompt = {
   mode: "mock-exam",
   title: "Mock Exam",
   description: "Simulate a real university exam",
-  icon: "📋",
+  icon: "□",
   category: "exam",
   bestFor: "Simulating the real exam under timed, realistic conditions.",
   whenToUse: "When you want to test your full-syllabus readiness before the actual exam.",
@@ -728,7 +728,7 @@ export const revisionPrompt: StudyPrompt = {
   mode: "revision",
   title: "Revision",
   description: "Rapid revision — what matters most",
-  icon: "⚡",
+  icon: "↻",
   category: "revision",
   bestFor: "Quickly reviewing a topic when time is limited.",
   whenToUse: "The night before an exam, or any time you need maximum yield in minimum minutes.",
@@ -767,7 +767,7 @@ REVISION STRATEGY: ${durationGuide}
 
 YOUR TASK: Generate a TIME-BOXED REVISION PLAN that maximizes marks per minute. Every item must be exam-actionable.
 
-${moduleContent ? "USE THE PROVIDED PrepPilot MODULE CONTENT as your PRIMARY source. Prioritize exam focus questions, revision notes, formulas, and worked examples from it." : ""}
+${moduleContent ? "USE THE PROVIDED TKM Notes MODULE CONTENT as your PRIMARY source. Prioritize exam focus questions, revision notes, formulas, and worked examples from it." : ""}
 
 STRUCTURE YOUR OUTPUT:
 
@@ -782,7 +782,7 @@ STRUCTURE YOUR OUTPUT:
 
 ---
 
-### 🎯 HIGH-PRIORITY CONCEPTS (Ranked by Exam Probability)
+### ★ HIGH-PRIORITY CONCEPTS (Ranked by Exam Probability)
 For each: **Concept** → **One-line exam-ready definition** → **Key formula/diagram** → **PYQ frequency (High/Med/Low)**
 
 1. 
@@ -829,7 +829,7 @@ export const mistakeFixerPrompt: StudyPrompt = {
   mode: "mistake-fixer",
   title: "Mistake Fixer",
   description: "Turn mistakes into learning — find the exact error",
-  icon: "🔧",
+  icon: "△",
   category: "practice",
   bestFor: "Finding the exact error in a wrong answer and understanding why it failed.",
   whenToUse: "After a test or mock exam — to turn every mistake into permanent learning.",
@@ -904,7 +904,7 @@ export const score90PlusPrompt: StudyPrompt = {
   mode: "score-90-plus",
   title: "Score 90+",
   description: "Build a marks-focused study strategy",
-  icon: "🎯",
+  icon: "★",
   category: "exam",
   bestFor: "Building a day-by-day strategy to maximize your final exam score.",
   whenToUse: "When you have an exam coming and want every study hour to earn maximum marks.",
@@ -952,7 +952,7 @@ STRATEGY PILLARS (prioritize in this order):
 7. **Mistake correction** → Fix each error permanently
 8. **Revision** → Spaced, compressed, keyword-focused
 
-${moduleContent ? "USE THE PROVIDED PrepPilot MODULE CONTENT to identify specific high-priority topics, exam focus questions, and worked examples for your strategy." : ""}
+${moduleContent ? "USE THE PROVIDED TKM Notes MODULE CONTENT to identify specific high-priority topics, exam focus questions, and worked examples for your strategy." : ""}
 
 OUTPUT FORMAT:
 
@@ -969,7 +969,7 @@ OUTPUT FORMAT:
 
 ---
 
-### 🎯 PRIORITY MATRIX (What to study, in order)
+### ★ PRIORITY MATRIX (What to study, in order)
 **WEEK 1 (Days 1-${Math.ceil(daysRemaining/2)}): FOUNDATION + HIGH YIELD**
 - Day 1-2: [Specific module/topic] — Why: [PYQ frequency + mark weight]
 - Day 3-4: [Specific module/topic] — Why: [High-mark predictable question]
@@ -1015,11 +1015,11 @@ OUTPUT FORMAT:
 - Reading textbook chapters cover-to-cover
 - Topics with <10% PYQ frequency AND <5 marks potential
 - Re-solving problems I already get right
-- Making pretty notes (use existing PrepPilot instead)
+- Making pretty notes (use existing TKM Notes instead)
 
 ---
 
-**REMEMBER**: This strategy assumes I use PrepPilot as my primary reference. The notes already contain: definitions, formulas, diagrams, exam focus, revision bullets. Don't duplicate — APPLY.`;
+**REMEMBER**: This strategy assumes I use TKM Notes as my primary reference. The notes already contain: definitions, formulas, diagrams, exam focus, revision bullets. Don't duplicate — APPLY.`;
   },
 };
 
@@ -1032,7 +1032,7 @@ export const syllabusCompletePrompt: StudyPrompt = {
   mode: "syllabus-complete",
   title: "Syllabus Complete",
   description: "Complete entire syllabus from basic to pro — no classes needed",
-  icon: "🎓",
+  icon: "▣",
   category: "learn",
   bestFor: "Self-studying the full syllabus from fundamentals to exam-ready mastery without attending any lectures.",
   whenToUse: "When you need a complete self-study roadmap covering every module from zero to 90+ score.",
@@ -1076,7 +1076,7 @@ YOUR TASK: Generate a COMPLETE SELF-STUDY MASTERPLAN that takes me from ${level}
 PHILOSOPHY:
 - Every day must have clear input (what to learn) + practice (how to test) + output (what to produce)
 - No passive reading — active recall, problem-solving, answer-writing every day
-- Leverage PrepPilot content as the textbook: definitions, formulas, diagrams, worked examples, PYQs
+- Leverage TKM Notes content as the textbook: definitions, formulas, diagrams, worked examples, PYQs
 - Build from FUNDAMENTALS → CONCEPTS → APPLICATIONS → EXAM PATTERNS → MASTERY
 
 OUTPUT FORMAT:
@@ -1094,7 +1094,7 @@ OUTPUT FORMAT:
 
 ---
 
-### 📚 MODULE-BY-MODULE BREAKDOWN
+### ◈ MODULE-BY-MODULE BREAKDOWN
 
 ${includeAll ? "ALL MODULES (adapt below for each)" : vars.module ? `MODULE ${vars.module} ONLY` : "PRIORITY MODULES (by exam weightage)"}
 
@@ -1111,14 +1111,14 @@ For EACH module, provide:
 **Day N — [Module/Topic]**
 | Block | Duration | Activity | Resource | Output |
 |-------|----------|----------|----------|--------|
-| 1 | ${Math.round(dailyHours * 60 * 0.35)} min | **Learn** — New concept (definitions, intuition, derivation) | PrepPilot notes + video if needed | One-page concept summary |
-| 2 | ${Math.round(dailyHours * 60 * 0.25)} min | **Practice** — Solve 2-3 worked examples step-by-step | PrepPilot worked examples | Clean solutions with annotations |
-| 3 | ${Math.round(dailyHours * 60 * 0.25)} min | **Active Recall** — Explain concept without notes + PYQ | PrepPilot exam focus + self-check | Verbal explanation recorded |
+| 1 | ${Math.round(dailyHours * 60 * 0.35)} min | **Learn** — New concept (definitions, intuition, derivation) | TKM Notes notes + video if needed | One-page concept summary |
+| 2 | ${Math.round(dailyHours * 60 * 0.25)} min | **Practice** — Solve 2-3 worked examples step-by-step | TKM Notes worked examples | Clean solutions with annotations |
+| 3 | ${Math.round(dailyHours * 60 * 0.25)} min | **Active Recall** — Explain concept without notes + PYQ | TKM Notes exam focus + self-check | Verbal explanation recorded |
 | 4 | ${Math.round(dailyHours * 60 * 0.15)} min | **Exam Writing** — Write 1 Part B answer from memory | PYQ Intelligence + Exam Answer mode | Full-mark model answer |
 
 ---
 
-### 🎯 MILESTONE CHECKPOINTS (Non-negotiable)
+### ★ MILESTONE CHECKPOINTS (Non-negotiable)
 
 **Week 1 (Day ${Math.ceil(targetDays/4)}):** Can define every term in Module 1 without notes. Score 80%+ on Module 1 self-check.
 **Week 2 (Day ${Math.ceil(targetDays/2)}):** Can derive all key formulas, draw all diagrams from memory. Complete Module 2-3.
@@ -1127,7 +1127,7 @@ For EACH module, provide:
 
 ---
 
-### 🛠️ SELF-STUDY TOOLKIT (Use PrepPilot modes daily)
+### 🛠️ SELF-STUDY TOOLKIT (Use TKM Notes modes daily)
 
 | Mode | When | Purpose |
 |------|------|---------|
@@ -1154,7 +1154,7 @@ For EACH module, provide:
 
 ---
 
-### 📋 WEEKLY REVIEW TEMPLATE (Sunday)
+### □ WEEKLY REVIEW TEMPLATE (Sunday)
 
 - [ ] Concepts mastered this week: [list]
 - [ ] Formulas memorized: [count] / [total]
@@ -1178,7 +1178,7 @@ For EACH module, provide:
 
 ---
 
-**REMEMBER**: This plan replaces classroom lectures. The PrepPilot content IS your textbook. Your job is to TRANSFORM it into permanent knowledge through active output every single day. No passive consumption.
+**REMEMBER**: This plan replaces classroom lectures. The TKM Notes content IS your textbook. Your job is to TRANSFORM it into permanent knowledge through active output every single day. No passive consumption.
 
 BEGIN WITH: **Day 1 — Foundation: Module 1 Core Definitions + Intuition**`;
   },

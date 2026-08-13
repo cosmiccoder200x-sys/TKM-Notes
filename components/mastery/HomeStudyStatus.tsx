@@ -21,6 +21,7 @@ export default function HomeStudyStatus() {
   const [minutesToClose, setMinutesToClose] = useState(0);
   const [bestSubject, setBestSubject] = useState<string | null>(null);
   const [topModule, setTopModule] = useState<string | null>(null);
+  const [fallbackHref, setFallbackHref] = useState<string | null>(null);
 
   useEffect(() => {
     const progress = getProgress();
@@ -70,6 +71,10 @@ export default function HomeStudyStatus() {
     setMinutesToClose(minutesToClose);
     setBestSubject(bestCode);
     if (bestCode) setTopModule(getTopRecommendation(bestCode, progress)?.moduleTitle ?? null);
+    const firstWritten = withContent[0];
+    setFallbackHref(
+      firstWritten ? `/${firstWritten.semesterId}/${firstWritten.slug}` : "/s3"
+    );
     setReady(true);
   }, []);
 
@@ -78,7 +83,7 @@ export default function HomeStudyStatus() {
   const hasData = assessed > 0;
   const masteryHref = bestSubject
     ? `/${subjects.find((s) => s.code === bestSubject)?.semesterId}/${subjects.find((s) => s.code === bestSubject)?.slug}/mastery`
-    : "/s3/digital-electronics-and-logic-design";
+    : fallbackHref ?? "/s3";
 
   if (!hasData) {
     return (
@@ -99,7 +104,7 @@ export default function HomeStudyStatus() {
             Build My Plan →
           </Link>
           <Link
-            href="/s3/digital-electronics-and-logic-design"
+            href={fallbackHref ?? "/s3"}
             className="font-mono text-xs uppercase tracking-wide px-4 py-2.5 rounded-card border border-bg-border text-ink-hi hover:border-signal hover:text-signal transition-colors text-center"
           >
             Start Practice

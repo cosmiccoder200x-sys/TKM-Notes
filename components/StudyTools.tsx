@@ -1,41 +1,42 @@
 import Link from "next/link";
+import { NavIcon } from "@/components/navigation/navItems";
 
 const TOOLS = [
   {
     title: "Prompt Lab",
     description: "The best prompt for whatever you need to do with AI",
     href: "/prompt-lab",
-    icon: "⚡",
+    icon: "flask",
   },
   {
     title: "Quick Revision",
     description: "Rapid review when time is limited",
     href: "/prompt-lab?mode=revision",
-    icon: "📌",
+    icon: "book",
   },
   {
     title: "Exam Answer",
     description: "Marks-focused answer for any question",
     href: "/prompt-lab?mode=exam-answer",
-    icon: "📝",
+    icon: "edit",
   },
   {
     title: "PYQ Intelligence",
     description: "What actually repeats in exams",
     href: "/prompt-lab?mode=pyq-intelligence",
-    icon: "🔍",
+    icon: "pyq",
   },
   {
     title: "Mock Exam",
     description: "Simulate the real exam",
     href: "/prompt-lab?mode=mock-exam",
-    icon: "📋",
+    icon: "practice",
   },
   {
     title: "Night-Before",
     description: "High-value revision plan from your notes",
     href: "/night-before",
-    icon: "⏱",
+    icon: "revision",
   },
 ];
 
@@ -48,8 +49,8 @@ export default function StudyTools() {
           href={t.href}
           className="card p-4 flex flex-col gap-2 hover:border-signal transition-colors group min-h-[110px]"
         >
-          <span className="text-lg" aria-hidden>
-            {t.icon}
+          <span className="text-signal" aria-hidden>
+            <NavIcon name={t.icon} className="w-5 h-5" />
           </span>
           <span className="font-display font-semibold text-ink-hi group-hover:text-signal transition-colors text-[15px]">
             {t.title}

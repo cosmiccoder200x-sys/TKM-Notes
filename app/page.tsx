@@ -12,16 +12,13 @@ export default function HomePage() {
     <main className="max-w-4xl mx-auto py-4 space-y-12">
       {/* Hero — editorial greeting */}
       <section className="space-y-6 relative">
-        {/* Soft background aura glow */}
-        <div className="absolute -top-12 -left-12 w-64 h-64 bg-signal/10 rounded-full blur-3xl pointer-events-none" />
-        
         <div className="space-y-3">
           <div className="eyebrow flex items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-signal animate-pulse" />
             {PRODUCT_NAME} · {BRANCH_NAME} · {BRANCH_RANGE}
           </div>
           <h1 className="font-display font-extrabold text-4xl sm:text-5xl md:text-6xl text-ink-hi leading-[1.1] tracking-tight max-w-3xl">
-            Prep less. <span className="bg-gradient-to-r from-signal to-signal-dim bg-clip-text text-transparent">Prioritize better.</span>
+            Prep less. <span className="text-signal">Prioritize better.</span>
           </h1>
           <p className="text-base sm:text-lg text-ink-lo leading-relaxed max-w-2xl font-light">
             A premium academic workspace engineered with prioritizing algorithms, curated revision content, and exam notes for Electrical & Computer Engineering.

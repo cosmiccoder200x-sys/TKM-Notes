@@ -3,7 +3,6 @@ import { Outfit, Inter } from "next/font/google";
 import "./globals.css";
 import ThemeScript from "@/components/ThemeScript";
 import CommandPalette from "@/components/CommandPalette";
-import MobileNav from "@/components/MobileNav";
 import { PRODUCT_NAME, PRODUCT_TAGLINE } from "@/lib/branch";
 import AppShell from "@/components/layout/AppShell";
 
@@ -55,7 +54,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </a>
         </footer>
         <CommandPalette />
-        <MobileNav />
       </body>
     </html>
   );

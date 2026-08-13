@@ -1,4 +1,4 @@
-// PrepPilot AI Study Planner engine.
+// TKM Notes AI Study Planner engine.
 // Pure + deterministic: builds a time-boxed study plan from verified content
 // (exam weightage, module order) and, when available, the student's own mastery
 // data. All reasons are honest statements about the content — no invented claims.

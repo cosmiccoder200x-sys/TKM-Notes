@@ -1,7 +1,12 @@
 import { SubjectContent } from "../types";
 
 const content: SubjectContent = {
-  subjectCode: "24ERP304",
+  code: "24ERP304",
+  name: "Data Structures and Algorithms",
+  semester: "s3",
+  category: "computer",
+  credits: 4,
+  ltpj: "2-1-2-0",
   modules: [
     // ---------------------------------------------------------------
     // MODULE I — Basic Concepts of Data Structures
@@ -9,6 +14,11 @@ const content: SubjectContent = {
     {
       id: "m1",
       title: "Basic Concepts of Data Structures",
+      number: 1,
+      topics: [
+        { title: "Introduction: Overview of Data Structures – The Need for Data Structures – Cost and Benefits – Abstract Data Types and Data Structures" },
+        { title: "Basic complexity analysis – Best, Worst, and Average Cases – Asymptotic Analysis -Analyzing Programs – Space Bounds, Complexity Calculation of Simple Algorithms" },
+      ],
       overview: {
         summary:
           "This chapter introduces what a data structure actually is, why we bother choosing one over another, and how to measure an algorithm's efficiency using time and space complexity and the asymptotic notations O, Ω, Θ.",
@@ -99,6 +109,13 @@ const content: SubjectContent = {
     {
       id: "m2",
       title: "Arrays and Linked List",
+      number: 2,
+      topics: [
+        { title: "Array - Stacks, Queues-Circular Queues, Double Ended Queues, Evaluation of Expressions" },
+        { title: "Linked List - Self Referential Structures, Dynamic Memory Allocation, Singly Linked List-Operations on Linked List" },
+        { title: "Doubly Linked List, Circular Linked List, Stacks and Queues using Linked List" },
+        { title: "Applications of array and linked list -, Polynomial representation" },
+      ],
       overview: {
         summary:
           "This chapter covers the two most fundamental linear data structures — arrays (and the stack/queue ADTs built on them) and linked lists (singly, doubly, circular) — plus the classic stack application of evaluating arithmetic expressions.",
@@ -195,6 +212,11 @@ const content: SubjectContent = {
     {
       id: "m3",
       title: "Trees and Graphs",
+      number: 3,
+      topics: [
+        { title: "Trees -Binary Trees - Binary Tree Representation, Tree Traversals, Binary Search Trees- Binary Search Tree Operations" },
+        { title: "Graphs, Representation of Graphs, Depth First Search and Breadth First Search on Graphs, Applications of Graphs" },
+      ],
       overview: {
         summary:
           "This chapter moves from linear to non-linear data structures: binary trees and binary search trees (with their representations and traversal orders), and graphs (their representations, and the two fundamental traversal algorithms DFS and BFS).",
@@ -290,6 +312,11 @@ const content: SubjectContent = {
     {
       id: "m4",
       title: "Sorting and Searching",
+      number: 4,
+      topics: [
+        { title: "Sorting – Linear Sorting – Heap Sort – Merge Sort – Quick Sort –External Memory Sorting" },
+        { title: "Searching - Linear Search, Binary Search, Complexity analysis" },
+      ],
       overview: {
         summary:
           "This chapter compares the major sorting algorithms — including linear-time (non-comparison) sorts, heap sort, merge sort, and quick sort — plus external memory sorting for data too large to fit in RAM, and the two fundamental search algorithms.",
@@ -377,6 +404,12 @@ const content: SubjectContent = {
     {
       id: "m5",
       title: "Hashing Table and Tries",
+      number: 5,
+      topics: [
+        { title: "Map ADT - Hash Tables and implementation of Map using Hash Tables - Design of hash functions - Collision resolution schemes: chaining, open addressing schemes - linear probing, quadratic probing, double hashing" },
+        { title: "Applications of Hashing: finding duplicates, set intersection" },
+        { title: "Tries: implementation of Map ADT using tries" },
+      ],
       overview: {
         summary:
           "This chapter covers the Map ADT and its most common implementation, the hash table: how hash functions are designed, how collisions are resolved (chaining and open addressing), and a brief look at tries for prefix-based string storage.",

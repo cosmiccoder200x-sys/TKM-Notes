@@ -11,6 +11,7 @@ import SelfCheck from "./SelfCheck";
 import TopicTOC from "./TopicTOC";
 import interactiveRegistry from "./InteractiveDiagrams";
 import ModuleMasteryChip from "./mastery/ModuleMasteryChip";
+import TopicCard from "./TopicCard";
 import { NoteCard, DefinitionBox, FormulaCard } from "./Notes";
 import { groupQuestionsByType } from "@/lib/study";
 import { generatePromptLabUrl, MODULE_QUICK_ACTIONS, QUESTION_ACTIONS } from "@/lib/prompts/context";
@@ -91,7 +92,7 @@ function WorkedExampleActionButton({
       className="text-xs font-mono px-2.5 py-1.5 rounded-md border border-bg-border text-ink-faint hover:border-signal hover:text-signal transition-colors"
       title="Solve this problem with AI guidance"
     >
-      ⚙️ Solve with AI
+      Solve with AI
     </Link>
   );
 }
@@ -217,10 +218,10 @@ export default function ModuleView({
           <button
             key={s.key}
             onClick={() => setActive(s.key)}
-            className={`shrink-0 font-mono text-[11px] uppercase tracking-wide px-2.5 py-1.5 rounded-md border transition-colors ${
+            className={`shrink-0 font-mono text-[11px] uppercase tracking-wide px-3 py-2 rounded-card border transition-colors ${
               active === s.key
                 ? "border-signal text-signal bg-signal/10"
-                : "border-bg-border text-ink-faint hover:text-ink-hi"
+                : "border-bg-border text-ink-faint hover:text-ink-hi hover:border-signal/30"
             }`}
           >
             {s.label}
@@ -232,7 +233,11 @@ export default function ModuleView({
         {/* Main content */}
         <div className="flex-1 min-w-0">
           {active === "overview" && (
-            <div id="section-overview" className="space-y-4 scroll-mt-4">
+            <div id="section-overview" className="read-col space-y-4 scroll-mt-4">
+              <header className="space-y-1">
+                <span className="section-kicker">Module overview</span>
+                <h2 className="section-title">What this module covers</h2>
+              </header>
               <NoteCard tone="keyidea" title="What it's about">
                 {module.overview.summary}
               </NoteCard>
@@ -242,11 +247,12 @@ export default function ModuleView({
               {module.intuition && <NoteCard tone="keyidea" title="Think of it like…">{module.intuition}</NoteCard>}
               {module.crossLinks && module.crossLinks.length > 0 && (
                 <div className="flex flex-col gap-1.5 pt-1">
+                  <span className="section-kicker">Related</span>
                   {module.crossLinks.map((link, i) => (
                     <a
                       key={i}
                       href={link.href}
-                      className="text-xs font-mono text-ink-faint hover:text-signal border border-bg-border rounded-md px-2.5 py-1.5 inline-block"
+                      className="text-xs font-mono text-ink-faint hover:text-signal border border-bg-border rounded-card px-2.5 py-2 inline-block"
                     >
                       ↗ {link.label}
                     </a>
@@ -257,18 +263,25 @@ export default function ModuleView({
           )}
 
           {active === "concepts" && (
-            <ul id="section-concepts" className="space-y-1.5 scroll-mt-4">
-              {module.coreConcepts.map((c, i) => (
-                <li key={i} className="text-sm text-ink-hi leading-relaxed flex gap-2">
-                  <span className="text-signal shrink-0">›</span>
-                  <span>{c}</span>
-                </li>
-              ))}
-            </ul>
+            <div id="section-concepts" className="read-col scroll-mt-4">
+              <header className="space-y-1 mb-3">
+                <span className="section-kicker">Core concepts</span>
+                <h2 className="section-title">The ideas behind this module</h2>
+              </header>
+              <div className="space-y-1.5">
+                {module.coreConcepts.map((c, i) => (
+                  <TopicCard key={i} index={i + 1} title={c} />
+                ))}
+              </div>
+            </div>
           )}
 
           {active === "definitions" && (
-            <div id="section-definitions" className="space-y-3 scroll-mt-4">
+            <div id="section-definitions" className="read-col space-y-3 scroll-mt-4">
+              <header className="space-y-1 pb-1">
+                <span className="section-kicker">Definitions</span>
+                <h2 className="section-title">Exam-ready terms</h2>
+              </header>
               {module.definitions.map((d, i) => (
                 <div key={i} className="group relative">
                   <DefinitionBox term={d.term} definition={d.definition} />
@@ -290,9 +303,13 @@ export default function ModuleView({
 
           {active === "diagrams" && (
             <div id="section-diagrams" className="space-y-5 scroll-mt-4">
+              <header className="space-y-1">
+                <span className="section-kicker">Diagrams</span>
+                <h2 className="section-title">Visuals that carry exam marks</h2>
+              </header>
               {module.diagrams.map((d, i) => (
                 <div key={i}>
-                  <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center justify-between mb-2 gap-2 flex-wrap">
                     <div className="text-sm font-semibold text-ink-hi">{d.title}</div>
                     {subjectCode && (
                       <QuestionActionButton
@@ -304,7 +321,7 @@ export default function ModuleView({
                       />
                     )}
                   </div>
-                  <div className="bg-bg-surface border border-bg-border rounded-card p-3">
+                  <div className="bg-bg-surface border border-bg-border rounded-card p-3 max-w-full overflow-hidden">
                     {d.interactive && interactiveRegistry[d.svgKey] ? (
                       interactiveRegistry[d.svgKey]()
                     ) : (
@@ -319,6 +336,10 @@ export default function ModuleView({
 
           {active === "formulas" && (
             <div id="section-formulas" className="space-y-3 scroll-mt-4">
+              <header className="space-y-1 pb-1">
+                <span className="section-kicker">Formulas</span>
+                <h2 className="section-title">The ones examiners actually ask for</h2>
+              </header>
               {module.formulas.map((f, i) => (
                 <div key={i} className="group relative">
                   <FormulaCard name={f.name} expression={f.expression} note={f.note} />
@@ -340,6 +361,10 @@ export default function ModuleView({
 
           {active === "practice" && module.workedExamples && (
             <div id="section-practice" className="space-y-3 scroll-mt-4">
+              <header className="space-y-1 pb-1">
+                <span className="section-kicker">Worked examples</span>
+                <h2 className="section-title">Step-by-step problem walkthroughs</h2>
+              </header>
               {module.workedExamples.map((ex, i) => (
                 <div key={i} className="relative">
                   <WorkedExampleCard example={ex} />
@@ -361,6 +386,10 @@ export default function ModuleView({
 
           {active === "compare" && module.comparisons && (
             <div id="section-compare" className="space-y-3 scroll-mt-4">
+              <header className="space-y-1 pb-1">
+                <span className="section-kicker">Compare</span>
+                <h2 className="section-title">Why this, not that</h2>
+              </header>
               {module.comparisons.map((c, i) => (
                 <div key={i} className="relative">
                   <ComparisonCard card={c} />
@@ -382,6 +411,10 @@ export default function ModuleView({
 
           {active === "examfocus" && (
             <div id="section-examfocus" className="space-y-5 scroll-mt-4">
+              <header className="space-y-1">
+                <span className="section-kicker">Exam focus</span>
+                <h2 className="section-title">Questions that actually appear</h2>
+              </header>
               {groupQuestionsByType(module.examFocus).map((group) => (
                 <div key={group.id} id={`qt-${group.id}`} className="space-y-3">
                   <div className="flex items-baseline justify-between gap-2 flex-wrap">
@@ -395,7 +428,16 @@ export default function ModuleView({
                   <p className="text-xs text-ink-faint -mt-1">{group.description}</p>
                   <div className="space-y-2.5">
                     {group.questions.map((q, i) => (
-                      <div key={i} className="border border-bg-border rounded-card p-3">
+                      <div
+                        key={i}
+                        className={`border rounded-card p-3 border-l-2 ${
+                          q.weightage === "high"
+                            ? "border-critical/25 border-l-critical"
+                            : q.weightage === "medium"
+                            ? "border-bg-border border-l-weight/60"
+                            : "border-bg-border border-l-bg-border"
+                        }`}
+                      >
                         <div className="flex items-start justify-between gap-2 mb-1.5">
                           <span className="text-sm text-ink-hi leading-relaxed">{q.question}</span>
                           <div className="shrink-0">
@@ -428,6 +470,10 @@ export default function ModuleView({
 
           {active === "selfcheck" && module.selfCheck && (
             <div id="section-selfcheck" className="space-y-3 scroll-mt-4">
+              <header className="space-y-1 pb-1">
+                <span className="section-kicker">Self-check</span>
+                <h2 className="section-title">Do you actually know this?</h2>
+              </header>
               {module.selfCheck.map((item, i) => (
                 <div key={i} className="relative">
                   <SelfCheck item={item} index={i} subjectCode={subjectCode} moduleId={module.id} />
@@ -455,14 +501,20 @@ export default function ModuleView({
           )}
 
           {active === "revision" && (
-            <ul id="section-revision" className="space-y-1.5 scroll-mt-4">
-              {module.revisionNotes.map((r, i) => (
-                <li key={i} className="text-sm text-ink-hi leading-relaxed font-mono flex gap-2">
-                  <span className="text-critical shrink-0">•</span>
-                  <span>{r}</span>
-                </li>
-              ))}
-            </ul>
+            <div id="section-revision" className="read-col scroll-mt-4">
+              <header className="space-y-1 mb-3">
+                <span className="section-kicker">Revision</span>
+                <h2 className="section-title">One-pass summary bullets</h2>
+              </header>
+              <ul className="space-y-1.5">
+                {module.revisionNotes.map((r, i) => (
+                  <li key={i} className="text-sm text-ink-hi leading-relaxed font-mono flex gap-2">
+                    <span className="text-critical shrink-0">•</span>
+                    <span>{r}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           )}
         </div>
 

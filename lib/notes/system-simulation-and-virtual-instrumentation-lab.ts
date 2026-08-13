@@ -1,7 +1,12 @@
 import { SubjectContent } from "../types";
 
 const content: SubjectContent = {
-  subjectCode: "24ESP307",
+  code: "24ESP307",
+  name: "System Simulation & Virtual Instrumentation Lab",
+  semester: "s3",
+  category: "electronics",
+  credits: 2,
+  ltpj: "1-0-2-0",
   modules: [
     // ---------------------------------------------------------------
     // MODULE I — Introduction to Electrical Circuit Simulation
@@ -9,6 +14,11 @@ const content: SubjectContent = {
     {
       id: "m1",
       title: "Introduction to Electrical Circuit Simulation",
+      number: 1,
+      topics: [
+        { title: "Overview of system simulation-Importance of system simulation- Advantages and disadvantages of simulation-Types of simulation problems-DC simulation-Transient Simulation-AC simulation-Digital Circuit Simulation-Sensitivity analysis- noise analysis" },
+        { title: "Examples" },
+      ],
       overview: {
         summary:
           "This module covers what system simulation is, why it's used in electrical engineering, the different categories of simulation problems (DC, transient, AC, digital), and the supporting analyses — sensitivity and noise analysis.",
@@ -67,6 +77,11 @@ const content: SubjectContent = {
     {
       id: "m2",
       title: "Introduction to MATLAB",
+      number: 2,
+      topics: [
+        { title: "Introduction to MATLAB/Scilab, Variables, arrays, conditional statements, loops, functions, m-files, plots and various Toolbox familiarization" },
+        { title: "Solution of ordinary differential equations- ODE Solvers" },
+      ],
       overview: {
         summary:
           "This module covers MATLAB fundamentals: variables, arrays, conditional statements, loops, functions, m-files, plotting, toolbox familiarization, and solving ordinary differential equations using built-in ODE solvers.",
@@ -136,6 +151,11 @@ const content: SubjectContent = {
     {
       id: "m3",
       title: "Creating Subsystems using MATLAB/SIMULINK",
+      number: 3,
+      topics: [
+        { title: "Introduction To MATLAB SIMULINK/ Scilab XCOS – Importance-SIMULINK Interface- Libraries & Tools-Sources & Sinks-Building Systems-Mathematical Modeling-Converting Mathematical Model into SIMULINK Model/ XCOS" },
+        { title: "Realtime Modeling exercises using Simulink" },
+      ],
       overview: {
         summary:
           "This module covers SIMULINK — MATLAB's block-diagram simulation environment — its interface, libraries, sources and sinks, and the process of converting a mathematical model into a working SIMULINK model.",
@@ -199,6 +219,10 @@ const content: SubjectContent = {
     {
       id: "m4",
       title: "Electronic Instrumentation",
+      number: 4,
+      topics: [
+        { title: "Basics of digital measurements: A/D and D/A Converters-Instrumentation amplifier- comparators and function generators-elements of digital multimeter-Hall effect sensor-clamp on meter-solid state energy meter-frequency, phase angle and time period measurement- Digital Storage Oscilloscope-Sample and Hold circuits" },
+      ],
       overview: {
         summary:
           "This module covers the building blocks of digital measurement instruments: A/D and D/A converters, instrumentation amplifiers, comparators and function generators, the internals of a digital multimeter, Hall-effect and clamp-on current sensing, and how frequency/phase/time-period and waveform capture (DSO) actually work.",
@@ -271,6 +295,12 @@ const content: SubjectContent = {
     {
       id: "m5",
       title: "Introduction to Virtual Instrumentation",
+      number: 5,
+      topics: [
+        { title: "Introduction to virtual instrumentation- Virtual instrumentation tools -Building virtual instruments for data acquisition and control, arrays, clusters, graphs, charts, programming techniques, string operation, data logging" },
+        { title: "Data acquisition methods-DAQ hardware, PC hardware; Structure, Operating system, ISA, PCI, USB, PCMICA buses, Instrumentation buses" },
+        { title: "IEEE 488.1" },
+      ],
       overview: {
         summary:
           "This module covers Virtual Instrumentation (VI) — using software (e.g. LabVIEW) plus general-purpose hardware to replace dedicated instruments — including data structures (arrays, clusters), graphs/charts, string operations, data logging, DAQ hardware, PC bus architectures, and instrumentation buses.",

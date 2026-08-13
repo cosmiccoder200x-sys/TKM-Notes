@@ -1,7 +1,12 @@
 import { SubjectContent } from "../types";
 
 const content: SubjectContent = {
-  subjectCode: "24ERT305",
+  code: "24ERT305",
+  name: "Sensor & Sensor Circuits",
+  semester: "s3",
+  category: "electronics",
+  credits: 3,
+  ltpj: "2-1-0-0",
   modules: [
     // ---------------------------------------------------------------
     // MODULE I — Introduction to Measurements and Sensors
@@ -9,6 +14,11 @@ const content: SubjectContent = {
     {
       id: "m1",
       title: "Introduction to Measurements and Sensors",
+      number: 1,
+      topics: [
+        { title: "Instruments: Classifications, applications, essentials of indicating instruments – deflecting, damping, controlling torques, elements of a generalized measurement system, -errors in measurement" },
+        { title: "Introduction to sensors, Need of sensors in the modern world, Overview of Sensors- Sensor fundamentals, characteristics, classification, performance and error analysis" },
+      ],
       overview: {
         summary:
           "This module sets up the vocabulary of instrumentation: classification of instruments, the three torques in an indicating instrument, the elements of a generalized measurement system, types of measurement errors, and why sensors are needed at all, including their characteristics and performance metrics.",
@@ -76,6 +86,11 @@ const content: SubjectContent = {
     {
       id: "m2",
       title: "Temperature and Flow Sensors",
+      number: 2,
+      topics: [
+        { title: "Temperature sensors- thermos-resistive, thermoelectric-simple numerical problems, Piezoelectric temperature sensor" },
+        { title: "Flow sensors: pressure gradient technique, thermal transport, ultrasonic, electromagnetic and Laser anemometer. coriolis mass flow sensor" },
+      ],
       overview: {
         summary:
           "This module covers temperature sensing technologies (thermo-resistive, thermoelectric, piezoelectric) with their characteristic equations, and flow sensing techniques (pressure gradient, thermal transport, ultrasonic, electromagnetic, laser anemometer, Coriolis mass flow).",
@@ -157,6 +172,11 @@ const content: SubjectContent = {
     {
       id: "m3",
       title: "Optical Sensors and Biomedical Sensors",
+      number: 3,
+      topics: [
+        { title: "Electronic and Optical properties of semiconductor as sensors, LED, Semiconductor lasers, Fiber optic sensors, Photo multipliers, photoconductive detectors, Charge Coupled devices (CCDs), CMOS sensors" },
+        { title: "Biomedical sensors – EEG, ECG, EMG" },
+      ],
       overview: {
         summary:
           "This module covers light-sensing devices built from semiconductor electronic and optical properties — LEDs, semiconductor lasers, fiber optic sensors, photomultipliers, photoconductive detectors, CCDs and CMOS image sensors — plus an introduction to biomedical bio-potential sensors (EEG, ECG, EMG).",
@@ -223,6 +243,12 @@ const content: SubjectContent = {
     {
       id: "m4",
       title: "Position, Direction, Displacement Sensors",
+      number: 4,
+      topics: [
+        { title: "Potentiometric and capacitive sensors, LVDT – simple numerical problems, RVDT, Hall effect sensor" },
+        { title: "Operational Amplifiers-characteristics (slew rate, CMRR)" },
+        { title: "Switched capacitor amplifier, Practical designing of a capacitor measurement circuit" },
+      ],
       overview: {
         summary:
           "This module covers potentiometric and capacitive position sensors, LVDT and RVDT (with numerical problems), the Hall effect sensor, key op-amp characteristics relevant to sensor circuits (slew rate, CMRR), and the practical design of a capacitance measurement circuit.",
@@ -297,6 +323,10 @@ const content: SubjectContent = {
     {
       id: "m5",
       title: "Signal Conditioning",
+      number: 5,
+      topics: [
+        { title: "Analog and Digital Signal Conditioning - Principles of analog signal conditioning, Signal- Level and Bias Changes, Linearization, Conversions, Hardware and Software of Data Acquisition System (DAS)" },
+      ],
       overview: {
         summary:
           "This module covers analog and digital signal conditioning principles — signal-level and bias changes, linearization, signal conversions — and the hardware/software architecture of a Data Acquisition System (DAS).",

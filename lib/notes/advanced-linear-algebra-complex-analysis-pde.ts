@@ -1,7 +1,12 @@
 import { SubjectContent } from "../types";
 
 const content: SubjectContent = {
-  subjectCode: "24MAP301",
+  code: "24MAP301",
+  name: "Advanced Linear Algebra, Complex Analysis & PDE",
+  semester: "s3",
+  category: "math",
+  credits: 5,
+  ltpj: "3-1-2-0",
   modules: [
     // ---------------------------------------------------------------
     // MODULE I — Vector Spaces
@@ -9,6 +14,11 @@ const content: SubjectContent = {
     {
       id: "m1",
       title: "Vector Spaces",
+      number: 1,
+      topics: [
+        { title: "(Text 1: Relevant topics from sections 2.1, 2.2, 2.3, 2.4, 2.5) Vector Spaces, Subspaces -Definition and Examples" },
+        { title: "Linear independence of vectors, Linear span, Basis and dimension, Co-ordinate representation of vectors, Row space and Column space" },
+      ],
       overview: {
         summary:
           "This module introduces vector spaces and subspaces in the abstract sense, then builds the core toolkit for working with them: linear independence, span, basis, dimension, coordinate representation, and row/column space.",
@@ -82,6 +92,10 @@ const content: SubjectContent = {
     {
       id: "m2",
       title: "Inner Product",
+      number: 2,
+      topics: [
+        { title: "(Text 1: Relevant topics from sections 5.1, 5.2, 5.5) Inner Product: Inner product spaces, properties of inner product, length and distance, Orthogonality, Cauchy-Schwarz inequality, Orthogonal projection, orthogonal complement, Orthonormal basis, Gram-Schmidt orthogonalization process" },
+      ],
       overview: {
         summary:
           "This module extends vector spaces with an inner product, giving a notion of length, distance and angle — leading to orthogonality, the Cauchy-Schwarz inequality, orthogonal projections, and the Gram-Schmidt process for building an orthonormal basis.",
@@ -166,6 +180,10 @@ const content: SubjectContent = {
     {
       id: "m3",
       title: "Complex Differentiation",
+      number: 3,
+      topics: [
+        { title: "(Text 2: Relevant topics from sections 13.3,13.4) Circles and disks half-planes, complex functions, limit, continuity and derivatives, analytic functions, Cauchy-Riemann equations, Laplace equation, Harmonic functions, harmonic conjugate functions" },
+      ],
       overview: {
         summary:
           "This module moves into complex analysis: regions in the complex plane, limits/continuity/derivatives of complex functions, analytic functions, the Cauchy-Riemann equations, and the connection to harmonic functions via the Laplace equation.",
@@ -234,6 +252,10 @@ const content: SubjectContent = {
     {
       id: "m4",
       title: "Complex Integration",
+      number: 4,
+      topics: [
+        { title: "(Text 2- Relevant topics from sections 14.1,14.2,14.3,14.4,15.4,16.1,16.2,16.3) Cauchy’s integral theorem for simply connected domains (without proof), Cauchy’s Integral formula for simply connected domains (without proof), Cauchy’s Integral formula for derivatives of analytic functions, Taylor and Maclaurin series, Laurent's series, Poles and Residues, Evaluation of residues, Cauchy's residue theorem" },
+      ],
       overview: {
         summary:
           "This module covers Cauchy's integral theorem and formula, power series representations of analytic functions (Taylor and Laurent series), poles and residues, and Cauchy's residue theorem for evaluating contour integrals.",
@@ -310,6 +332,10 @@ const content: SubjectContent = {
     {
       id: "m5",
       title: "Partial Differential Equations",
+      number: 5,
+      topics: [
+        { title: "(Text 3: Relevant topics from sections 17.1,17.2,17.3,17.4,17.5) Introduction, Formation of partial differential equations -elimination of arbitrary constants-elimination of arbitrary functions, Solutions of partial differential equations, Equations solvable by direct integration, Linear equations of the first order, Lagrange's linear equation" },
+      ],
       overview: {
         summary:
           "This module covers how partial differential equations (PDEs) are formed — by eliminating arbitrary constants or arbitrary functions — and methods for solving first-order PDEs: direct integration, linear first-order PDEs, and Lagrange's linear equation.",

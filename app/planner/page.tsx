@@ -1,11 +1,12 @@
 import { Suspense } from "react";
 import { Metadata } from "next";
 import StudyPlanner from "@/components/planner/StudyPlanner";
+import { PRODUCT_NAME } from "@/lib/branch";
 
 export const metadata: Metadata = {
   title: "Study Planner",
   description:
-    "What should I study now? Tell PrepPilot how much time you have and it builds a prioritized plan from verified syllabus data and your own mastery marks.",
+    `What should I study now? Tell ${PRODUCT_NAME} how much time you have and it builds a prioritized plan from verified syllabus data and your own mastery marks.`,
 };
 
 export default function PlannerPage() {

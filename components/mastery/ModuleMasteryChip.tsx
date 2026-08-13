@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getProgress, calculateModuleMastery, masteryLabel } from "@/lib/study";
+import { NavIcon } from "@/components/navigation/navItems";
 
 export default function ModuleMasteryChip({
   subjectCode,
@@ -42,9 +43,9 @@ export default function ModuleMasteryChip({
       </span>
       <Link
         href={`/night-before?subject=${encodeURIComponent(subjectCode)}&time=60`}
-        className="font-mono text-[10px] uppercase tracking-wide px-2.5 py-1 rounded-card border border-signal text-signal hover:bg-signal/10 transition-colors"
+        className="inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-wide px-2.5 py-1 rounded-card border border-signal text-signal hover:bg-signal/10 transition-colors"
       >
-        ⏱ Night-Before
+        <NavIcon name="revision" className="w-3.5 h-3.5" /> Night-Before
       </Link>
     </div>
   );

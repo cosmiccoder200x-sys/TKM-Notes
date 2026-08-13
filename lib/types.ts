@@ -1,4 +1,4 @@
-// Core content model for PrepPilot S3-S8 Interactive Notes.
+// Core content model for TKM Notes S3-S8 Interactive Notes.
 // Every subject is broken into Modules. Every Module carries the
 // 7 fixed exam-prep sections (A-G from the spec). Nothing else.
 
@@ -45,9 +45,20 @@ export interface ExamFocusItem {
   note?: string; // hint on how to structure the answer
 }
 
+// A single syllabus topic, faithful to the official TKM syllabus text.
+export interface Topic {
+  title: string;   // exact syllabus topic wording
+  details?: string; // optional extra context from the syllabus (e.g. sub-notes)
+}
+
+// Discipline grouping for a subject (matches lib/branch.ts SubjectCategoryId).
+export type SubjectCategory = "computer" | "electronics" | "math" | "core";
+
 export interface Module {
   id: string;          // "m1"
+  number: number;      // 1-5 (syllabus module number)
   title: string;
+  topics: Topic[];     // exact syllabus topics for this module
   overview: {
     summary: string;     // what this chapter is about
     whyItMatters: string; // why it matters in exams
@@ -98,6 +109,11 @@ export interface CrossLink {
 }
 
 export interface SubjectContent {
-  subjectCode: string;
+  code: string;          // course code, e.g. "24EST332"
+  name: string;          // full subject name
+  semester: string;      // "s3".."s8"
+  category: SubjectCategory; // discipline grouping
+  credits: number | "MOOC";
+  ltpj: string;          // L-T-P-J structure, e.g. "2-0-0-0"
   modules: Module[];
 }

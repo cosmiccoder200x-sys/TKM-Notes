@@ -1,7 +1,12 @@
 import { SubjectContent } from "../types";
 
 const content: SubjectContent = {
-  subjectCode: "24EST332",
+  code: "24EST332",
+  name: "Network Theory",
+  semester: "s3",
+  category: "electronics",
+  credits: 2,
+  ltpj: "2-0-0-0",
   modules: [
     // ---------------------------------------------------------------
     // MODULE I — Steady State Analysis Using Circuit Theorems
@@ -9,6 +14,10 @@ const content: SubjectContent = {
     {
       id: "m1",
       title: "Steady State Analysis Using Circuit Theorems",
+      number: 1,
+      topics: [
+        { title: "Steady state analysis of AC and DC circuits with dependent and independent sources; Source transformation; Superposition, Thevenin’s, Norton’s, and Maximum Power Transfer theorems; Problems from DC circuits only" },
+      ],
       overview: {
         summary:
           "This chapter covers the network theorems used to simplify and solve DC circuits containing dependent and independent sources: source transformation, superposition, Thevenin's theorem, Norton's theorem, and Maximum Power Transfer theorem.",
@@ -95,6 +104,14 @@ const content: SubjectContent = {
     {
       id: "m2",
       title: "Transient Analysis of Circuits in s-domain",
+      number: 2,
+      topics: [
+        { title: "Review of Laplace Transform" },
+        { title: "Transformation of a circuit into s-domain" },
+        { title: "Transform impedance of passive circuit elements - R, L and C" },
+        { title: "Transient Analysis: Formulation and solution of dynamic equations of RL and RC series networks with DC excitation and initial conditions using Laplace Transforms, Time constant; Complete solution of RL and RC series circuits with sinusoidal excitation using Laplace Transforms" },
+        { title: "Simple Numerical Problems" },
+      ],
       overview: {
         summary:
           "This chapter uses the Laplace Transform to move RL and RC circuits from the time domain into the s-domain, where differential equations become algebra — letting you solve for the transient and complete response of these circuits under DC and sinusoidal excitation.",
@@ -176,6 +193,11 @@ const content: SubjectContent = {
     {
       id: "m3",
       title: "Resonance in Series Circuits & Transformed Circuit Analysis",
+      number: 3,
+      topics: [
+        { title: "Resonance in Series circuits – Quality factor – Bandwidth – Simple Numerical Problems Steady state Analysis: Mesh analysis and node analysis of transformed circuits in -domain" },
+        { title: "Numerical Problems" },
+      ],
       overview: {
         summary:
           "This chapter covers resonance in a series RLC circuit — quality factor and bandwidth — followed by mesh and node analysis applied to circuits that have already been transformed into the s-domain.",
@@ -253,6 +275,11 @@ const content: SubjectContent = {
     {
       id: "m4",
       title: "Steady State Analysis of Three Phase Network",
+      number: 4,
+      topics: [
+        { title: "Complex Power in sinusoidal steady state, Steady state analysis of - three-phase three- wire and four-wire unbalanced Y circuits, Unbalanced Delta circuit, Neutral shift" },
+        { title: "Complex Power" },
+      ],
       overview: {
         summary:
           "This chapter covers complex power and the steady-state analysis of three-phase circuits — three-wire and four-wire unbalanced star (Y) systems, unbalanced delta systems, and the phenomenon of neutral shift.",
@@ -319,6 +346,10 @@ const content: SubjectContent = {
     {
       id: "m5",
       title: "Two Port Networks",
+      number: 5,
+      topics: [
+        { title: "Two-port network parameters - Z, Y, h and T parameter, Conditions for symmetry & reciprocity" },
+      ],
       overview: {
         summary:
           "This chapter introduces two-port networks — circuits with two pairs of terminals — and the four standard parameter sets (Z, Y, h, T/ABCD) used to characterize them, along with the conditions for reciprocity and symmetry.",

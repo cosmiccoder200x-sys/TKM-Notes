@@ -1,8 +1,8 @@
-# PrepPilot
+# TKM Notes
 
 **Your AI exam preparation system.** Study less. Prioritize better.
 
-AI exam preparation workspace for TKM College of Engineering (EC Engineering, 2024 scheme), S3–S8. **PrepPilot ranks every topic by real exam weightage** and turns your available time into a prioritized, reason-backed study plan. Prompt Lab supplies the AI prompts — find the best prompt for whatever you need to do, copy it, and use it with ChatGPT, Gemini, Claude or any AI. Exam-focused notes are the verified context that makes everything specific. One job only: help you score full marks. No chatbots, no trackers, no fluff.
+AI exam preparation workspace for TKM College of Engineering (EC Engineering, 2024 scheme), S3–S8. **TKM Notes ranks every topic by real exam weightage** and turns your available time into a prioritized, reason-backed study plan. Prompt Lab supplies the AI prompts — find the best prompt for whatever you need to do, copy it, and use it with ChatGPT, Gemini, Claude or any AI. Exam-focused notes are the verified context that makes everything specific. One job only: help you score full marks. No chatbots, no trackers, no fluff.
 
 ---
 
@@ -10,7 +10,7 @@ AI exam preparation workspace for TKM College of Engineering (EC Engineering, 20
 
 ### The 30-second version
 
-> Open PrepPilot → answer "what should I study now?" → get a prioritized plan with reasons → open the modules in order → practice the HIGH PRIORITY questions → revise → score.
+> Open TKM Notes → answer "what should I study now?" → get a prioritized plan with reasons → open the modules in order → practice the HIGH PRIORITY questions → revise → score.
 
 ### Step-by-step study workflow
 
@@ -58,10 +58,10 @@ Every module has up to 9 sections. Work through them in this order for best resu
 | **Self-Check** | Tap-to-reveal questions to test yourself | Final check — if you can answer these, you're ready |
 | **Revision** | Ultra-short one-page night-before-the-exam bullets | Last day before the exam, go through these |
 
-#### 4b. Study Planner (the core PrepPilot feature)
+#### 4b. Study Planner (the core TKM Notes feature)
 
 - **Priority system** — every module shows a **Must Learn / Core / Support** badge. Click it for *why*: real exam weightage, module position, and high-priority question counts. Never a guess.
-- **AI Study Planner** (`/planner` or "Generate My Plan" anywhere) — pick a subject, tick the modules, choose time available and how far along you are. PrepPilot returns a time-boxed plan: what to learn, which HIGH PRIORITY questions to practice, what to revise, and honest reasons for each step — based on verified syllabus data plus your own mastery marks.
+- **AI Study Planner** (`/planner` or "Generate My Plan" anywhere) — pick a subject, tick the modules, choose time available and how far along you are. TKM Notes returns a time-boxed plan: what to learn, which HIGH PRIORITY questions to practice, what to revise, and honest reasons for each step — based on verified syllabus data plus your own mastery marks.
 - **Study Modes** — on every subject page: **Learn / Exam / Last-Minute / Revision**. Each mode re-curates the module list for that goal (Last-Minute shows only modules the paper actually rewards).
 - **Exam Focus grouping** — questions are grouped by answer type (Explain, Derive, Calculate, Compare, Design…) so you spot the pattern before the exam.
 

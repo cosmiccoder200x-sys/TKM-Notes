@@ -1,4 +1,4 @@
-// Topic priority system for PrepPilot.
+// Topic priority system for TKM Notes.
 // Pure + deterministic: derives priority entirely from existing verified content —
 // exam weightage metadata + module position in the syllabus. Never invents frequency.
 

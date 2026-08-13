@@ -1,7 +1,12 @@
 import { SubjectContent } from "../types";
 
 const content: SubjectContent = {
-  subjectCode: "24ERJ303",
+  code: "24ERJ303",
+  name: "Digital Electronics and Logic Design",
+  semester: "s3",
+  category: "electronics",
+  credits: 5,
+  ltpj: "2-0-2-2",
   modules: [
     // ---------------------------------------------------------------
     // MODULE I — Number Systems and Logic Gate Fundamentals
@@ -9,6 +14,12 @@ const content: SubjectContent = {
     {
       id: "m1",
       title: "Number Systems and Logic Gate Fundamentals",
+      number: 1,
+      topics: [
+        { title: "Number Systems and Codes: Binary, Octal and hexadecimal conversions- ASCII code, Excess -3 code, Gray code, BCD, Error detection codes-Parity code" },
+        { title: "Signed numbers- representation, addition and subtraction, Fixed point and floating-point representation" },
+        { title: "TTL and CMOS logic families-Internal diagram of TTL NAND gate and CMOS NOR gate" },
+      ],
       overview: {
         summary:
           "This module covers number system conversions and codes (binary, octal, hex, ASCII, Excess-3, Gray, BCD, parity), signed number representation and arithmetic, fixed/floating point representation, and the basics of TTL and CMOS logic families.",
@@ -82,6 +93,11 @@ const content: SubjectContent = {
     {
       id: "m2",
       title: "Boolean Algebra and Combinational Circuit Design",
+      number: 2,
+      topics: [
+        { title: "Boolean algebra - Sum of Products method, Product of Sum method – K map representation and simplification (up to four variables) - Pairs, Quads, Octets, Don’t care conditions" },
+        { title: "Combinational circuits: Adders -Full adder and half adder, Subtractors- half subtractor and full subtractor, 4 bit parallel binary adder/subtractor, Carry Look ahead adders" },
+      ],
       overview: {
         summary:
           "This module covers Boolean algebra simplification using Sum of Products (SOP) and Product of Sums (POS) forms, K-map minimization up to four variables (pairs, quads, octets, don't-care conditions), and the design of adders and subtractors.",
@@ -166,6 +182,13 @@ const content: SubjectContent = {
     {
       id: "m3",
       title: "Digital Logic Components and Verilog Programming",
+      number: 3,
+      topics: [
+        { title: "Comparators, Parity generators and checkers, Encoders, Decoders, , BCD to seven segment decoder, Code converters, Multiplexers, Demultiplexers, Architecture of Arithmetic Logic Units (Block schematic only)" },
+        { title: "Verilog basic language elements: identifiers, data objects, scalar data types, operators" },
+        { title: "Entity and Architecture, Gate Level Modelling: Basic gates, testbench, XOR using NAND and NOR" },
+        { title: "Modeling combinational logic circuits in Verilog - Data Flow Modelling, Behavioral level Modeling: half adder, full adder, mux, demux, decoder, encoder" },
+      ],
       overview: {
         summary:
           "This module covers MSI-level combinational building blocks — comparators, parity generators/checkers, encoders, decoders, multiplexers, demultiplexers, and ALU architecture — alongside an introduction to Verilog HDL and modeling combinational circuits with it.",
@@ -240,6 +263,13 @@ const content: SubjectContent = {
     {
       id: "m4",
       title: "Flip-Flops, Registers, and Counters: Sequential Logic Design",
+      number: 4,
+      topics: [
+        { title: "Flip-Flops, SR, JK, D and T flip-flops, JK Master Slave Flip-flop, Preset and clear inputs, Conversion of flip-flops" },
+        { title: "Registers -SISO, SIPO, PISO, PIPO" },
+        { title: "Up/Down Counters: Asynchronous Counters – Modulus of a counter – Mod-N counters Ring counter, Johnson Counter Synchronous counters, Design of Synchronous counters" },
+        { title: "Modeling of sequential logic circuits in Verilog: flipflops, counters" },
+      ],
       overview: {
         summary:
           "This module covers the four basic flip-flop types (SR, JK, D, T) and their conversions, shift register configurations (SISO/SIPO/PISO/PIPO), and counter design — both asynchronous (ripple) and synchronous counters.",
@@ -332,6 +362,12 @@ const content: SubjectContent = {
     {
       id: "m5",
       title: "State Machines, D/A and A/D Converters, Programmable Logic Devices",
+      number: 5,
+      topics: [
+        { title: "Devices State Machines: State transition diagram, Moore and Mealy Machines Digital to Analog converter –Specifications, Weighted resistor type, R-2R Ladder type" },
+        { title: "Analog to Digital Converter – Specifications, Flash type, Successive approximation type" },
+        { title: "Programmable Logic Devices - PAL, PLA, FPGA, combinational logic design with PAL, PLA" },
+      ],
       overview: {
         summary:
           "This module covers finite state machine modeling (Moore vs Mealy machines), the two main D/A converter architectures (weighted resistor, R-2R ladder), the two main A/D converter architectures (flash, successive approximation), and programmable logic devices (PAL, PLA, FPGA).",

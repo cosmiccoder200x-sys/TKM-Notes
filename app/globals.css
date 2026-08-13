@@ -9,56 +9,43 @@
     --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
     --font-mono: "JetBrains Mono", ui-monospace, monospace;
 
-    /* Google Stitch Premium Palette — Crisp, Vibrant, Soft Glows */
-    --color-bg:            243 244 246;  /* Soft cool grey #F3F4F6 */
-    --color-bg-surface:    255 255 255;  /* Pure white */
-    --color-bg-raised:     249 250 251;  /* Off-white #F9FAFB */
-    --color-border:        224 226 232;  /* Smooth grey #E0E2E8 */
-    --color-ink-hi:        17 24 39;     /* Deep Slate #111827 */
-    --color-ink-lo:        75 85 99;     /* Slate grey #4B5563 */
-    --color-ink-faint:     107 114 128;  /* Muted grey #6B7280 */
-    --color-ink-faintest:  156 163 175;  /* Subtle grey */
-    --color-signal:        99 102 241;   /* Indigo Accent #6366F1 */
-    --color-signal-dim:    79 70 229;    /* Deep Indigo */
-    --color-weight:        245 158 11;   /* Golden Amber */
-    --color-weight-dim:    217 119 6;    /* Deep Amber */
-    --color-critical:      239 68 68;    /* Crimson Red */
+    /* Light theme (preserved/functional) */
+    --color-bg:            243 244 246;  /* #F3F4F6 */
+    --color-bg-surface:    255 255 255;  /* #FFFFFF */
+    --color-bg-raised:     249 250 251;  /* #F9FAFB */
+    --color-bg-hover:      244 245 248;  /* #F4F5F8 */
+    --color-border:        224 226 232;  /* #E0E2E8 */
+    --color-ink-hi:        17 24 39;     /* #111827 */
+    --color-ink-lo:        75 85 99;     /* #4B5563 */
+    --color-ink-faint:     107 114 128;  /* #6B7280 */
+    --color-ink-faintest:  156 163 175;  /* #9CA3AF */
+    --color-signal:        109 92 231;   /* Accent #6D5CE7 */
+    --color-signal-dim:    88 72 205;    /* Deep accent */
+    --color-weight:        245 158 11;   /* #F59E0B */
+    --color-weight-dim:    217 119 6;    /* #D97706 */
+    --color-critical:      239 68 68;    /* #EF4444 */
+    --color-icon:          240 242 255;  /* Light icon container */
+    --color-icon-border:   226 229 255;  /* Light icon border */
   }
 
   .dark {
-    /* Stitch Dark Theme — Glowing controls, deep slate space */
-    --color-bg:            8 8 11;       /* Deep space #08080B */
-    --color-bg-surface:    14 14 20;     /* Dark obsidian #0E0E14 */
-    --color-bg-raised:     20 20 28;     /* Surface obsidian #14141C */
-    --color-border:        31 32 41;     /* Charcoal #1F2029 */
-    --color-ink-hi:        243 244 246;  /* High contrast cool grey */
-    --color-ink-lo:        156 163 175;  /* Mid-tone grey */
-    --color-ink-faint:     107 114 128;  /* Darker grey */
-    --color-ink-faintest:  75 85 99;     /* Muted line grey */
-    --color-signal:        129 140 248;  /* Glowing Indigo #818CF8 */
-    --color-signal-dim:    99 102 241;   /* Indigo */
-    --color-weight:        251 191 36;   /* Amber Glow */
-    --color-weight-dim:    245 158 11;   /* Amber */
-    --color-critical:      248 113 113;  /* Bright Red */
-  }
-
-  .dark body {
-    background-image: 
-      radial-gradient(ellipse 80% 60% at 50% -20%, rgb(var(--color-signal) / 0.18), transparent),
-      radial-gradient(ellipse 60% 50% at 90% 90%, rgb(139 92 246 / 0.14), transparent),
-      radial-gradient(ellipse 40% 40% at 10% 10%, rgb(245 158 11 / 0.06), transparent);
-  }
-
-  .dark body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: 
-      radial-gradient(circle at 20% 20%, rgb(var(--color-signal) / 0.03) 1px, transparent 1px),
-      radial-gradient(circle at 80% 80%, rgb(var(--color-weight) / 0.02) 1px, transparent 1px);
-    background-size: 80px 80px, 120px 120px;
-    pointer-events: none;
-    z-index: -1;
+    /* Phase 1 — minimal dark academic SaaS */
+    --color-bg:            9 9 11;       /* Background #09090B */
+    --color-bg-surface:    13 13 15;     /* Surface #0D0D0F */
+    --color-bg-raised:     16 16 18;     /* Card #101012 */
+    --color-bg-hover:      20 20 25;     /* Card hover #141419 */
+    --color-border:        32 32 36;     /* Border #202024 */
+    --color-ink-hi:        245 245 245;  /* Primary #F5F5F5 */
+    --color-ink-lo:        161 161 170;  /* Secondary #A1A1AA */
+    --color-ink-faint:     113 113 122;  /* Muted #71717A */
+    --color-ink-faintest:  63 63 70;     /* Fainter */
+    --color-signal:        109 92 231;   /* Accent #6D5CE7 */
+    --color-signal-dim:    88 72 205;    /* Deep accent */
+    --color-weight:        251 191 36;   /* #FBBF24 */
+    --color-weight-dim:    245 158 11;   /* #F59E0B */
+    --color-critical:      248 113 113;  /* #F87171 */
+    --color-icon:          26 24 42;     /* Accent-soft icon container */
+    --color-icon-border:   42 38 66;     /* Icon border */
   }
 
   html {
@@ -67,15 +54,12 @@
   }
 
   * {
-    @apply border-bg-border transition-colors duration-150;
+    @apply border-bg-border;
   }
 
   body {
     @apply bg-bg text-ink-hi font-body antialiased;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11", "ss01";
-    background-image: 
-      radial-gradient(ellipse 70% 60% at 50% -10%, rgb(var(--color-signal) / 0.06), transparent),
-      radial-gradient(ellipse 50% 50% at 90% 90%, rgb(139 92 246 / 0.04), transparent);
   }
 
   ::selection {
@@ -84,7 +68,7 @@
   }
 
   :focus-visible {
-    outline: 2px solid rgb(var(--color-signal) / 0.8);
+    outline: 2px solid rgb(var(--color-signal) / 0.6);
     outline-offset: 2px;
   }
 
@@ -95,34 +79,95 @@
 }
 
 @layer components {
-  /* Glassmorphism panel for cards/sidebars */
+  /* Flat surface panel (glass removed) */
   .glass-panel {
-    @apply bg-bg-surface/80 dark:bg-bg-surface/75 backdrop-blur-md border border-white/20 dark:border-white/5;
+    @apply bg-bg-surface border border-bg-border;
   }
 
-  /* Eyebrows styling */
+  /* Eyebrows */
   .eyebrow {
     @apply font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.2em] text-ink-faint font-semibold;
   }
 
-  /* Card styling with subtle elevations & hover effects */
+  /* Card */
   .card {
-    @apply bg-bg-surface border border-bg-border rounded-xl shadow-card transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:border-signal/40;
+    @apply bg-bg-surface border border-bg-border rounded-xl transition-colors duration-200;
   }
-
+  .card:hover {
+    @apply bg-bg-hover;
+  }
   .dark .card {
-    @apply bg-bg-surface/95 border-bg-border/80;
+    @apply bg-bg-raised border-bg-border;
   }
   .dark .card:hover {
-    @apply border-signal/50 shadow-[0_0_24px_rgb(var(--color-signal)/0.15)];
+    @apply bg-bg-hover border-bg-border;
   }
 
+  /* Button */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 font-mono text-[11px] uppercase tracking-wider px-3.5 py-2 rounded-lg border select-none cursor-pointer transition-colors duration-200;
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 font-mono text-[11px] uppercase tracking-wider px-3.5 py-2 rounded-lg border select-none cursor-pointer transition-colors duration-200 text-white bg-signal border-transparent hover:bg-signal-dim;
+  }
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 font-mono text-[11px] uppercase tracking-wider px-3.5 py-2 rounded-lg border select-none cursor-pointer transition-colors duration-200 text-ink-hi border-bg-border bg-transparent hover:border-signal/40 hover:text-signal;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 font-mono text-[11px] uppercase tracking-wider px-3.5 py-2 rounded-lg border select-none cursor-pointer transition-colors duration-200 text-ink-lo border-transparent bg-transparent hover:text-ink-hi hover:bg-bg-raised;
+  }
+
+  /* Badge / chip */
+  .badge {
+    @apply inline-flex items-center gap-1.5 font-mono text-[10px] sm:text-[11px] uppercase tracking-wider px-2.5 py-1 rounded-full border border-bg-border text-ink-lo bg-bg-raised;
+  }
+  .badge-signal {
+    @apply inline-flex items-center gap-1.5 font-mono text-[10px] sm:text-[11px] uppercase tracking-wider px-2.5 py-1 rounded-full border border-signal/25 text-signal bg-signal/10;
+  }
   .chip {
-    @apply inline-flex items-center gap-1.5 font-mono text-[10px] sm:text-[11px] uppercase tracking-wider px-2.5 py-1 rounded-full border border-bg-border text-ink-lo bg-bg-raised transition-all hover:border-signal/50 hover:text-signal;
+    @apply inline-flex items-center gap-1.5 font-mono text-[10px] sm:text-[11px] uppercase tracking-wider px-2.5 py-1 rounded-full border border-bg-border text-ink-lo bg-bg-raised;
   }
 
-  .dark .chip:hover {
-    @apply bg-signal/10 shadow-[0_0_12px_rgb(var(--color-signal)/0.2)];
+  /* Input */
+  .input {
+    @apply w-full bg-bg-surface border border-bg-border rounded-lg px-3.5 py-2 text-sm text-ink-hi placeholder:text-ink-faint focus:outline-none focus:border-signal/50 transition-colors duration-200;
+  }
+  .dark .input {
+    @apply bg-bg-raised border-bg-border;
+  }
+
+  /* Search */
+  .search {
+    @apply flex items-center gap-2 bg-bg-surface border border-bg-border rounded-xl px-3.5 py-2.5 transition-colors duration-200;
+  }
+  .search:focus-within {
+    @apply border-signal/50;
+  }
+  .dark .search {
+    @apply bg-bg-raised border-bg-border;
+  }
+  .search-input {
+    @apply flex-1 bg-transparent text-sm text-ink-hi placeholder:text-ink-faint focus:outline-none;
+  }
+
+  /* Tabs */
+  .tabs {
+    @apply flex gap-1.5;
+  }
+  .tab {
+    @apply font-mono text-xs uppercase tracking-wide px-3.5 py-1.5 rounded-lg border border-bg-border text-ink-lo transition-colors duration-200 hover:text-ink-hi hover:bg-bg-raised;
+  }
+  .tab-active {
+    @apply font-mono text-xs uppercase tracking-wide px-3.5 py-1.5 rounded-lg border border-signal/30 text-signal bg-signal/10;
+  }
+
+  /* Icon container */
+  .icon-box {
+    @apply flex items-center justify-center rounded-lg;
+  }
+  .icon-box {
+    background: rgb(var(--color-icon));
+    border: 1px solid rgb(var(--color-icon-border));
   }
 
   .no-scrollbar {
@@ -136,19 +181,18 @@
     padding-bottom: env(safe-area-inset-bottom);
   }
 
-  /* Thin progress bar */
+  /* Progress */
   .progress-bar {
-    @apply block h-1.5 w-full overflow-hidden rounded-full bg-bg/50;
+    @apply block h-1.5 w-full overflow-hidden rounded-full bg-bg-raised;
   }
   .progress-bar > span {
-    @apply block h-full rounded-full transition-[width] duration-500 ease-out;
+    @apply block h-full rounded-full transition-[width] duration-300 ease-out;
   }
   .progress-signal {
-    background: linear-gradient(90deg, rgb(var(--color-signal-dim)), rgb(var(--color-signal)));
-    box-shadow: 0 0 8px rgb(var(--color-signal) / 0.4);
+    background: rgb(var(--color-signal));
   }
   .progress-weight {
-    background: linear-gradient(90deg, rgb(var(--color-weight-dim)), rgb(var(--color-weight)));
+    background: rgb(var(--color-weight));
   }
   .progress-critical {
     background: rgb(var(--color-critical));
@@ -157,43 +201,33 @@
     background: rgb(var(--color-ink-faintest));
   }
 
-  /* Violet gradient utilities */
-  .gradient-violet {
-    background: linear-gradient(135deg, rgb(var(--color-signal-dim)) 0%, rgb(var(--color-signal)) 50%, #a78bfa 100%);
-  }
-  .gradient-violet-text {
-    background: linear-gradient(135deg, rgb(var(--color-signal-dim)) 0%, rgb(var(--color-signal)) 50%, #a78bfa 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  
-  /* Glowing dynamic border */
-  .gradient-glow-border {
-    position: relative;
-    border-radius: 12px;
-    background: linear-gradient(135deg, rgb(var(--color-signal-dim)) 0%, rgb(var(--color-signal)) 100%);
-    padding: 1px;
-  }
-  .gradient-glow-border::before {
-    content: '';
-    position: absolute;
-    inset: 1px;
-    background: rgb(var(--color-bg-surface));
-    border-radius: 11px;
-    z-index: 0;
-  }
-  .gradient-glow-border > * {
-    position: relative;
-    z-index: 10;
-  }
-
   /* Note body typography */
   .note-body p {
     @apply text-[15px] sm:text-[16px] leading-[1.8] text-ink-hi;
   }
   .note-body > * + * {
     margin-top: 1rem;
+  }
+
+  /* Section heading used inside subject/module reading layout */
+  .section-title {
+    @apply font-display font-semibold text-ink-hi text-base sm:text-lg leading-snug;
+  }
+  .section-kicker {
+    @apply font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint;
+  }
+
+  /* Reading column — comfortable, not full-width paragraphs */
+  .read-col {
+    @apply max-w-[65ch];
+  }
+  .read-col > * + * {
+    margin-top: 1rem;
+  }
+
+  /* Horizontal scroll guards for code/mono content */
+  .scroll-x {
+    @apply overflow-x-auto overflow-y-hidden;
   }
 }
 

@@ -12,6 +12,7 @@ module.exports = {
           DEFAULT: "rgb(var(--color-bg))",
           surface: "rgb(var(--color-bg-surface))",
           raised: "rgb(var(--color-bg-raised))",
+          hover: "rgb(var(--color-bg-hover))",
           border: "rgb(var(--color-border))",
         },
         ink: {
@@ -23,6 +24,10 @@ module.exports = {
         signal: {
           DEFAULT: "rgb(var(--color-signal))",
           dim: "rgb(var(--color-signal-dim))",
+        },
+        icon: {
+          DEFAULT: "rgb(var(--color-icon))",
+          border: "rgb(var(--color-icon-border))",
         },
         weight: {
           DEFAULT: "rgb(var(--color-weight))",
@@ -54,10 +59,11 @@ module.exports = {
         DEFAULT: "6px",
         md: "8px",
         lg: "12px",
+        card: "12px",
       },
       boxShadow: {
-        card: "0 1px 2px rgb(0 0 0 / 0.03)",
-        popover: "0 2px 8px rgb(0 0 0 / 0.06), 0 12px 32px -8px rgb(0 0 0 / 0.12)",
+        card: "0 1px 2px rgb(0 0 0 / 0.04)",
+        popover: "0 4px 16px -4px rgb(0 0 0 / 0.25)",
       },
       maxWidth: {
         prose: "68ch",

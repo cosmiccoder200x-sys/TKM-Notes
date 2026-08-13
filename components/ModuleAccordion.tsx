@@ -5,6 +5,8 @@ import Link from "next/link";
 import { Module } from "@/lib/types";
 import ModuleView from "@/components/ModuleView";
 import ModulePriorityBadge from "@/components/ModulePriorityBadge";
+import ModuleProgressBar from "@/components/ModuleProgressBar";
+import { NavIcon } from "@/components/navigation/navItems";
 import { generatePromptLabUrl } from "@/lib/prompts/context";
 import { getProgress, calculateModuleMastery, estimatedModuleMinutes, ModuleProgress } from "@/lib/study";
 
@@ -123,9 +125,9 @@ export default function ModuleAccordion({ modules, subjectCode, subjectName }: P
                 <Link
                   href={`/night-before?subject=${encodeURIComponent(subjectCode)}&time=60`}
                   onClick={(e) => e.stopPropagation()}
-                  className="font-mono text-[10px] uppercase tracking-wide px-2.5 py-1.5 rounded-md border border-signal-dim text-signal hover:bg-signal/10 transition-colors"
+                  className="inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-wide px-2.5 py-1.5 rounded-card border border-signal-dim text-signal hover:bg-signal/10 transition-colors"
                 >
-                  ⏱ Night-Before
+                  <NavIcon name="revision" className="w-3.5 h-3.5" /> Night-Before
                 </Link>
               </div>
             )}
@@ -133,6 +135,9 @@ export default function ModuleAccordion({ modules, subjectCode, subjectName }: P
             {/* Module content — only rendered when open */}
             {isOpenNow && (
               <div id={`module-body-${m.id}`} className="border-t border-bg-border">
+                <div className="px-4 pt-4 pb-1">
+                  <ModuleProgressBar score={mastery.score} />
+                </div>
                 <ModuleView
                   module={m}
                   index={i + 1}
@@ -140,6 +145,36 @@ export default function ModuleAccordion({ modules, subjectCode, subjectName }: P
                   subjectName={subjectName}
                   headless
                 />
+              </div>
+            )}
+
+            {/* Module navigation footer — visible when open */}
+            {isOpenNow && (
+              <div className="flex items-center justify-between gap-3 border-t border-bg-border px-4 py-3">
+                {i > 0 ? (
+                  <button
+                    type="button"
+                    onClick={() => setActiveIndex(i - 1)}
+                    className="font-mono text-[11px] uppercase tracking-wide px-3 py-2 rounded-card border border-bg-border text-ink-faint hover:border-signal hover:text-signal transition-colors"
+                  >
+                    ← {modules[i - 1].id.toUpperCase()}
+                  </button>
+                ) : (
+                  <span />
+                )}
+                {i < modules.length - 1 ? (
+                  <button
+                    type="button"
+                    onClick={() => setActiveIndex(i + 1)}
+                    className="font-mono text-[11px] uppercase tracking-wide px-3 py-2 rounded-card border border-signal text-signal hover:bg-signal/10 transition-colors"
+                  >
+                    Next · {modules[i + 1].id.toUpperCase()} →
+                  </button>
+                ) : (
+                  <span className="font-mono text-[11px] uppercase tracking-wide text-ink-faintest">
+                    End of modules
+                  </span>
+                )}
               </div>
             )}
           </div>

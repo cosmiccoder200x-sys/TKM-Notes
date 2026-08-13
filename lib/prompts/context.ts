@@ -1,4 +1,4 @@
-// Study Context - Deep integration with PrepPilot notes content
+// Study Context - Deep integration with TKM Notes notes content
 
 import { Subject, Module } from "@/lib/types";
 import { subjects, semesters, findSubject, subjectsForSemester } from "@/lib/content";
@@ -337,7 +337,7 @@ export const MODULE_QUICK_ACTIONS: QuickAction[] = [
     label: "Explain this module",
     description: "Deep dive into all concepts",
     mode: "learn",
-    icon: "📚",
+    icon: "◈",
     contextRequirements: { needsModule: true },
   },
   {
@@ -345,7 +345,7 @@ export const MODULE_QUICK_ACTIONS: QuickAction[] = [
     label: "Quiz me on this module",
     description: "Active recall practice",
     mode: "active-recall",
-    icon: "🧠",
+    icon: "⌘",
     contextRequirements: { needsModule: true },
   },
   {
@@ -353,7 +353,7 @@ export const MODULE_QUICK_ACTIONS: QuickAction[] = [
     label: "Important questions",
     description: "PYQ analysis & high-priority topics",
     mode: "pyq-intelligence",
-    icon: "🔍",
+    icon: "◇",
     contextRequirements: { needsModule: true },
   },
   {
@@ -361,7 +361,7 @@ export const MODULE_QUICK_ACTIONS: QuickAction[] = [
     label: "Generate exam answers",
     description: "Practice structured answers",
     mode: "exam-answer",
-    icon: "📝",
+    icon: "ƒ",
     contextRequirements: { needsModule: true },
   },
   {
@@ -369,7 +369,7 @@ export const MODULE_QUICK_ACTIONS: QuickAction[] = [
     label: "Create revision plan",
     description: "Time-boxed review session",
     mode: "revision",
-    icon: "⚡",
+    icon: "↻",
     contextRequirements: { needsModule: true },
   },
   {
@@ -377,7 +377,7 @@ export const MODULE_QUICK_ACTIONS: QuickAction[] = [
     label: "Generate mock test",
     description: "Full exam simulation",
     mode: "mock-exam",
-    icon: "📋",
+    icon: "□",
     contextRequirements: { needsModule: true },
   },
   {
@@ -385,7 +385,7 @@ export const MODULE_QUICK_ACTIONS: QuickAction[] = [
     label: "Score 90+ strategy",
     description: "Marks-focused study plan",
     mode: "score-90-plus",
-    icon: "🎯",
+    icon: "★",
     contextRequirements: { needsModule: false },
   },
 ];
@@ -396,42 +396,42 @@ export const QUESTION_ACTIONS = [
     id: "explain",
     label: "Explain",
     mode: "learn",
-    icon: "📖",
+    icon: "◈",
     description: "Understand this concept deeply",
   },
   {
     id: "practice",
     label: "Practice",
     mode: "problem-solver",
-    icon: "⚙️",
+    icon: "≈",
     description: "Solve without being spoon-fed",
   },
   {
     id: "exam-answer",
     label: "Exam Answer",
     mode: "exam-answer",
-    icon: "📝",
+    icon: "ƒ",
     description: "Generate structured answer",
   },
   {
     id: "strict-examiner",
     label: "Evaluate",
     mode: "strict-examiner",
-    icon: "👨‍🏫",
+    icon: "≜",
     description: "Get your answer graded",
   },
   {
     id: "active-recall",
     label: "Quiz Me",
     mode: "active-recall",
-    icon: "🧠",
+    icon: "⌘",
     description: "Test your memory",
   },
   {
     id: "mistake-fixer",
     label: "Fix Mistakes",
     mode: "mistake-fixer",
-    icon: "🔧",
+    icon: "△",
     description: "Learn from errors",
   },
 ];

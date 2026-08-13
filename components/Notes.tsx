@@ -6,11 +6,11 @@ type Tone = "definition" | "keyidea" | "formula" | "tip" | "mistake" | "warning"
 
 const TONE: Record<Tone, { border: string; bg: string; icon: string; title: string }> = {
   definition: { border: "border-weight-dim", bg: "bg-weight/5", icon: "■", title: "DEFINITION" },
-  keyidea: { border: "border-signal-dim", bg: "bg-signal/5", icon: "💡", title: "KEY IDEA" },
+  keyidea: { border: "border-signal-dim", bg: "bg-signal/5", icon: "◇", title: "KEY IDEA" },
   formula: { border: "border-bg-border", bg: "bg-bg", icon: "ƒ", title: "FORMULA" },
   tip: { border: "border-weight-dim", bg: "bg-weight/5", icon: "ⓘ", title: "EXAM TIP" },
-  mistake: { border: "border-critical/40", bg: "bg-critical/5", icon: "⚠", title: "COMMON MISTAKE" },
-  warning: { border: "border-critical/40", bg: "bg-critical/5", icon: "⚠", title: "CAREFUL" },
+  mistake: { border: "border-critical/40", bg: "bg-critical/5", icon: "✕", title: "COMMON MISTAKE" },
+  warning: { border: "border-critical/40", bg: "bg-critical/5", icon: "▲", title: "CAREFUL" },
   procedure: { border: "border-signal-dim", bg: "bg-signal/5", icon: "#", title: "STANDARD METHOD" },
   revision: { border: "border-bg-border", bg: "bg-bg", icon: "•", title: "QUICK REVISION" },
 };

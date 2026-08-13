@@ -1,6 +1,12 @@
 import Link from "next/link";
 import { StudyRecommendation } from "@/lib/study";
 
+const DOT: Record<string, string> = {
+  weak: "bg-critical",
+  "needs-practice": "bg-weight",
+  "not-assessed": "bg-ink-faintest",
+};
+
 export default function WeakAreas({
   recommendations,
   subjectCode,
@@ -18,18 +24,15 @@ export default function WeakAreas({
     <section className="card p-4 space-y-3">
       <h2 className="font-display font-semibold text-ink-hi text-base">Your Next Focus</h2>
       <ul className="space-y-1.5">
-        {weak.map((r) => {
-          const dot = r.status === "weak" ? "🔴" : r.status === "needs-practice" ? "🟠" : "⚪";
-          return (
-            <li key={r.moduleId} className="flex items-center gap-2 text-sm text-ink-hi">
-              <span aria-hidden>{dot}</span>
-              <span>{r.moduleTitle}</span>
-              <span className="ml-auto text-xs font-mono text-ink-lo">
-                {r.score === null ? "not assessed" : `${r.score}%`}
-              </span>
-            </li>
-          );
-        })}
+        {weak.map((r) => (
+          <li key={r.moduleId} className="flex items-center gap-2 text-sm text-ink-hi">
+            <span className={`w-2 h-2 rounded-full shrink-0 ${DOT[r.status] ?? "bg-ink-faintest"}`} aria-hidden />
+            <span>{r.moduleTitle}</span>
+            <span className="ml-auto text-xs font-mono text-ink-lo">
+              {r.score === null ? "not assessed" : `${r.score}%`}
+            </span>
+          </li>
+        ))}
       </ul>
       <Link
         href={`/night-before?subject=${encodeURIComponent(subjectCode)}`}

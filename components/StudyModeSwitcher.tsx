@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Module } from "@/lib/types";
 import { rankModulesForStudy, PriorityTier } from "@/lib/study";
 import { generatePromptLabUrl } from "@/lib/prompts/context";
+import { NavIcon } from "@/components/navigation/navItems";
 
 type ModeId = "learn" | "exam" | "last-minute" | "revision";
 
@@ -83,9 +84,9 @@ export default function StudyModeSwitcher({
         {mode === "last-minute" && (
           <Link
             href={`/night-before?subject=${encodeURIComponent(subjectCode)}&time=60`}
-            className="ml-auto font-mono text-[10px] uppercase tracking-wide px-3 py-1.5 rounded-card border border-signal text-signal hover:bg-signal/10 transition-colors"
+            className="ml-auto inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-wide px-3 py-1.5 rounded-card border border-signal text-signal hover:bg-signal/10 transition-colors"
           >
-            ⏱ Night-Before Plan
+            <NavIcon name="revision" className="w-3.5 h-3.5" /> Night-Before Plan
           </Link>
         )}
       </div>

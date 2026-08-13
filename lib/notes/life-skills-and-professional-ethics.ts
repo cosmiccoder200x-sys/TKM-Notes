@@ -1,7 +1,12 @@
 import { SubjectContent } from "../types";
 
 const content: SubjectContent = {
-  subjectCode: "24HUT310",
+  code: "24HUT310",
+  name: "Life Skills and Professional Ethics",
+  semester: "s3",
+  category: "core",
+  credits: 3,
+  ltpj: "3-0-0-0",
   modules: [
     // ---------------------------------------------------------------
     // MODULE I — Foundation of Life Skills
@@ -9,6 +14,10 @@ const content: SubjectContent = {
     {
       id: "m1",
       title: "Foundation of Life Skills",
+      number: 1,
+      topics: [
+        { title: "Understanding Life Skills: Meaning and Significance of Life Skills-WHO-Identified Life Skills- Life skills for professionals Self-awareness: Definition and Need-Tools and Techniques of Self-awareness Stress Management: Stress, reasons and effects- stress diaries- Four A's of stress management Coping with emotions: Identifying and managing emotions- PATH method and relaxation techniques (Group activities for self awareness and stress management)" },
+      ],
       overview: {
         summary:
           "This module introduces what life skills are (per WHO's framework) and why they matter for a professional, then covers self-awareness, stress management (the Four A's), and coping with emotions (the PATH method and relaxation techniques).",
@@ -76,6 +85,11 @@ const content: SubjectContent = {
     {
       id: "m2",
       title: "21st Century Skills and Problem-Solving Techniques",
+      number: 2,
+      topics: [
+        { title: "21st Century Skills: Creativity, Critical Thinking, Collaboration, Problem Solving, Decision Making- Lateral Thinking- Critical thinking Vs Creative thinking Problem Solving Techniques: Six Thinking Hats- Mind Mapping- Forced Connections- Scientific temperament and Logical thinking with case studies" },
+        { title: "(Activity based learning)" },
+      ],
       overview: {
         summary:
           "This module covers the core 21st century skills (creativity, critical thinking, collaboration, problem solving, decision making, lateral thinking) and structured problem-solving techniques: Six Thinking Hats, Mind Mapping, Forced Connections, and scientific/logical temperament.",
@@ -142,6 +156,10 @@ const content: SubjectContent = {
     {
       id: "m3",
       title: "Group Dynamics and Leadership",
+      number: 3,
+      topics: [
+        { title: "Group and Team Dynamics: Composition, Formation-Problem Solving in Groups-Group vs Team, Team Dynamics- Managing team performance(Activity based learning) Leadership: Leadership Framework -Types of Leadership- VUCA Leadership- Transactional vs Transformational Leaders" },
+      ],
       overview: {
         summary:
           "This module covers how groups and teams form and function (group vs team, composition, managing team performance) and leadership frameworks — types of leadership, VUCA leadership, and transactional vs transformational leaders.",
@@ -208,6 +226,11 @@ const content: SubjectContent = {
     {
       id: "m4",
       title: "Human Values",
+      number: 4,
+      topics: [
+        { title: "Morals, values and Ethics -- Integrity- Academic integrity-Work Ethics- Service Learning- Civic Virtue- Respect for others- Living peacefully- Caring and Sharing- Honestly- courage-Cooperation commitment- Empathy-Self Confidence -Social Expectations" },
+        { title: "Case study on Civil Engineering disasters (Include study of Ethical issues in a recent disaster) Code of Conduct in Engineering profession" },
+      ],
       overview: {
         summary:
           "This module covers the foundational vocabulary of ethics (morals, values, ethics, integrity) and a set of core human values relevant to professional life, alongside a case study lens on engineering disasters and the engineering profession's code of conduct.",
@@ -271,6 +294,10 @@ const content: SubjectContent = {
     {
       id: "m5",
       title: "Responsibilities & Rights",
+      number: 5,
+      topics: [
+        { title: "Collegiality and loyalty -- Managing conflict- Respect for authority- Collective bargaining- Confidentiality-Role of confidentiality in moral integrity-Conflicts of interest- Occupational crime- Professional rights-Employee right- IPR Discrimination Global ethical issues- Business ethics, Computer Ethics, Environment ethics -- Role in technological development-Engineers as Managers- Consulting Engineers- Engineers as Expert witnesses and advisors" },
+      ],
       overview: {
         summary:
           "This module covers professional responsibilities (collegiality, loyalty, conflict management, confidentiality, conflicts of interest), employee/professional rights (including IPR and discrimination), and global ethical issues — business, computer, and environmental ethics — including the engineer's role as manager, consultant, or expert witness.",
