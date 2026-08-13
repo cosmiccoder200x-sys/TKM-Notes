@@ -20,7 +20,7 @@ function readStored(): Theme {
     const v = localStorage.getItem(STORAGE_KEY);
     if (v === "light" || v === "dark" || v === "system") return v;
   } catch {}
-  return "system";
+  return "dark";
 }
 
 // Cycle light -> dark -> system -> light
@@ -33,7 +33,7 @@ export default function ThemeToggle({
   compact?: boolean;
   className?: string;
 }) {
-  const [theme, setTheme] = useState<Theme>("system");
+  const [theme, setTheme] = useState<Theme>("dark");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
