@@ -2,14 +2,14 @@
 
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import registry from "@/lib/notes";
+import { getSubjectContent } from "@/lib/notes";
 import { semesters, subjects } from "@/lib/content";
 
 const MINUTES = [30, 60, 90, 120];
 
 export default function QuickPlannerForm() {
   const router = useRouter();
-  const withNotes = useMemo(() => subjects.filter((s) => registry[s.code]), []);
+  const withNotes = useMemo(() => subjects.filter((s) => getSubjectContent(s.code, s.programId)), []);
   const groups = semesters
     .map((sem) => ({ semester: sem, list: withNotes.filter((s) => s.semesterId === sem.id) }))
     .filter((g) => g.list.length > 0);

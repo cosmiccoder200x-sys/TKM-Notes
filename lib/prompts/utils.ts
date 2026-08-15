@@ -3,7 +3,7 @@
 import { StudyPrompt, StudyPromptVariable, FavoritePrompt, RecentPrompt, StudyModeId } from "./types";
 import { Subject, Module } from "@/lib/types";
 import { semesters, subjects, findSubject } from "@/lib/content";
-import registry from "@/lib/notes";
+import { getSubjectContentByCode } from "@/lib/notes";
 import { 
   StudyContext, 
   ContextualPromptVars, 
@@ -48,7 +48,7 @@ export function getSubjectOptions(): { value: string; label: string; group: stri
 
 // Get modules for a subject
 export function getModuleOptions(subjectCode: string): { value: string; label: string }[] {
-  const content = registry[subjectCode];
+  const content = getSubjectContentByCode(subjectCode);
   if (!content) return [];
   return content.modules.map((m, i) => ({
     value: m.id,
@@ -58,7 +58,7 @@ export function getModuleOptions(subjectCode: string): { value: string; label: s
 
 // Get module title by ID
 export function getModuleTitle(subjectCode: string, moduleId: string): string {
-  const content = registry[subjectCode];
+  const content = getSubjectContentByCode(subjectCode);
   if (!content) return moduleId;
   const mod = content.modules.find(m => m.id === moduleId);
   return mod ? mod.title : moduleId;

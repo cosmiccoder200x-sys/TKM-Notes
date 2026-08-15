@@ -1,4 +1,4 @@
-import { SubjectContent } from "../types";
+import { SubjectContent, ProgramId } from "../types";
 import dsa from "./data-structures-and-algorithms";
 import networkTheory from "./network-theory";
 import simLab from "./system-simulation-and-virtual-instrumentation-lab";
@@ -27,45 +27,70 @@ import cps from "./cyber-physical-systems";
 import computerVision from "./computer-vision";
 import energySystems from "./energy-systems";
 
-// Add one entry per subject as notes get written.
-// Key = subject code (matches lib/content.ts).
-const registry: Record<string, SubjectContent> = {
-  // Semester 3
-  "24ERP304": dsa,
-  "24EST332": networkTheory,
-  "24ESP307": simLab,
-  "24MAP301": advMath,
-  "24ERJ303": dld,
-  "24ERT305": sensors,
-  "24HUT310": lifeSkills,
-  // Semester 4
-  "24ERT401": coa,
-  "24ERT402": signals,
-  "24ERP403": electricalTech,
-  "24ERJ404": solidState,
-  "24HUT435": engEcon,
-  "24MCT406": envSci,
-  "24ERP407": oopJava,
-  // Semester 5
-  "24ERT501": controlSystems,
-  "24ERJ502": dbms,
-  "24ERT503": ai,
-  "24ERP504": os,
-  "24HUT535": pmf,
-  "24MCT506": constitution,
-  "24ERT507": softwareEng,
-  // Semester 6
-  "24ERP601": computerNetworks,
-  "24ERP602": embedded,
-  "24ERT603": powerElec,
-  "24ESP608": cps,
-  // Semester 7
-  "24ERP701": computerVision,
-  "24ERP702": energySystems,
-};
+// CS [AI] note files that exist on disk.
+import advMathAi from "./advanced-linear-algebra-complex-analysis-pde-ai";
 
-export function getSubjectContent(subjectCode: string): SubjectContent | undefined {
-  return registry[subjectCode];
+// Registry built only from note files that actually exist.
+// Key format: `${programId}-${subjectCode}` (e.g. "ER-24ERP304", "CS_AI-24MAP300").
+// Subjects without a written note file fall through to the "not written yet"
+// state at the page level and never crash the app.
+const erNotes: { content: SubjectContent; programId: ProgramId }[] = [
+  { content: dsa, programId: "ER" },
+  { content: networkTheory, programId: "ER" },
+  { content: simLab, programId: "ER" },
+  { content: advMath, programId: "ER" },
+  { content: dld, programId: "ER" },
+  { content: sensors, programId: "ER" },
+  { content: lifeSkills, programId: "ER" },
+  { content: coa, programId: "ER" },
+  { content: signals, programId: "ER" },
+  { content: electricalTech, programId: "ER" },
+  { content: solidState, programId: "ER" },
+  { content: engEcon, programId: "ER" },
+  { content: envSci, programId: "ER" },
+  { content: oopJava, programId: "ER" },
+  { content: controlSystems, programId: "ER" },
+  { content: dbms, programId: "ER" },
+  { content: ai, programId: "ER" },
+  { content: os, programId: "ER" },
+  { content: pmf, programId: "ER" },
+  { content: constitution, programId: "ER" },
+  { content: softwareEng, programId: "ER" },
+  { content: computerNetworks, programId: "ER" },
+  { content: embedded, programId: "ER" },
+  { content: powerElec, programId: "ER" },
+  { content: cps, programId: "ER" },
+  { content: computerVision, programId: "ER" },
+  { content: energySystems, programId: "ER" },
+];
+
+const csAiNotes: { content: SubjectContent; programId: ProgramId }[] = [
+  { content: advMathAi, programId: "CS_AI" },
+];
+
+// Composite keys are the canonical lookup ("ER-24ERP304"). Plain-code aliases
+// are also registered for legacy call sites that index `registry[code]`; ER
+// wins when two programs share a course code. New code should prefer
+// getSubjectContent(code, programId) for program-correct resolution.
+const registry: Record<string, SubjectContent> = {};
+for (const { content, programId } of erNotes) {
+  registry[`${programId}-${content.code}`] = content;
+  if (!(content.code in registry)) registry[content.code] = content;
+}
+for (const { content, programId } of csAiNotes) {
+  registry[`${programId}-${content.code}`] = content;
+  if (!(content.code in registry)) registry[content.code] = content;
+}
+
+export function getSubjectContent(subjectCode: string, programId?: ProgramId): SubjectContent | undefined {
+  if (!programId) {
+    return registry[`ER-${subjectCode}`] || registry[`CS-${subjectCode}`] || registry[`CS_AI-${subjectCode}`];
+  }
+  return registry[`${programId}-${subjectCode}`];
+}
+
+export function getSubjectContentByCode(subjectCode: string): SubjectContent | undefined {
+  return getSubjectContent(subjectCode, "ER") || getSubjectContent(subjectCode, "CS") || getSubjectContent(subjectCode, "CS_AI");
 }
 
 export default registry;

@@ -2,7 +2,7 @@
 
 import { Subject, Module } from "@/lib/types";
 import { subjects, semesters, findSubject, subjectsForSemester } from "@/lib/content";
-import registry from "@/lib/notes";
+import { getSubjectContent } from "@/lib/notes";
 
 export type ContentType = 
   | "module"
@@ -78,7 +78,7 @@ export function buildContextFromParams(params: {
   }
   
   if (params.module && context.subjectCode) {
-    const content = registry[context.subjectCode];
+    const content = getSubjectContent(context.subjectCode);
     if (content) {
       const mod = content.modules.find(m => m.id === params.module);
       if (mod) {
@@ -112,7 +112,7 @@ export function buildContextFromParams(params: {
 export function enrichContext(context: StudyContext): StudyContext {
   // If we have subject/module but missing moduleContent, try to fetch it
   if (context.subjectCode && context.moduleId && !context.moduleContent) {
-    const content = registry[context.subjectCode];
+    const content = getSubjectContent(context.subjectCode);
     if (content) {
       const mod = content.modules.find(m => m.id === context.moduleId);
       if (mod) {

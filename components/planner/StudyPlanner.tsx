@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import registry from "@/lib/notes";
+import { getSubjectContent } from "@/lib/notes";
 import { semesters, subjects } from "@/lib/content";
 import {
   generateStudyPlan,
@@ -103,7 +103,7 @@ function BlockCard({ block, subjectCode }: { block: PlanBlock; subjectCode: stri
 
 export default function StudyPlanner() {
   const params = useSearchParams();
-  const withNotes = useMemo(() => subjects.filter((s) => registry[s.code]), []);
+  const withNotes = useMemo(() => subjects.filter((s) => getSubjectContent(s.code, s.programId)), []);
 
   const [subjectCode, setSubjectCode] = useState(params.get("subject") ?? withNotes[0]?.code ?? "");
   const [minutes, setMinutes] = useState(Number(params.get("minutes")) || 60);
@@ -112,7 +112,9 @@ export default function StudyPlanner() {
   );
   const [generated, setGenerated] = useState(false);
 
-  const content = subjectCode ? registry[subjectCode] : null;
+  const content = subjectCode
+    ? getSubjectContent(subjectCode, subjects.find((s) => s.code === subjectCode)?.programId)
+    : null;
   const allModuleIds = content?.modules.map((m) => m.id) ?? [];
   const [selected, setSelected] = useState<Set<string> | null>(null);
   const effectiveSelected = selected ?? new Set(allModuleIds);

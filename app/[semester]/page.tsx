@@ -1,15 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { notFound } from "next/navigation";
 import { semesters, subjectsForSemester } from "@/lib/content";
-import { Subject } from "@/lib/types";
+import { Subject, ProgramId } from "@/lib/types";
 import { PRODUCT_NAME, BRANCH_NAME } from "@/lib/branch";
 import { NavIcon } from "@/components/navigation/navItems";
 import SubjectCard from "@/components/SubjectCard";
 import SearchBar from "@/components/SearchBar";
+
+const BRANCH_LABELS: Record<ProgramId, string> = {
+  ER: BRANCH_NAME,
+  CS: "Computer Science",
+  CS_AI: "Computer Science [AI]",
+};
+
+const VALID_PROGRAM_IDS: ProgramId[] = ["ER", "CS", "CS_AI"];
 
 export default function SemesterPage({
   params,
@@ -19,11 +27,20 @@ export default function SemesterPage({
   const pathname = usePathname();
   const [semesterId, setSemesterId] = useState(params.semester);
   const [search, setSearch] = useState("");
+  const [programId, setProgramId] = useState<ProgramId>("ER");
+
+  useEffect(() => {
+    const stored = localStorage.getItem("tkm_program_id");
+    const migrated = stored === "CSE" ? "ER" : stored === "CSE_AI" ? "CS_AI" : stored;
+    if (migrated && (VALID_PROGRAM_IDS as string[]).includes(migrated)) {
+      setProgramId(migrated as ProgramId);
+    }
+  }, []);
 
   const semester = semesters.find((s) => s.id === semesterId);
   if (!semester) notFound();
 
-  const allSubjects = subjectsForSemester(semesterId);
+  const allSubjects = subjectsForSemester(semesterId, programId);
   const filteredSubjects = allSubjects.filter((s: Subject) =>
     s.name.toLowerCase().includes(search.toLowerCase()) ||
     s.code.toLowerCase().includes(search.toLowerCase())
@@ -42,7 +59,7 @@ export default function SemesterPage({
         </div>
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2">
-            <span className="text-ink-lo text-sm">TKM · {BRANCH_NAME}</span>
+            <span className="text-ink-lo text-sm">TKM · {BRANCH_LABELS[programId]}</span>
           </div>
           <div className="flex items-center gap-3">
             <select

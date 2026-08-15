@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { MOBILE_NAV } from "./navItems";
+import { MOBILE_BOTTOM_NAV } from "./navItems";
 import { NavIcon, isActive } from "./navItems";
 import type { NavItem } from "./navItems";
 
@@ -49,7 +49,7 @@ export default function MobileNavigation() {
       aria-label="Mobile bottom navigation"
     >
       <div className="grid grid-cols-5">
-        {MOBILE_NAV.map((item) => (
+        {MOBILE_BOTTOM_NAV.map((item) => (
           <MobileNavItem key={item.label} item={item} />
         ))}
       </div>

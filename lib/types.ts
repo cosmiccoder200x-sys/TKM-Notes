@@ -4,6 +4,8 @@
 
 export type Weightage = "low" | "medium" | "high";
 
+export type ProgramId = "ER" | "CS" | "CS_AI";
+
 export interface Semester {
   id: string;       // "s3" ... "s8"
   label: string;     // "Semester 3"
@@ -15,6 +17,7 @@ export interface Subject {
   name: string;
   credits: number | "MOOC";
   semesterId: string;
+  programId: ProgramId;  // "ER", "CS", or "CS_AI"
 }
 
 export interface Definition {
@@ -112,6 +115,7 @@ export interface SubjectContent {
   code: string;          // course code, e.g. "24EST332"
   name: string;          // full subject name
   semester: string;      // "s3".."s8"
+  programId?: ProgramId;  // "ER", "CS", or "CS_AI" (optional for backward compatibility)
   category: SubjectCategory; // discipline grouping
   credits: number | "MOOC";
   ltpj: string;          // L-T-P-J structure, e.g. "2-0-0-0"

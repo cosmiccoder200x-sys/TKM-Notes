@@ -11,7 +11,7 @@ import DeepDivePrompt from "@/components/DeepDivePrompt";
 import ModuleMasteryBadges from "@/components/mastery/ModuleMasteryBadges";
 import SubjectMasteryBar from "@/components/mastery/SubjectMasteryBar";
 import { subjects, findSubject } from "@/lib/content";
-import registry from "@/lib/notes";
+import { getSubjectContent } from "@/lib/notes";
 import { PRODUCT_NAME } from "@/lib/branch";
 import { generatePromptLabUrl } from "@/lib/prompts/context";
 import { estimatedSubjectMinutes } from "@/lib/study";
@@ -37,7 +37,7 @@ export default function SubjectPage({ params }: { params: { semester: string; su
   const subject = findSubject(params.semester, params.subject);
   if (!subject) notFound();
 
-  const content = registry[subject.code];
+  const content = getSubjectContent(subject.code, subject.programId);
   const modules = content?.modules ?? [];
 
   const stats = modules.reduce(

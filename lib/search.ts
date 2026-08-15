@@ -1,5 +1,5 @@
 import { subjects } from "./content";
-import registry from "./notes";
+import { getSubjectContent } from "./notes";
 
 export interface SearchHit {
   subjectCode: string;
@@ -42,7 +42,7 @@ export function searchAll(query: string): SearchHit[] {
       });
     }
 
-    const content = registry[subject.code];
+    const content = getSubjectContent(subject.code, subject.programId);
     if (!content) continue;
 
     for (const mod of content.modules) {

@@ -1,7 +1,8 @@
 "use client";
 
 import { useMemo, useState, useEffect, useCallback } from "react";
-import type { Subject, Module, SubjectContent } from "@/lib/types";
+import type { Subject, Module } from "@/lib/types";
+import { getSubjectContent } from "@/lib/notes";
 
 export type ContentType =
   | "subject"
@@ -99,8 +100,7 @@ export function fuzzyScore(query: string, text: string): number {
 }
 
 export function buildSearchIndex(
-  subjects: Subject[],
-  registry: Record<string, SubjectContent>
+  subjects: Subject[]
 ): SearchDoc[] {
   const docs: SearchDoc[] = [];
 
@@ -118,7 +118,7 @@ export function buildSearchIndex(
       href: base,
     });
 
-    const content = registry[subject.code];
+    const content = getSubjectContent(subject.code, subject.programId);
     if (!content) continue;
 
     content.modules.forEach((mod: Module) => {
@@ -351,9 +351,9 @@ export function useSearchService() {
 
   useEffect(() => {
     let active = true;
-    Promise.all([import("@/lib/content"), import("@/lib/notes")])
-      .then(([contentMod, notesMod]) => {
-        if (active) setIndex(buildSearchIndex(contentMod.subjects, notesMod.default));
+    Promise.all([import("@/lib/content")])
+      .then(([contentMod]) => {
+        if (active) setIndex(buildSearchIndex(contentMod.subjects));
       })
       .catch(() => {});
     return () => {

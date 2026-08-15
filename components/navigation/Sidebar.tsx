@@ -1,22 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import { PRIMARY_NAV, FOOTER_NAV } from "./navItems";
 import SidebarItem from "./SidebarItem";
 import ThemeToggle from "@/components/ThemeToggle";
-import { PRODUCT_NAME } from "@/lib/branch";
-
-function Logo() {
-  return (
-    <Link
-      href="/"
-      className="font-display font-bold text-base tracking-wide text-ink-hi"
-      aria-label={PRODUCT_NAME}
-    >
-      {PRODUCT_NAME}
-    </Link>
-  );
-}
 
 export default function Sidebar() {
   return (
@@ -25,10 +11,6 @@ export default function Sidebar() {
       role="navigation"
       aria-label="Main navigation"
     >
-      <div className="h-16 px-5 flex items-center border-b border-bg-border/40 shrink-0">
-        <Logo />
-      </div>
-
       <nav className="flex-1 overflow-y-auto no-scrollbar px-2 py-3 space-y-1" aria-label="Primary">
         {PRIMARY_NAV.map((item) => (
           <SidebarItem key={item.label} item={item} />

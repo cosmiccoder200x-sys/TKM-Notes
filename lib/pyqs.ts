@@ -1,5 +1,5 @@
 import { subjects } from "./content";
-import registry from "./notes";
+import { getSubjectContent } from "./notes";
 import type { Weightage } from "./types";
 
 export interface PyqEntry {
@@ -25,7 +25,7 @@ export function getQuestionBank(): PyqEntry[] {
   const entries: PyqEntry[] = [];
 
   for (const subject of subjects) {
-    const content = registry[subject.code];
+    const content = getSubjectContent(subject.code, subject.programId);
     if (!content) continue;
 
     content.modules.forEach((mod, mi) => {

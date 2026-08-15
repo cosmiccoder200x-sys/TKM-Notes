@@ -1,6 +1,5 @@
 import { Subject } from "./types";
 import syllabusText from "./syllabusText";
-import { electiveOptions } from "./content";
 
 export function hasSyllabusText(code: string): boolean {
   return Boolean(syllabusText[code]);
@@ -8,15 +7,12 @@ export function hasSyllabusText(code: string): boolean {
 
 export function buildDeepDivePrompt(subject: Subject): string {
   const syllabus = syllabusText[subject.code];
-  const electives = electiveOptions[subject.code];
 
   const header = `I'm a TKM College of Engineering (KTU, ECE, 2024 scheme) student studying "${subject.name}" (${subject.code}, ${subject.semesterId.toUpperCase()}, ${subject.credits} credits).`;
 
   let syllabusBlock: string;
   if (syllabus) {
     syllabusBlock = `Here is the EXACT official syllabus for this course, module by module — use this directly instead of a generic version of the subject:\n\n${syllabus}`;
-  } else if (electives) {
-    syllabusBlock = `This is an elective slot. The official options are: ${electives.join(", ")}.\nAsk me which one I've picked if it's not obvious from context, then use the standard KTU 2024-scheme syllabus for that specific elective.`;
   } else {
     syllabusBlock = `I don't have the exact official module breakdown for this course on hand — use the standard KTU 2024-scheme syllabus for "${subject.name}" if you have reliable knowledge of it, and clearly flag any module you're unsure about so I can correct it rather than presenting a guess as fact.`;
   }

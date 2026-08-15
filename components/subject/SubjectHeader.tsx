@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Subject } from "@/lib/types";
-import { getSubjectCategoryMeta, PRODUCT_NAME } from "@/lib/branch";
+import { getSubjectCategoryMeta } from "@/lib/branch";
 import { NavIcon } from "@/components/navigation/navItems";
 
 export default function SubjectHeader({
@@ -19,7 +19,7 @@ export default function SubjectHeader({
         <ol className="flex flex-wrap items-center gap-1.5 text-xs font-mono text-ink-faint">
           <li>
             <Link href="/" className="hover:text-signal transition-colors">
-              {PRODUCT_NAME}
+              Home
             </Link>
           </li>
           <li>/</li>

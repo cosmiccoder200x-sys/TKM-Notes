@@ -17,11 +17,13 @@ export function isActive(item: NavItem, pathname: string): boolean {
 
 export const PRIMARY_NAV = [
   { label: "Library", href: "/", icon: "library" },
+  { label: "Learn CS", href: "/learn-cs", icon: "learn" },
   { label: "Subjects", href: "/s3", icon: "subjects" },
   { label: "PYQs", href: "/pyqs", icon: "pyq" },
   { label: "Planner", href: "/planner", icon: "planner" },
   { label: "Practice", href: "/prompt-lab", icon: "practice" },
   { label: "Revision", href: "/night-before", icon: "revision" },
+  { label: "Typing", href: "/typing", icon: "typing" },
   { label: "Bookmarks", onClick: () => window.dispatchEvent(new CustomEvent("tkm:open-palette")), icon: "bookmark" },
 ];
 
@@ -31,19 +33,32 @@ export const FOOTER_NAV = [
 
 export const MOBILE_NAV = [
   { label: "Library", href: "/", icon: "library" },
+  { label: "Learn CS", href: "/learn-cs", icon: "learn" },
   { label: "Planner", href: "/planner", icon: "planner" },
   { label: "Subjects", href: "/s3", icon: "subjects" },
   { label: "Practice", href: "/prompt-lab", icon: "practice" },
   { label: "Revision", href: "/night-before", icon: "revision" },
+  { label: "Typing", href: "/typing", icon: "typing" },
+  { label: "Search", onClick: () => window.dispatchEvent(new CustomEvent("tkm:open-palette")), icon: "search" },
+];
+
+// Fixed 5-slot bottom navigation bar on phones.
+export const MOBILE_BOTTOM_NAV = [
+  { label: "Library", href: "/", icon: "library" },
+  { label: "Learn CS", href: "/learn-cs", icon: "learn" },
+  { label: "Subjects", href: "/s3", icon: "subjects" },
+  { label: "Practice", href: "/prompt-lab", icon: "practice" },
   { label: "Search", onClick: () => window.dispatchEvent(new CustomEvent("tkm:open-palette")), icon: "search" },
 ];
 
 export const MOBILE_DRAWER_ITEMS = [
   { href: "/", label: "Library", icon: "library" },
+  { href: "/learn-cs", label: "Learn CS", icon: "learn" },
   { href: "/planner", label: "Planner", icon: "planner" },
   { href: "/s3", label: "Subjects", icon: "subjects" },
   { href: "/prompt-lab", label: "Practice", icon: "practice" },
   { href: "/night-before", label: "Revision", icon: "revision" },
+  { href: "/typing", label: "Typing", icon: "typing" },
 ];
 
 export function NavIcon({ name, className = "w-[18px] h-[18px]" }: { name: string; className?: string }) {
@@ -52,6 +67,12 @@ export function NavIcon({ name, className = "w-[18px] h-[18px]" }: { name: strin
   switch (name) {
     case "library":
       return <svg className={c} viewBox="0 0 24 24" {...s}><path d="M4 20V6a3 3 0 013-3h13v14H7a3 3 0 00-3 3z"/><path d="M4 20h13"/></svg>;
+    case "learn":
+      return <svg className={c} viewBox="0 0 24 24" {...s}><path d="M22 9l-10-5L2 9l10 5 10-5z"/><path d="M6 11.5V15c0 1.66 2.69 3 6 3s6-1.34 6-3v-3.5"/><path d="M22 9v5"/></svg>;
+    case "terminal":
+      return <svg className={c} viewBox="0 0 24 24" {...s}><path d="M4 17l6-5-6-5"/><path d="M12 19h8"/></svg>;
+    case "database":
+      return <svg className={c} viewBox="0 0 24 24" {...s}><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4.03 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/></svg>;
     case "subjects":
       return <svg className={c} viewBox="0 0 24 24" {...s}><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>;
     case "pyq":
@@ -68,6 +89,8 @@ export function NavIcon({ name, className = "w-[18px] h-[18px]" }: { name: strin
       return <svg className={c} viewBox="0 0 24 24" {...s}><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg>;
     case "search":
       return <svg className={c} viewBox="0 0 24 24" {...s}><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>;
+    case "typing":
+      return <svg className={c} viewBox="0 0 24 24" {...s}><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M7 14h10"/></svg>;
     case "chevron-down":
       return <svg className={c} viewBox="0 0 24 24" {...s}><path d="M6 9l6 6 6-6"/></svg>;
     case "edit":

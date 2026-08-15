@@ -2,10 +2,12 @@ import Link from "next/link";
 import SemesterExplorer from "@/components/SemesterExplorer";
 import StudyTools from "@/components/StudyTools";
 import PaletteButton from "@/components/PaletteButton";
+import BranchSelect from "@/components/navigation/BranchSelect";
+import BranchPicker from "@/components/BranchPicker";
 import HomeStudyStatus from "@/components/mastery/HomeStudyStatus";
 import QuickPlannerForm from "@/components/planner/QuickPlannerForm";
 import { semesters } from "@/lib/content";
-import { BRANCH_NAME, BRANCH_RANGE, PRODUCT_NAME, PRODUCT_POSITIONING, PRODUCT_TAGLINE } from "@/lib/branch";
+import { BRANCH_NAME, BRANCH_RANGE } from "@/lib/branch";
 
 export default function HomePage() {
   return (
@@ -15,7 +17,7 @@ export default function HomePage() {
         <div className="space-y-3">
           <div className="eyebrow flex items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-signal animate-pulse" />
-            {PRODUCT_NAME} · {BRANCH_NAME} · {BRANCH_RANGE}
+            {BRANCH_NAME} · {BRANCH_RANGE}
           </div>
           <h1 className="font-display font-extrabold text-4xl sm:text-5xl md:text-6xl text-ink-hi leading-[1.1] tracking-tight max-w-3xl">
             Prep less. <span className="text-signal">Prioritize better.</span>
@@ -23,6 +25,7 @@ export default function HomePage() {
           <p className="text-base sm:text-lg text-ink-lo leading-relaxed max-w-2xl font-light">
             A premium academic workspace engineered with prioritizing algorithms, curated revision content, and exam notes for Electrical & Computer Engineering.
           </p>
+          <BranchSelect />
         </div>
 
         {/* Search & Planner Widget Deck */}
@@ -65,6 +68,19 @@ export default function HomePage() {
             Browse Notes
           </a>
         </div>
+      </section>
+
+      {/* Choose your branch */}
+      <section className="space-y-6 pt-4">
+        <div className="flex items-baseline justify-between gap-3 flex-wrap">
+          <div className="flex items-baseline gap-3">
+            <span className="eyebrow text-ink-hi">Your Branch</span>
+          </div>
+          <span className="font-mono text-[10px] uppercase tracking-wider text-ink-faint">
+            ER · CS · CS-AI
+          </span>
+        </div>
+        <BranchPicker />
       </section>
 
       {/* How it works — editorial cards */}

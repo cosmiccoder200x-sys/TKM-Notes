@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import registry from "@/lib/notes";
+import { getSubjectContent } from "@/lib/notes";
 import { subjects } from "@/lib/content";
 import {
   getProgress,
@@ -25,7 +25,7 @@ export default function HomeStudyStatus() {
 
   useEffect(() => {
     const progress = getProgress();
-    const withContent = subjects.filter((s) => registry[s.code]);
+    const withContent = subjects.filter((s) => getSubjectContent(s.code, s.programId));
 
     let sum = 0;
     let n = 0;
@@ -38,7 +38,8 @@ export default function HomeStudyStatus() {
     let bestAttention = -1;
 
     for (const s of withContent) {
-      const content = registry[s.code];
+      const content = getSubjectContent(s.code, s.programId);
+      if (!content) continue;
       const moduleIds = content.modules.map((m) => m.id);
       const summary = calculateSubjectMastery(s.code, moduleIds, progress[s.code] ?? {});
 
