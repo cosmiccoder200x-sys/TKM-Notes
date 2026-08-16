@@ -12,6 +12,37 @@ export type LearnCategoryId =
   | "ai-data"
   | "advanced";
 
+// Fine-grained categories for browsing the catalog (spec: 17 categories).
+export type LearnFineCategoryId =
+  | "programming"
+  | "dsa"
+  | "algorithms"
+  | "dbms"
+  | "os"
+  | "networks"
+  | "coa"
+  | "se"
+  | "web"
+  | "security"
+  | "cloud"
+  | "ai"
+  | "ml"
+  | "ds"
+  | "math"
+  | "toc"
+  | "distributed";
+
+export interface LearnFineCategory {
+  id: LearnFineCategoryId;
+  order: number;
+  label: string;
+  shortLabel: string;
+  description: string;
+  difficulty: SubjectDifficulty;
+  estimatedHours: number;
+  whyItMatters: string;
+}
+
 export type LearnStageId =
   | "fundamentals"
   | "core"
@@ -56,6 +87,9 @@ export interface LearnTopic {
   practice?: string[];
   quickRevision?: string[];
   prerequisites?: string[];
+  complexity?: string; // one-line time/space complexity note (rendered as-is)
+  related?: string[]; // related topic slugs within the same subject
+  question?: string; // active-learning prompt for the topic (Question → Think)
 }
 
 export interface LearnSubjectStage {
@@ -75,8 +109,55 @@ export interface LearnSubject {
   stages: LearnSubjectStage[];
 }
 
+// Cross-link to a canonical TKM syllabus subject (never duplicated here).
+export interface LearnSyllabusLink {
+  programId: "ER" | "CS" | "CS_AI";
+  subjectCode: string;
+  subjectName: string;
+  semesterId: string;
+  subjectSlug: string;
+  moduleId?: string;
+}
+
+// A learn-cs topic can point at the TKM subject that covers the same idea.
+export interface LearnTopicSyllabusLink {
+  subjectSlug: string;
+  topicSlug: string;
+  links: LearnSyllabusLink[];
+}
+
+// Roadmap level (spec: levels 0–5). A level is an ordered set of subjects.
+export interface LearnRoadmapLevel {
+  level: number;
+  title: string;
+  description: string;
+  subjects: string[]; // learn-cs subject slugs
+}
+
+// A learning goal a student can pick on /learn-cs/roadmap.
+export interface LearnGoal {
+  id: string;
+  label: string;
+  description: string;
+  roadmap: string[]; // ordered subject slugs (subset of the full roadmap)
+}
+
 // topicSlug -> state, stored per subject.
 export type LearnProgress = Record<string, LearningState>;
+
+// Revision / quiz metadata persisted per (subject, topic).
+export interface LearnTopicDetail {
+  learnedAt?: number; // epoch ms when first marked learned
+  lastRevisedAt?: number; // epoch ms of the most recent revision
+  revisionCount: number; // times revised
+  quizBest: number; // best quiz score 0..100
+  quizAttempts: number; // quizzes taken
+  quizCorrect: number; // correct answers across quizzes
+  quizTotal: number; // answers answered across quizzes
+  quizWeak: string[]; // topic slugs flagged weak (from quiz misses)
+}
+
+export type LearnTopicDetailMap = Record<string, LearnTopicDetail>; // `${subjectSlug}/${topicSlug}`
 
 export const LEARNING_STATE_ORDER: LearningState[] = [
   "not-started",

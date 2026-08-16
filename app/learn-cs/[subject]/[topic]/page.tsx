@@ -6,6 +6,11 @@ import { DIFFICULTY_META } from "@/lib/learn-cs/types";
 import { NavIcon } from "@/components/navigation/navItems";
 import TopicState from "@/components/learn-cs/TopicState";
 import LearnWithAI from "@/components/learn-cs/LearnWithAI";
+import TopicPrereqGate from "@/components/learn-cs/TopicPrereqGate";
+import PracticePanel from "@/components/learn-cs/PracticePanel";
+import QuizPanel from "@/components/learn-cs/QuizPanel";
+import RevisionPanel from "@/components/learn-cs/RevisionPanel";
+import SyllabusCrossLinks from "@/components/learn-cs/SyllabusCrossLinks";
 import { PRODUCT_NAME } from "@/lib/branch";
 
 export function generateStaticParams() {
@@ -88,16 +93,42 @@ export default function LearnTopicPage({ params }: { params: { subject: string; 
           </span>
           <span className="chip">~{topic.estimatedMinutes} min</span>
           <span className="chip">{topic.difficulty === "advanced" ? "interview + mastery depth" : "core lesson"}</span>
+          {topic.complexity && <span className="chip border border-signal-dim text-signal bg-signal/10">{topic.complexity}</span>}
         </div>
 
         <TopicState subjectSlug={subject.slug} topicSlug={topic.slug} />
       </section>
+
+      {/* Prerequisites (YOU ARE READY / YOU SHOULD LEARN FIRST) */}
+      <TopicPrereqGate subject={subject} topic={topic} />
+
+      {/* Practice + Quiz + Revision */}
+      <section className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
+        <PracticePanel subject={subject} topic={topic} />
+        <QuizPanel subject={subject} topic={topic} />
+      </section>
+      <RevisionPanel subject={subject} topic={topic} />
+
+      {/* Cross-link to TKM syllabus + notes */}
+      <SyllabusCrossLinks subjectSlug={subject.slug} topicSlug={topic.slug} />
 
       {/* Learn with AI */}
       <LearnWithAI subject={subject} topic={topic} />
 
       {/* Lesson content */}
       <div className="read-col space-y-10">
+        {topic.question && (
+          <Section kicker="Think first" title="Answer this before reading on">
+            <div className="card p-4 border-dashed">
+              <p className="text-sm leading-relaxed text-ink-hi">{topic.question}</p>
+              <p className="text-xs text-ink-faint mt-2 font-mono">
+                Form your own answer, then read on. Checking yourself against the notes is the fastest
+                way to make the idea stick.
+              </p>
+            </div>
+          </Section>
+        )}
+
         <Section kicker="What is it?" title="The one-paragraph answer">
           <p className="text-[15px] leading-[1.8] text-ink-lo">{topic.summary}</p>
         </Section>
@@ -168,6 +199,31 @@ export default function LearnTopicPage({ params }: { params: { subject: string; 
           </Section>
         )}
       </div>
+
+      {/* Related topics */}
+      {topic.related && topic.related.length > 0 && (
+        <section className="space-y-2.5">
+          <div className="space-y-1">
+            <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint">Related topics</span>
+            <h2 className="font-display font-semibold text-ink-hi text-lg">Go deeper from here</h2>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {topic.related.map((slug) => {
+              const rel = findLearnTopic(subject, slug);
+              if (!rel) return null;
+              return (
+                <Link
+                  key={slug}
+                  href={`/learn-cs/${subject.slug}/${slug}`}
+                  className="font-mono text-[11px] uppercase tracking-wider px-2.5 py-1.5 rounded-card border border-bg-border text-ink-lo hover:border-signal hover:text-signal transition-colors"
+                >
+                  {rel.title}
+                </Link>
+              );
+            })}
+          </div>
+        </section>
+      )}
 
       {/* Next concept */}
       {next ? (

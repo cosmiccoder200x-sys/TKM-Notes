@@ -2,10 +2,11 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { getLearnSubject, totalTopics, totalMinutes, LEARN_SUBJECTS } from "@/lib/learn-cs";
-import { getLearnCategory } from "@/lib/learn-cs/categories";
+import { getLearnCategory, getLearnFineCategory, roadmapLevelFor } from "@/lib/learn-cs/categories";
 import type { LearnSubject } from "@/lib/learn-cs/types";
 import { NavIcon } from "@/components/navigation/navItems";
 import LearningPath from "@/components/learn-cs/LearningPath";
+import SubjectReadiness from "@/components/learn-cs/SubjectReadiness";
 import { PRODUCT_NAME } from "@/lib/branch";
 
 export function generateStaticParams() {
@@ -32,6 +33,11 @@ export default function LearnSubjectPage({ params }: { params: { subject: string
   if (!subject) notFound();
 
   const category = getLearnCategory(subject.category);
+  const fine = getLearnFineCategory(subject.slug);
+  const level = roadmapLevelFor(subject.slug);
+  const whyMatters =
+    fine?.whyItMatters ??
+    "This subject builds the core mental models the rest of your CS work leans on.";
   const prerequisites: LearnSubject[] = (subject.prerequisites ?? [])
     .map((slug) => getLearnSubject(slug))
     .filter((s): s is LearnSubject => Boolean(s));
@@ -67,7 +73,20 @@ export default function LearnSubjectPage({ params }: { params: { subject: string
           <span className="chip">~{subject.estimatedHours} hours</span>
           <span className="chip">{totalTopics(subject)} topics</span>
           <span className="chip">~{Math.round(totalMinutes(subject) / 60)}h of lessons</span>
+          {level >= 0 && (
+            <Link href="/learn-cs/roadmap" className="chip border border-signal-dim text-signal bg-signal/10 hover:bg-signal/20 transition-colors">
+              Roadmap Level {level}
+            </Link>
+          )}
         </div>
+
+        {/* Why learn it */}
+        <p className="text-sm text-ink-lo leading-relaxed max-w-2xl">
+          {whyMatters}
+        </p>
+
+        {/* Subject readiness (prerequisite gate) */}
+        <SubjectReadiness subject={subject} />
 
         {/* Prerequisites */}
         {prerequisites.length > 0 && (

@@ -73,6 +73,20 @@ export default function MyLearningView() {
           Everything is saved on this device. Move each topic from <span className="text-signal">Learning</span> to{" "}
           <span className="text-critical">Mastered</span> as you go.
         </p>
+        <div className="flex flex-wrap gap-2 pt-1">
+          <Link
+            href="/learn-cs/progress"
+            className="font-mono text-[11px] uppercase tracking-wider px-3 py-1.5 rounded-full border border-bg-border text-ink-hi hover:border-signal hover:text-signal hover:bg-signal/5 transition-all"
+          >
+            Full dashboard
+          </Link>
+          <Link
+            href="/learn-cs/roadmap"
+            className="font-mono text-[11px] uppercase tracking-wider px-3 py-1.5 rounded-full border border-bg-border text-ink-hi hover:border-signal hover:text-signal hover:bg-signal/5 transition-all"
+          >
+            Roadmap & goals
+          </Link>
+        </div>
       </section>
 
       {/* Overall stats */}

@@ -3,6 +3,7 @@ import { LEARN_CATEGORIES, RECOMMENDED_ROADMAP } from "@/lib/learn-cs/categories
 import { LEARN_SUBJECTS, getLearnSubject, totalTopics } from "@/lib/learn-cs";
 import { NavIcon } from "@/components/navigation/navItems";
 import LearnProgressCard from "@/components/learn-cs/LearnProgressCard";
+import RecommendationsView from "@/components/learn-cs/RecommendationsView";
 
 const DIFFICULTY_STYLE: Record<string, string> = {
   beginner: "text-signal border-signal-dim bg-signal/10",
@@ -37,7 +38,7 @@ export default function LearnCsPage() {
 
         <div className="flex flex-wrap gap-2 pt-2">
           <Link
-            href="#roadmap"
+            href="/learn-cs/roadmap"
             className="font-mono text-[11px] uppercase tracking-wider px-4 py-2 rounded-full bg-signal text-white hover:bg-signal-dim transition-all shadow-sm"
           >
             Start the Roadmap →
@@ -48,11 +49,20 @@ export default function LearnCsPage() {
           >
             My Learning Progress
           </Link>
+          <Link
+            href="/learn-cs/progress"
+            className="font-mono text-[11px] uppercase tracking-wider px-4 py-2 rounded-full border border-bg-border text-ink-hi hover:border-signal hover:text-signal hover:bg-signal/5 transition-all"
+          >
+            Dashboard
+          </Link>
         </div>
       </section>
 
       {/* My Learning progress */}
       <LearnProgressCard />
+
+      {/* Recommendations */}
+      <RecommendationsView />
 
       {/* Roadmap — recommended order */}
       <section id="roadmap" className="scroll-mt-20 space-y-6">
@@ -97,6 +107,13 @@ export default function LearnCsPage() {
             );
           })}
         </ol>
+
+        <Link
+          href="/learn-cs/roadmap"
+          className="inline-flex font-mono text-[11px] uppercase tracking-wider text-signal hover:text-signal-dim transition-colors"
+        >
+          Goals & roadmap levels →
+        </Link>
       </section>
 
       {/* Explore by category */}
