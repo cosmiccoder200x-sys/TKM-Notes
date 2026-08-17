@@ -2,6 +2,7 @@
 
 import { StudyPrompt, StudyPromptVariable, StudyModeId, StudyModeCategory } from "./types";
 import { Subject, Module } from "@/lib/types";
+import { subjects } from "@/lib/content";
 import { 
   getSubjectCategory as getSubjectCategoryFn, 
   getSubjectEvaluationCriteria,
@@ -12,35 +13,8 @@ import {
 
 function getSubjectName(subjectCode: string): string {
   if (!subjectCode) return "your subject";
-  const subjectMap: Record<string, string> = {
-    "24ERP304": "Data Structures and Algorithms",
-    "24EST332": "Network Theory",
-    "24ERJ303": "Digital Electronics and Logic Design",
-    "24MAP301": "Advanced Linear Algebra, Complex Analysis & PDE",
-    "24ERT305": "Sensor & Sensor Circuits",
-    "24HUT310": "Life Skills and Professional Ethics",
-    "24ESP307": "System Simulation & Virtual Instrumentation Lab",
-    "24ERT401": "Computer Organization and Architecture",
-    "24ERT402": "Signals & Systems",
-    "24ERP403": "Electrical Technology",
-    "24ERJ404": "Solid State Electronic Devices and Circuits",
-    "24HUT435": "Engineering Economics",
-    "24MCT406": "Environmental Sciences",
-    "24ERP407": "Object Oriented Programming Using Java",
-    "24ERT501": "Control Systems",
-    "24ERJ502": "Database Management Systems",
-    "24ERT503": "Artificial Intelligence: Theory and Applications",
-    "24ERP504": "Operating Systems",
-    "24HUT535": "Project Management and Finance",
-    "24MCT506": "Constitution of India",
-    "24ERT507": "Software Engineering",
-    "24ERP601": "Computer Networks",
-    "24ERP602": "Embedded System Design and IoT",
-    "24ERT603": "Power Electronics & Drives",
-    "24ERP701": "Computer Vision",
-    "24ERP702": "Energy Systems",
-  };
-  return subjectMap[subjectCode] || subjectCode;
+  // Canonical name lookup across every program (no hard-coded code→name map).
+  return subjects.find((s) => s.code === subjectCode)?.name ?? subjectCode;
 }
 
 // Opening line that stays coherent even when no subject is provided.

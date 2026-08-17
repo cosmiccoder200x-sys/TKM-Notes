@@ -1,9 +1,10 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { subjects } from "@/lib/content";
+import { subjects, semesters } from "@/lib/content";
 import { PROGRAM_SLUGS, PROGRAM_LABELS, programUrl } from "@/lib/urls";
-import { ProgramId, Semester } from "@/lib/types";
+import { ProgramId } from "@/lib/types";
 import { PRODUCT_NAME } from "@/lib/branch";
+import { PROGRAMS } from "@/lib/domain";
 
 export const metadata: Metadata = {
   title: `Syllabus — ${PRODUCT_NAME}`,
@@ -11,15 +12,7 @@ export const metadata: Metadata = {
 };
 
 export default function SyllabusIndexPage() {
-  const programs: ProgramId[] = ["ER", "CS", "CS_AI"];
-  const semesters: Semester[] = [
-    { id: "s3", label: "Semester 3" },
-    { id: "s4", label: "Semester 4" },
-    { id: "s5", label: "Semester 5" },
-    { id: "s6", label: "Semester 6" },
-    { id: "s7", label: "Semester 7" },
-    { id: "s8", label: "Semester 8" },
-  ];
+  const programs: ProgramId[] = PROGRAMS.map((p) => p.id);
 
   return (
     <main className="max-w-4xl mx-auto px-4 py-8 space-y-8">

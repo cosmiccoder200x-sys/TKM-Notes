@@ -10,6 +10,7 @@ export interface SearchHit {
   semesterId: string;
   subjectSlug: string;
   programId: ProgramId;
+  source?: "tkm" | "learn-cs"; // "tkm" when omitted (TKM syllabus/notes data)
   moduleId?: string;
   moduleTitle?: string;
   matchType:
@@ -216,7 +217,9 @@ export function searchAll(query: string): SearchHit[] {
     }
   }
 
-  // Learn CS catalog (learn-cs subjects + their topics).
+  // Learn CS catalog (learn-cs subjects + their topics). These are not TKM
+  // branch data — programId is a placeholder and the source discriminator
+  // keeps them from ever being treated as an ER/CS/CS_AI hit.
   for (const subject of LEARN_SUBJECTS) {
     if (subject.name.toLowerCase().includes(q)) {
       hits.push({
@@ -224,6 +227,7 @@ export function searchAll(query: string): SearchHit[] {
         subjectName: subject.name,
         semesterId: "learn-cs",
         programId: "CS",
+        source: "learn-cs",
         subjectSlug: subject.slug,
         matchType: "learn-subject",
         snippet: subject.description,
@@ -243,6 +247,7 @@ export function searchAll(query: string): SearchHit[] {
           subjectName: subject.name,
           semesterId: "learn-cs",
           programId: "CS",
+          source: "learn-cs",
           subjectSlug: subject.slug,
           matchType: "learn-topic",
           snippet: topic.title,

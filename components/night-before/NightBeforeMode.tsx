@@ -49,7 +49,7 @@ export default function NightBeforeMode() {
   // Resume an in-progress session on mount when a subject is supplied (unless fresh=1).
   useEffect(() => {
     if (!urlSubject || urlFresh) return;
-    const saved = loadNightBeforeSession(urlSubject);
+    const saved = loadNightBeforeSession(urlSubject, urlProgram);
     if (saved) {
       setSubjectCode(saved.subjectCode);
       setProgramId(saved.programId ?? "ER");
@@ -112,7 +112,7 @@ export default function NightBeforeMode() {
   }
 
   function restart() {
-    if (subjectCode) clearNightBeforeSession(subjectCode);
+    if (subjectCode) clearNightBeforeSession(subjectCode, programId);
     setSession(null);
     setActiveSectionId(null);
     setStep("setup");

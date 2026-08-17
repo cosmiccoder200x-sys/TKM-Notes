@@ -1,18 +1,14 @@
-import { Semester, Subject, ProgramId } from "./types";
+import { Subject, ProgramId } from "./types";
 import { csSubjects, csAiSubjects, syllabusModules } from "./syllabusData";
 import type { SyllabusModule } from "./syllabusData";
+import { SEMESTERS } from "./domain";
+import { subjectId as domainSubjectId } from "./domain";
 
 export { csSubjects, csAiSubjects, syllabusModules };
 export type { SyllabusModule };
 
-export const semesters: Semester[] = [
-  { id: "s3", label: "Semester 3" },
-  { id: "s4", label: "Semester 4" },
-  { id: "s5", label: "Semester 5" },
-  { id: "s6", label: "Semester 6" },
-  { id: "s7", label: "Semester 7" },
-  { id: "s8", label: "Semester 8" },
-];
+// Canonical semester table (single source: lib/domain.ts).
+export const semesters = SEMESTERS;
 
 const erSubjects: Subject[] = [
   // Semester 3
@@ -94,8 +90,9 @@ export function findSubjectByCode(programId: ProgramId, subjectCode: string): Su
 }
 
 // Canonical stable identifier used everywhere (progress, notes, pyqs, practice).
+// Implemented by lib/domain.ts; kept here for backward-compatible call sites.
 export function subjectKey(programId: ProgramId, subjectCode: string): string {
-  return `${programId}:${subjectCode}`;
+  return domainSubjectId(programId, subjectCode);
 }
 
 

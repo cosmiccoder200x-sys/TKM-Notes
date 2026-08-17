@@ -70,29 +70,34 @@ const csAiNotes: { content: SubjectContent; programId: ProgramId }[] = [
   { content: advMathAi, programId: "CS_AI" },
 ];
 
-// Composite keys are the canonical lookup ("ER-24ERP304"). Plain-code aliases
-// are also registered for legacy call sites that index `registry[code]`; ER
-// wins when two programs share a course code. New code should prefer
-// getSubjectContent(code, programId) for program-correct resolution.
+// Composite keys are the canonical lookup ("ER-24ERP304"). There are no
+// plain-code aliases: a course code like 24CSP304 exists in both CS and CS_AI
+// with different content, so indexing by code alone would be ambiguous.
+// getSubjectContentByCode resolves program-scoped keys in ER → CS → CS_AI order
+// for legacy call sites that have only a code (Prompt Lab subject dropdown).
 const registry: Record<string, SubjectContent> = {};
 for (const { content, programId } of erNotes) {
   registry[`${programId}-${content.code}`] = content;
-  if (!(content.code in registry)) registry[content.code] = content;
 }
 for (const { content, programId } of csAiNotes) {
   registry[`${programId}-${content.code}`] = content;
-  if (!(content.code in registry)) registry[content.code] = content;
 }
+
+const PROGRAM_LOOKUP_ORDER: ProgramId[] = ["ER", "CS", "CS_AI"];
 
 export function getSubjectContent(subjectCode: string, programId?: ProgramId): SubjectContent | undefined {
   if (!programId) {
-    return registry[`ER-${subjectCode}`] || registry[`CS-${subjectCode}`] || registry[`CS_AI-${subjectCode}`];
+    return getSubjectContentByCode(subjectCode);
   }
   return registry[`${programId}-${subjectCode}`];
 }
 
 export function getSubjectContentByCode(subjectCode: string): SubjectContent | undefined {
-  return getSubjectContent(subjectCode, "ER") || getSubjectContent(subjectCode, "CS") || getSubjectContent(subjectCode, "CS_AI");
+  for (const programId of PROGRAM_LOOKUP_ORDER) {
+    const content = registry[`${programId}-${subjectCode}`];
+    if (content) return content;
+  }
+  return undefined;
 }
 
 export default registry;

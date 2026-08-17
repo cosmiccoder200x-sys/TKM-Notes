@@ -2,9 +2,13 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { semesters } from "@/lib/content";
 import { getQuestionBankStats, type PyqEntry } from "@/lib/pyqs";
 import { generatePromptLabUrl } from "@/lib/prompts/context";
+import { PROGRAM_OPTIONS } from "@/lib/branch";
+import { ProgramId } from "@/lib/types";
+import { programFromSlug } from "@/lib/urls";
 import PriorityLabel from "@/components/PriorityLabel";
 import { subjectUrl } from "@/lib/urls";
 
@@ -15,25 +19,33 @@ type SubjectFilter = string; // subject code or "all"
 type WeightageFilter = "all" | "high" | "medium" | "low";
 
 export default function PyqsExplorer({ entries }: { entries: PyqEntry[] }) {
-  const [semesterId, setSemesterId] = useState<SemesterFilter>(SERVER);
-  const [subjectCode, setSubjectCode] = useState<SubjectFilter>("all");
+  const params = useSearchParams();
+  const urlProgram = programFromSlug(params.get("program") ?? "");
+  const urlSemester = params.get("semester") ?? "";
+  const urlSubject = params.get("subject") ?? "";
+
+  const [programId, setProgramId] = useState<ProgramId>(urlProgram ?? "ER");
+  const [semesterId, setSemesterId] = useState<SemesterFilter>(urlSemester || SERVER);
+  const [subjectCode, setSubjectCode] = useState<SubjectFilter>(urlSubject || "all");
   const [weightage, setWeightage] = useState<WeightageFilter>("all");
 
+  const byProgram = useMemo(() => entries.filter((q) => q.programId === programId), [entries, programId]);
+
   const subjectsInScope = useMemo(() => {
-    const list = entries.filter((q) => (semesterId === "all" ? true : q.semesterId === semesterId));
+    const list = byProgram.filter((q) => (semesterId === "all" ? true : q.semesterId === semesterId));
     return Array.from(new Map(list.map((q) => [q.subjectCode, q.subjectName])).entries()).sort(
       (a, b) => a[1].localeCompare(b[1])
     );
-  }, [entries, semesterId]);
+  }, [byProgram, semesterId]);
 
   const filtered = useMemo(() => {
-    return entries.filter((q) => {
+    return byProgram.filter((q) => {
       if (semesterId !== "all" && q.semesterId !== semesterId) return false;
       if (subjectCode !== "all" && q.subjectCode !== subjectCode) return false;
       if (weightage !== "all" && q.weightage !== weightage) return false;
       return true;
     });
-  }, [entries, semesterId, subjectCode, weightage]);
+  }, [byProgram, semesterId, subjectCode, weightage]);
 
   const stats = useMemo(() => getQuestionBankStats(filtered), [filtered]);
 
@@ -63,7 +75,7 @@ export default function PyqsExplorer({ entries }: { entries: PyqEntry[] }) {
           Previous-Year Questions
         </h1>
         <p className="text-sm text-ink-lo leading-relaxed max-w-2xl">
-          Every high-priority exam question from your notes, aggregated into one filterable bank.
+          Every high-priority exam question from your syllabus, aggregated into one filterable bank.
           Filters use only the metadata that currently exists — subject, module, and question
           weightage. Year-wise papers and per-question marks will appear here as they are added.
         </p>
@@ -102,8 +114,33 @@ export default function PyqsExplorer({ entries }: { entries: PyqEntry[] }) {
 
       <div className="flex flex-wrap items-center gap-3">
         <label className="flex items-center gap-2 text-xs font-mono uppercase tracking-wide text-ink-faint">
+          Branch
+          <select
+            value={programId}
+            onChange={(e) => {
+              setProgramId(e.target.value as ProgramId);
+              setSubjectCode("all");
+            }}
+            className={selectCls}
+          >
+            {PROGRAM_OPTIONS.map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.short}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <label className="flex items-center gap-2 text-xs font-mono uppercase tracking-wide text-ink-faint">
           Semester
-          <select value={semesterId} onChange={(e) => { setSemesterId(e.target.value); setSubjectCode("all"); }} className={selectCls}>
+          <select
+            value={semesterId}
+            onChange={(e) => {
+              setSemesterId(e.target.value);
+              setSubjectCode("all");
+            }}
+            className={selectCls}
+          >
             <option value="all">All</option>
             {semesters.map((s) => (
               <option key={s.id} value={s.id}>
@@ -152,7 +189,7 @@ export default function PyqsExplorer({ entries }: { entries: PyqEntry[] }) {
         <div className="card p-8 text-center">
           <p className="text-sm text-ink-hi mb-1">No questions match these filters.</p>
           <p className="text-sm text-ink-lo">
-            Notes for the selected subject may not be written yet — pick a different semester.
+            Notes for the selected subject may not be written yet — pick a different branch or semester.
           </p>
         </div>
       ) : (
@@ -196,6 +233,7 @@ export default function PyqsExplorer({ entries }: { entries: PyqEntry[] }) {
                             <Link
                               href={generatePromptLabUrl(
                                 {
+                                  semester: q.semesterId,
                                   subjectCode: q.subjectCode,
                                   moduleId: q.moduleId,
                                   moduleName: q.moduleTitle,
@@ -214,6 +252,12 @@ export default function PyqsExplorer({ entries }: { entries: PyqEntry[] }) {
                               className="font-mono text-[10px] uppercase tracking-wide px-2.5 py-1.5 rounded-card border border-bg-border text-ink-faint hover:border-signal hover:text-signal transition-colors"
                             >
                               Open in notes
+                            </Link>
+                            <Link
+                              href={`/practice?program=${programFromSlug(q.programId)}&semester=${q.semesterId}&subject=${encodeURIComponent(q.subjectCode)}`}
+                              className="font-mono text-[10px] uppercase tracking-wide px-2.5 py-1.5 rounded-card border border-signal-dim text-signal hover:bg-signal/10 transition-colors"
+                            >
+                              Practice
                             </Link>
                           </div>
                         </div>

@@ -6,20 +6,20 @@ import { ProgramId } from "@/lib/types";
 import { findSubject, semesters, subjects } from "@/lib/content";
 import { programFromSlug, PROGRAM_LABELS, subjectUrl, programUrl, semesterUrl } from "@/lib/urls";
 import { PRODUCT_NAME } from "@/lib/branch";
+import { PROGRAMS } from "@/lib/domain";
 
 function allSubjectsFor(programId: ProgramId, semesterId: string) {
   return subjects.filter((s) => s.programId === programId && s.semesterId === semesterId);
 }
 
 export function generateStaticParams() {
-  const programs = [{ program: "er" }, { program: "cse" }, { program: "cse-ai" }];
   const out: { program: string; semester: string; subject: string }[] = [];
-  for (const p of programs) {
+  for (const p of PROGRAMS) {
     for (const s of semesters) {
-      const programId = programFromSlug(p.program);
+      const programId = programFromSlug(p.slug);
       if (!programId) continue;
       for (const subject of allSubjectsFor(programId, s.id)) {
-        out.push({ program: p.program, semester: s.id, subject: subject.slug });
+        out.push({ program: p.slug, semester: s.id, subject: subject.slug });
       }
     }
   }

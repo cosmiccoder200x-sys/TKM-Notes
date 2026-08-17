@@ -57,8 +57,8 @@ export default function SubjectHeader({
 
       <p className="text-base text-ink-lo">
         {moduleCount > 0
-          ? `${moduleCount} modules · Exam-focused notes`
-          : "Notes for this subject haven't been written yet."}
+          ? `${moduleCount} modules · Practice & PYQs ready`
+          : "Official KTU 2024 syllabus subject — study with practice, PYQs and AI tools."}
       </p>
 
       {moduleCount > 0 && (

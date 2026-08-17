@@ -48,7 +48,7 @@ const SUBJECT_LINKS: Record<string, SubjectTarget[]> = {
   "computer-organization-and-architecture": [
     { programId: "ER", subjectCode: "24ERT401" },
     { programId: "CS", subjectCode: "24CSP305" },
-    { programId: "CS_AI", subjectCode: "24CSP305" },
+    { programId: "CS_AI", subjectCode: "24AIP305" },
   ],
   "software-engineering": [
     { programId: "ER", subjectCode: "24ERT507" },
@@ -188,4 +188,4 @@ export function syllabusLinkModuleTitle(link: LearnSyllabusLink): string | undef
   return mod ? String(mod.title).replace(/^[^:]*:/, "").trim() : undefined;
 }
 
-export { SUBJECT_LINKS };
+export { SUBJECT_LINKS, TOPIC_LINKS };

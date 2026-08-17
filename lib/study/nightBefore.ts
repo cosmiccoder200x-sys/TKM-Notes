@@ -201,34 +201,45 @@ export function hasAnyContent(subjectCode: string, programId: ProgramId = "ER"):
 }
 
 // --- Night-Before session persistence (localStorage) ---
+// Keys are program-scoped: a course code like 24CSP304 exists in both CS and
+// CS_AI, so the legacy code-only key would collide. A legacy key (code only)
+// is still read as a fallback so existing in-progress sessions survive.
 
-function sessionKey(subjectCode: string): string {
+function sessionKey(programId: ProgramId, subjectCode: string): string {
+  return `tkm.nightbefore.session.${programId}:${subjectCode}`;
+}
+
+function legacySessionKey(subjectCode: string): string {
   return `tkm.nightbefore.session.${subjectCode}`;
 }
 
 export function saveNightBeforeSession(session: NightBeforeSession) {
   if (typeof window === "undefined") return;
   try {
-    window.localStorage.setItem(sessionKey(session.subjectCode), JSON.stringify(session));
+    const programId = session.programId ?? "ER";
+    window.localStorage.setItem(sessionKey(programId, session.subjectCode), JSON.stringify(session));
   } catch {
     // storage unavailable — session just won't persist
   }
 }
 
-export function loadNightBeforeSession(subjectCode: string): NightBeforeSession | null {
+export function loadNightBeforeSession(subjectCode: string, programId: ProgramId = "ER"): NightBeforeSession | null {
   if (typeof window === "undefined") return null;
   try {
-    const raw = window.localStorage.getItem(sessionKey(subjectCode));
-    return raw ? (JSON.parse(raw) as NightBeforeSession) : null;
+    const raw = window.localStorage.getItem(sessionKey(programId, subjectCode));
+    if (raw) return JSON.parse(raw) as NightBeforeSession;
+    const legacy = window.localStorage.getItem(legacySessionKey(subjectCode));
+    return legacy ? (JSON.parse(legacy) as NightBeforeSession) : null;
   } catch {
     return null;
   }
 }
 
-export function clearNightBeforeSession(subjectCode: string) {
+export function clearNightBeforeSession(subjectCode: string, programId: ProgramId = "ER") {
   if (typeof window === "undefined") return;
   try {
-    window.localStorage.removeItem(sessionKey(subjectCode));
+    window.localStorage.removeItem(sessionKey(programId, subjectCode));
+    window.localStorage.removeItem(legacySessionKey(subjectCode));
   } catch {
     // ignore
   }

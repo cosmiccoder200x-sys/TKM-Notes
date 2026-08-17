@@ -5,13 +5,13 @@ import { semesters, subjectsForSemester } from "@/lib/content";
 import { programFromSlug, PROGRAM_LABELS, subjectUrl, programUrl } from "@/lib/urls";
 import { ProgramId } from "@/lib/types";
 import { PRODUCT_NAME } from "@/lib/branch";
+import { PROGRAMS } from "@/lib/domain";
 import SubjectCard from "@/components/SubjectCard";
 
 export function generateStaticParams() {
-  const programs = [{ program: "er" }, { program: "cse" }, { program: "cse-ai" }];
   const out: { program: string; semester: string }[] = [];
-  for (const p of programs) {
-    for (const s of semesters) out.push({ program: p.program, semester: s.id });
+  for (const p of PROGRAMS) {
+    for (const s of semesters) out.push({ program: p.slug, semester: s.id });
   }
   return out;
 }

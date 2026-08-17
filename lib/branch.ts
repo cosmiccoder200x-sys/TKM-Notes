@@ -3,7 +3,8 @@
 // Source of truth for branding strings and per-subject discipline grouping.
 
 import { subjects } from "./content";
-import { ProgramId, Subject } from "./types";
+import { Subject } from "./types";
+import { PROGRAMS, normalizeProgramId as domainNormalizeProgramId, BRANCH_LABELS as domainBranchLabels } from "./domain";
 
 export const PRODUCT_NAME = "TKM Notes";
 export const PRODUCT_TAGLINE = "Exam-focused notes & AI study tools for TKM CE.";
@@ -15,31 +16,18 @@ export const BRANCH_RANGE = "S3–S8";
 export const BRANCH_TAGLINE = "Exam-focused · No distractions";
 export const BRANCH_FULL = "TKM College of Engineering · Electrical & Computer Engineering";
 
-export const PROGRAM_OPTIONS: { id: ProgramId; label: string; short: string }[] = [
-  { id: "ER", label: "ER / 2024 Scheme", short: "ER" },
-  { id: "CS", label: "CS / 2024 Scheme", short: "CS" },
-  { id: "CS_AI", label: "CS-AI / 2024 Scheme", short: "CS-AI" },
-];
+// Derived from the canonical program registry in lib/domain.ts.
+export const PROGRAM_OPTIONS: { id: "ER" | "CS" | "CS_AI"; label: string; short: string }[] = PROGRAMS.map((p) => ({
+  id: p.id,
+  label: `${p.id} / ${p.schemeId} Scheme`,
+  short: p.shortLabel,
+}));
 
-const VALID_PROGRAM_IDS: ProgramId[] = ["ER", "CS", "CS_AI"];
-
-function isProgramId(value: string | null): value is ProgramId {
-  return !!value && (VALID_PROGRAM_IDS as string[]).includes(value);
+export function normalizeProgramId(value: string | null): "ER" | "CS" | "CS_AI" | null {
+  return domainNormalizeProgramId(value);
 }
 
-// Normalize any stored value to a valid ProgramId, migrating legacy keys.
-export function normalizeProgramId(value: string | null): ProgramId | null {
-  if (isProgramId(value)) return value;
-  if (value === "CSE") return "ER";
-  if (value === "CSE_AI") return "CS_AI";
-  return null;
-}
-
-export const BRANCH_LABELS: Record<ProgramId, string> = {
-  ER: "Electrical & Computer Engineering",
-  CS: "Computer Science",
-  CS_AI: "Computer Science (Artificial Intelligence)",
-};
+export const BRANCH_LABELS: Record<"ER" | "CS" | "CS_AI", string> = domainBranchLabels;
 
 export type SubjectCategoryId = "computer" | "electronics" | "math" | "core";
 

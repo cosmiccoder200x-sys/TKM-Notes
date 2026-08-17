@@ -1,39 +1,34 @@
 // Branch-aware URL helpers. The branch is always encoded in the path, so the
 // route itself (not localStorage) is the authoritative source of truth.
+// Program slug/label metadata comes from lib/domain.ts (single source).
 
 import { ProgramId } from "./types";
+import { programById, programSlug as domainProgramSlug, programFromSlug as domainProgramFromSlug } from "./domain";
 
 export const PROGRAM_SLUGS: Record<ProgramId, string> = {
-  ER: "er",
-  CS: "cse",
-  CS_AI: "cse-ai",
+  ER: programById("ER")!.slug,
+  CS: programById("CS")!.slug,
+  CS_AI: programById("CS_AI")!.slug,
 };
 
 export const PROGRAM_LABELS: Record<ProgramId, string> = {
-  ER: "ER / Electrical & Computer Engineering",
-  CS: "CSE",
-  CS_AI: "CSE [AI]",
+  ER: programById("ER")!.label,
+  CS: programById("CS")!.label,
+  CS_AI: programById("CS_AI")!.label,
 };
 
 export const PROGRAM_SHORT_LABELS: Record<ProgramId, string> = {
-  ER: "ER",
-  CS: "CSE",
-  CS_AI: "CSE [AI]",
-};
-
-const SLUG_TO_PROGRAM: Record<string, ProgramId> = {
-  er: "ER",
-  cse: "CS",
-  "cse-ai": "CS_AI",
+  ER: programById("ER")!.shortLabel,
+  CS: programById("CS")!.shortLabel,
+  CS_AI: programById("CS_AI")!.shortLabel,
 };
 
 export function programSlug(programId: ProgramId): string {
-  return PROGRAM_SLUGS[programId];
+  return domainProgramSlug(programId);
 }
 
 export function programFromSlug(slug: string | undefined): ProgramId | null {
-  if (!slug) return null;
-  return SLUG_TO_PROGRAM[slug.toLowerCase()] ?? null;
+  return domainProgramFromSlug(slug);
 }
 
 export function semesterUrl(programId: ProgramId, semesterId: string): string {

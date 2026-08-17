@@ -5,9 +5,10 @@ import { subjectsForProgram, semesters } from "@/lib/content";
 import { programFromSlug, PROGRAM_LABELS, semesterUrl } from "@/lib/urls";
 import { ProgramId } from "@/lib/types";
 import { PRODUCT_NAME } from "@/lib/branch";
+import { PROGRAMS } from "@/lib/domain";
 
 export function generateStaticParams() {
-  return [{ program: "er" }, { program: "cse" }, { program: "cse-ai" }];
+  return PROGRAMS.map((p) => ({ program: p.slug }));
 }
 
 export function generateMetadata({ params }: { params: { program: string } }): Metadata {

@@ -156,7 +156,7 @@ export default function CommandPalette() {
                     <span className="min-w-0 flex-1">
                       <span className="block text-sm text-ink-hi truncate">{hit.snippet}</span>
                       <span className="block text-[11px] font-mono text-ink-faint truncate">
-                        {hit.href
+                        {hit.source === "learn-cs"
                           ? `Learn CS · ${hit.subjectName}`
                           : `${hit.programId} · ${hit.semesterId.toUpperCase()} · ${hit.subjectName}`}
                         {hit.moduleTitle ? ` · ${hit.moduleTitle}` : ""}

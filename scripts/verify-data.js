@@ -102,21 +102,27 @@ console.log(`\nLearn CS: ${subjects.length} subjects, ${topicTotal} topics.`);
 // (ER from content.ts, CS/CS_AI from syllabusData.ts); topic-level links must
 // reference a learn-cs subject+topic that exists and, for CS/CS_AI, a module
 // that exists in the generated syllabus data (ER has no generated modules).
+// Checks are program-scoped: a link { programId: "CS_AI", subjectCode: "X" }
+// only passes if program CS_AI actually owns subject X.
 const syllabusSrc = fs.readFileSync("lib/syllabusData.ts", "utf8");
 const contentSrc = fs.readFileSync("lib/content.ts", "utf8");
 
-const syllabusCodeRe = /^\s*"((CS|CS_AI)-[A-Z0-9]+)": \[/gm;
-const syllabusCodes = new Set();
-let sc;
-while ((sc = syllabusCodeRe.exec(syllabusSrc))) syllabusCodes.add(sc[1].split("-")[1]);
-
+// programId -> Set<code>, built from the module breakdown keys (CS/CS_AI).
+const codesByProgram = { ER: new Set(), CS: new Set(), CS_AI: new Set() };
+const moduleMapRe = /^\s*"((CS|CS_AI)-[A-Z0-9]+)": \[/gm;
+let mmk;
+while ((mmk = moduleMapRe.exec(syllabusSrc))) {
+  const [prog, code] = mmk[1].split("-");
+  codesByProgram[prog].add(code);
+}
 const erCodeRe = /code: "([^"]+)", slug: "[^"]+", name: "[^"]+", credits: [^,]+(?:, semesterId: "[^"]+")?, programId: "ER"/g;
-const allCodes = new Set(syllabusCodes);
 let ec;
-while ((ec = erCodeRe.exec(contentSrc))) allCodes.add(ec[1]);
+while ((ec = erCodeRe.exec(contentSrc))) codesByProgram.ER.add(ec[1]);
 
-const syllabusObjRe = /^\s*"((CS|CS_AI)-[A-Z0-9]+)": \[[\s\S]*?\n\s*\],/gm;
+const ownsCode = (programId, code) => Boolean(codesByProgram[programId] && codesByProgram[programId].has(code));
+
 const modulesBySubject = {};
+const syllabusObjRe = /^\s*"((CS|CS_AI)-[A-Z0-9]+)": \[[\s\S]*?\n\s*\],/gm;
 let mo;
 while ((mo = syllabusObjRe.exec(syllabusSrc))) {
   const key = mo[1];
@@ -135,10 +141,10 @@ const brokenSubjLinks = [];
 while ((sl = subjLinksRe.exec(linksSrc))) {
   const learnSlug = sl[1];
   if (!allSlugs.has(learnSlug)) brokenSubjLinks.push(`${learnSlug} (unknown learn-cs subject)`);
-  const codeRe = /subjectCode: "([^"]+)"/g;
-  let cm;
-  while ((cm = codeRe.exec(sl[2]))) {
-    if (!allCodes.has(cm[1])) brokenSubjLinks.push(`${learnSlug} → ${cm[1]} (not in syllabus)`);
+  const targetRe = /\{ programId: "(ER|CS|CS_AI)", subjectCode: "([^"]+)" \}/g;
+  let tm;
+  while ((tm = targetRe.exec(sl[2]))) {
+    if (!ownsCode(tm[1], tm[2])) brokenSubjLinks.push(`${learnSlug} → ${tm[1]}-${tm[2]} (not in ${tm[1]} syllabus)`);
   }
 }
 check("every subject-level cross-link target exists", brokenSubjLinks.length === 0, brokenSubjLinks.join(", "));
@@ -157,18 +163,20 @@ while ((tl = topicLinksRe.exec(linksSrc))) {
     brokenTopicLinks.push(`${learnSlug}/${topicSlug} (unknown topic)`);
     continue;
   }
-  const codeRe = /subjectCode: "([^"]+)", moduleId: "([^"]+)"/g;
-  let cm;
-  while ((cm = codeRe.exec(tl[2]))) {
-    if (!allCodes.has(cm[1])) {
-      brokenTopicLinks.push(`${tl[1]} → ${cm[1]} (not in syllabus)`);
+  // per-program module target: `ER: { subjectCode: "...", moduleId: "..." }`
+  const targetRe = /(ER|CS|CS_AI): \{ subjectCode: "([^"]+)", moduleId: "([^"]+)" \}/g;
+  let tm;
+  while ((tm = targetRe.exec(tl[2]))) {
+    const prog = tm[1];
+    const code = tm[2];
+    if (!ownsCode(prog, code)) {
+      brokenTopicLinks.push(`${tl[1]} → ${prog}-${code} (not in ${prog} syllabus)`);
       continue;
     }
     // ER has no generated module breakdown — skip the moduleId check there.
-    const isCS = syllabusCodes.has(cm[1]);
-    if (!isCS) continue;
-    const mods = modulesBySubject[cm[1]];
-    if (!mods || !mods.has(cm[2])) brokenTopicLinks.push(`${tl[1]} → ${cm[1]}:${cm[2]} (module not found)`);
+    if (prog === "ER") continue;
+    const mods = modulesBySubject[code];
+    if (!mods || !mods.has(tm[3])) brokenTopicLinks.push(`${tl[1]} → ${prog}-${code}:${tm[3]} (module not found)`);
   }
 }
 check("every topic-level cross-link target exists", brokenTopicLinks.length === 0, brokenTopicLinks.join(", "));

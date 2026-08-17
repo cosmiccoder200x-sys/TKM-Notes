@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "next lint",
     "import:syllabus": "node scripts/import-syllabus.mjs",
-    "validate:syllabus": "node scripts/verify-data.js"
+    "validate:syllabus": "node scripts/verify-data.js",
+    "validate:content": "node scripts/validate-content.js",
+    "test": "vitest run"
   },
   "dependencies": {
     "next": "14.2.35",
@@ -24,6 +26,7 @@
     "eslint-config-next": "^14.2.35",
     "postcss": "^8.4.40",
     "tailwindcss": "^3.4.7",
-    "typescript": "^5.5.4"
+    "typescript": "^5.5.4",
+    "vitest": "^2.1.9"
   }
 }

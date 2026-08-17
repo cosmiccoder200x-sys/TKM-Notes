@@ -23,7 +23,8 @@ export default function HomePage() {
             Prep less. <span className="text-signal">Prioritize better.</span>
           </h1>
           <p className="text-base sm:text-lg text-ink-lo leading-relaxed max-w-2xl font-light">
-            A premium academic workspace engineered with prioritizing algorithms, curated revision content, and exam notes for Electrical & Computer Engineering.
+            A premium study workspace for Electrical &amp; Computer Engineering — official syllabus,
+            prioritized practice, a PYQ bank, AI study tools, and progress tracking.
           </p>
           <BranchSelect />
         </div>
@@ -36,7 +37,7 @@ export default function HomePage() {
               <div className="flex items-center gap-2 text-[10px] font-mono text-signal uppercase tracking-wider">
                 <span>⌘ Command Palette</span>
               </div>
-              <p className="text-xs text-ink-lo">Instant access to all subject notes, formulas, and topic definitions.</p>
+              <p className="text-xs text-ink-lo">Instant access to subjects, modules, topics, and formulas.</p>
             </div>
             <PaletteButton label="Search subjects, topics, formulas..." large />
           </div>
@@ -65,7 +66,7 @@ export default function HomePage() {
             href="#current-semester"
             className="font-mono text-[11px] uppercase tracking-wider px-4 py-2 rounded-full bg-signal text-white hover:bg-signal-dim transition-all shadow-sm"
           >
-            Browse Notes
+            Explore Syllabus
           </a>
         </div>
       </section>
@@ -106,8 +107,8 @@ export default function HomePage() {
           <div className="flex items-baseline gap-3">
             <span className="eyebrow text-ink-hi">Current Semester</span>
           </div>
-          <Link href="/syllabus/er" className="font-mono text-[11px] text-signal hover:text-signal-dim transition-colors uppercase tracking-wider">
-            Continue Reading →
+          <Link href="/syllabus" className="font-mono text-[11px] text-signal hover:text-signal-dim transition-colors uppercase tracking-wider">
+            Open Syllabus →
           </Link>
         </div>
         <SemesterExplorer initialSemester="s3" />

@@ -4,6 +4,7 @@ import { StudyPrompt, StudyPromptVariable, FavoritePrompt, RecentPrompt, StudyMo
 import { Subject, Module, ProgramId } from "@/lib/types";
 import { semesters, subjects, findSubject, syllabusModulesFor } from "@/lib/content";
 import { getSubjectContentByCode } from "@/lib/notes";
+import { programShortLabel } from "@/lib/domain";
 import { 
   StudyContext, 
   ContextualPromptVars, 
@@ -33,17 +34,26 @@ export {
   QUESTION_ACTIONS
 };
 
-// Populate subject options for select dropdowns, grouped by semester
+// Populate subject options for select dropdowns, grouped by semester.
+// A course code can exist in multiple programs (24CSP304 in CS and CS_AI), so
+// the same value would otherwise appear twice in the dropdown. Dedupe by code
+// and disambiguate the label with the program when shared.
 export function getSubjectOptions(): { value: string; label: string; group: string }[] {
-  return semesters.flatMap((sem) =>
-    subjects
-      .filter((s) => s.semesterId === sem.id)
-      .map((s) => ({
+  const seen = new Set<string>();
+  const out: { value: string; label: string; group: string }[] = [];
+  for (const sem of semesters) {
+    for (const s of subjects.filter((s) => s.semesterId === sem.id)) {
+      if (seen.has(s.code)) continue;
+      seen.add(s.code);
+      const shared = subjects.some((x) => x.code === s.code && x.programId !== s.programId);
+      out.push({
         value: s.code,
-        label: s.name,
+        label: shared ? `${s.name} (${programShortLabel(s.programId)})` : s.name,
         group: sem.label,
-      }))
-  );
+      });
+    }
+  }
+  return out;
 }
 
 // Get modules for a subject: written notes first, else the official syllabus
