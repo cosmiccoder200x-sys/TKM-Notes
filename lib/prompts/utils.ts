@@ -1,8 +1,8 @@
 // Prompt Lab Utilities
 
 import { StudyPrompt, StudyPromptVariable, FavoritePrompt, RecentPrompt, StudyModeId } from "./types";
-import { Subject, Module } from "@/lib/types";
-import { semesters, subjects, findSubject } from "@/lib/content";
+import { Subject, Module, ProgramId } from "@/lib/types";
+import { semesters, subjects, findSubject, syllabusModulesFor } from "@/lib/content";
 import { getSubjectContentByCode } from "@/lib/notes";
 import { 
   StudyContext, 
@@ -46,22 +46,44 @@ export function getSubjectOptions(): { value: string; label: string; group: stri
   );
 }
 
-// Get modules for a subject
+// Get modules for a subject: written notes first, else the official syllabus
+// module breakdown (covers every CS / CS_AI subject). Branch resolution matches
+// getSubjectContentByCode (ER → CS → CS_AI).
+const MODULE_FALLBACK_PROGRAMS: ProgramId[] = ["ER", "CS", "CS_AI"];
+
 export function getModuleOptions(subjectCode: string): { value: string; label: string }[] {
   const content = getSubjectContentByCode(subjectCode);
-  if (!content) return [];
-  return content.modules.map((m, i) => ({
-    value: m.id,
-    label: `Module ${i + 1}: ${m.title}`,
-  }));
+  if (content) {
+    return content.modules.map((m, i) => ({
+      value: m.id,
+      label: `Module ${i + 1}: ${m.title}`,
+    }));
+  }
+  for (const programId of MODULE_FALLBACK_PROGRAMS) {
+    const mods = syllabusModulesFor(programId, subjectCode);
+    if (mods.length) {
+      return mods.map((m) => ({
+        value: m.id,
+        label: `Module ${m.number}: ${m.title}`,
+      }));
+    }
+  }
+  return [];
 }
 
 // Get module title by ID
 export function getModuleTitle(subjectCode: string, moduleId: string): string {
   const content = getSubjectContentByCode(subjectCode);
-  if (!content) return moduleId;
-  const mod = content.modules.find(m => m.id === moduleId);
-  return mod ? mod.title : moduleId;
+  if (content) {
+    const mod = content.modules.find(m => m.id === moduleId);
+    if (mod) return mod.title;
+  }
+  for (const programId of MODULE_FALLBACK_PROGRAMS) {
+    const mods = syllabusModulesFor(programId, subjectCode);
+    const mod = mods.find(m => m.id === moduleId);
+    if (mod) return mod.title;
+  }
+  return moduleId;
 }
 
 // Populate variables with dynamic options

@@ -1,14 +1,35 @@
-import { Subject } from "./types";
+import { Subject, ProgramId } from "./types";
+import { syllabusModulesFor } from "./content";
+import { BRANCH_LABELS } from "./branch";
 import syllabusText from "./syllabusText";
+
+const ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII"];
 
 export function hasSyllabusText(code: string): boolean {
   return Boolean(syllabusText[code]);
 }
 
-export function buildDeepDivePrompt(subject: Subject): string {
-  const syllabus = syllabusText[subject.code];
+// Build a SYLLABUS block from the official module breakdown (syllabusData.ts),
+// which is verified per-branch for every CS / CS_AI subject.
+function formatSyllabusModules(programId: ProgramId, code: string): string | undefined {
+  const mods = syllabusModulesFor(programId, code);
+  if (!mods.length) return undefined;
+  const lines: string[] = ["SYLLABUS"];
+  for (const m of mods) {
+    const roman = ROMAN[m.number - 1] ?? String(m.number);
+    lines.push(` MODULE ${roman}: ${m.title}`);
+    lines.push(m.content.trim());
+  }
+  return lines.join("\n");
+}
 
-  const header = `I'm a TKM College of Engineering (KTU, ECE, 2024 scheme) student studying "${subject.name}" (${subject.code}, ${subject.semesterId.toUpperCase()}, ${subject.credits} credits).`;
+export function buildDeepDivePrompt(subject: Subject): string {
+  // Branch-exact official modules take precedence (covers all CS / CS_AI);
+  // curated syllabusText entries serve the ER branch (keyed by code only).
+  const syllabus = formatSyllabusModules(subject.programId, subject.code) || syllabusText[subject.code];
+
+  const branch = BRANCH_LABELS[subject.programId] ?? "Engineering";
+  const header = `I'm a TKM College of Engineering (KTU, ${branch}, 2024 scheme) student studying "${subject.name}" (${subject.code}, ${subject.semesterId.toUpperCase()}, ${subject.credits} credits).`;
 
   let syllabusBlock: string;
   if (syllabus) {

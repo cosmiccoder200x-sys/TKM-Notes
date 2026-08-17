@@ -359,7 +359,7 @@ for (const rec of cseRecords) {
     const hrsTail = content.match(/^(hours?|hrs?)\.?\s*(.*)$/is);
     if (/\(\d+\s*$/.test(title) && hrsTail) {
       title = cleanTitle(`${title} ${hrsTail[1]})`);
-      content = (hrsTail[2] || "").trim();
+      content = (hrsTail[2] || "").replace(/^\)\s*/, "").trim();
     }
     if (!title) {
       // derive from leading parenthetical in content

@@ -1,7 +1,7 @@
 // Study Context - Deep integration with TKM Notes notes content
 
-import { Subject, Module } from "@/lib/types";
-import { subjects, semesters, findSubject, subjectsForSemester } from "@/lib/content";
+import { Subject, Module, ProgramId } from "@/lib/types";
+import { subjects, semesters, findSubject, subjectsForSemester, syllabusModulesFor } from "@/lib/content";
 import { getSubjectContent } from "@/lib/notes";
 import { normalizeProgramId } from "@/lib/branch";
 
@@ -51,6 +51,15 @@ export interface ContextualPromptVars {
   [key: string]: string | undefined;
 }
 
+// Resolve a module title for a subject: written notes first, else the official
+// syllabus module breakdown (covers every CS / CS_AI subject).
+function moduleTitleFor(programId: ProgramId, subjectCode: string, moduleId: string): string | undefined {
+  const content = getSubjectContent(subjectCode, programId);
+  const mod = content?.modules.find((m) => m.id === moduleId);
+  if (mod) return mod.title;
+  return syllabusModulesFor(programId, subjectCode).find((m) => m.id === moduleId)?.title;
+}
+
 // Build context from URL params or current route
 export function buildContextFromParams(params: {
   semester?: string;
@@ -62,7 +71,8 @@ export function buildContextFromParams(params: {
   contentType?: ContentType;
 }): StudyContext {
   const context: StudyContext = {};
-  
+  const programId = normalizeProgramId(typeof localStorage !== "undefined" ? localStorage.getItem("tkm_program_id") : null) ?? "ER";
+
   if (params.semester) {
     context.semester = params.semester;
     const sem = semesters.find(s => s.id === params.semester);
@@ -70,7 +80,6 @@ export function buildContextFromParams(params: {
   }
   
   if (params.subject) {
-    const programId = normalizeProgramId(localStorage.getItem("tkm_program_id")) ?? "ER";
     const subject = findSubject(programId, params.semester || "", params.subject);
     if (subject) {
       context.subjectCode = subject.code;
@@ -80,7 +89,7 @@ export function buildContextFromParams(params: {
   }
   
   if (params.module && context.subjectCode) {
-    const content = getSubjectContent(context.subjectCode);
+    const content = getSubjectContent(context.subjectCode, programId);
     if (content) {
       const mod = content.modules.find(m => m.id === params.module);
       if (mod) {
@@ -99,6 +108,12 @@ export function buildContextFromParams(params: {
           comparisons: mod.comparisons,
         };
       }
+    }
+    // No written notes yet — still resolve the official syllabus module title
+    // so module-scoped prompts (Syllabus Complete etc.) stay accurate.
+    if (!context.moduleName) {
+      context.moduleId = params.module;
+      context.moduleName = moduleTitleFor(programId, context.subjectCode, params.module);
     }
   }
   
@@ -131,6 +146,13 @@ export function enrichContext(context: StudyContext): StudyContext {
           comparisons: mod.comparisons,
         };
       }
+    }
+    // No written notes yet — resolve the official syllabus module title so
+    // module-scoped prompts stay accurate for every branch.
+    if (!context.moduleName && context.subjectCode) {
+      context.moduleName = moduleTitleFor("ER", context.subjectCode, context.moduleId)
+        || moduleTitleFor("CS", context.subjectCode, context.moduleId)
+        || moduleTitleFor("CS_AI", context.subjectCode, context.moduleId);
     }
   }
   return context;

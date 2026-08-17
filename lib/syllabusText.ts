@@ -859,6 +859,35 @@ conjugate functions
  Mitigation strategies – carbon capture, utilization, and storage; adapting to climate
  change.
  Renewable Energy- solar energy, Biomass, Wind energy, New Energy sources`,
+  "24CSJ303": `SYLLABUS
+ MODULE I: Basics of Object-Oriented concepts and Java (5 hrs)
+ Approaches to Software Design - Functional Oriented Design, Object Oriented Design,
+ Case Study of Payroll Program. Object-Oriented concepts. Object Modeling using
+ Unified Modeling Language (UML) - Static and Dynamic models, UML diagrams- Use
+ case diagram, Class diagram.
+ Introduction to Java- JRE, JDK, JVM, Program Structure, Primitive Data types, Arrays,
+ Command-Line Arguments, Type conversions and promotion, Garbage collection.
+ MODULE II: Fundamentals of Core Java (5 hrs)
+ Classes and Objects. Constructors. Object class in Java. Use of static, this and final
+ keywords. Method Overloading. Objects as Parameters to Methods. Access modifiers
+ and Packages, Strings- Class and Methods, String Buffer and String Tokenizer.
+ Reading Input from Console Using Scanner class.
+ MODULE III: Inheritance, Polymorphism (5 hrs)
+ Inheritance - Basics and Types, super keyword, calling superclass constructor from
+ child class constructor, Method Overriding, using final with inheritance. Abstract
+ Classes and methods. Interface- Basics, Multiple inheritance through interfaces,
+ interface inheritance.
+ MODULE IV: Collection Framework and Exception Handling (5 hrs)
+ Collection Framework- concepts, Collection Interfaces and their Methods, List
+ interface, Collections Class - Array List, Vector, Linked List. Accessing a Collection
+ via an Iterator. Exception handling: Exception Basics and Types, try, catch, throw,
+ throws, finally keywords, User defined exceptions.
+ MODULE V: Event Handling and GUI Programming (4 hrs)
+ Delegation Event Model, Event Classes, Listener Interfaces, Introduction to Java's
+ Swing Package, Components, Containers and Layouts, Exploring Swings - JFrame,
+ JPanel, JLabel, JTextField, JTextArea, JButton, JToggleButton, Check Boxes, Radio
+ Buttons, JScrollPane, JMenu, JMenuBar and JMenuItem, Designing Frames and
+ Adding GUI Components, Event Handling in Swings, Swing vs JavaFX`,
 };
 
 export default syllabusText;
