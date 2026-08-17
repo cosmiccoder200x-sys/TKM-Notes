@@ -1,28 +1,30 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Module } from "@/lib/types";
-import { getProgress, calculateModuleMastery } from "@/lib/study";
+import { Module, ProgramId } from "@/lib/types";
+import { getProgress, calculateModuleMastery, progressSubjectKey } from "@/lib/study";
 
 export default function ModuleMasteryBadges({
   subjectCode,
   modules,
+  programId = "ER",
 }: {
   subjectCode: string;
   modules: Module[];
+  programId?: ProgramId;
 }) {
   const [ready, setReady] = useState(false);
   const [scores, setScores] = useState<Record<string, number | null>>({});
 
   useEffect(() => {
-    const p = getProgress()[subjectCode] ?? {};
+    const p = getProgress()[progressSubjectKey(programId, subjectCode)] ?? {};
     const m: Record<string, number | null> = {};
     for (const mod of modules) {
       m[mod.id] = calculateModuleMastery(p[mod.id]).score;
     }
     setScores(m);
     setReady(true);
-  }, [subjectCode, modules]);
+  }, [subjectCode, modules, programId]);
 
   if (!ready) return null;
 

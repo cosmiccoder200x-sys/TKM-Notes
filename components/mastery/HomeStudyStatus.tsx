@@ -9,7 +9,10 @@ import {
   calculateSubjectMastery,
   getTopRecommendation,
   estimatedModuleMinutes,
+  progressSubjectKey,
 } from "@/lib/study";
+import { ProgramId } from "@/lib/types";
+import { subjectUrl, masteryUrl } from "@/lib/urls";
 
 export default function HomeStudyStatus() {
   const [ready, setReady] = useState(false);
@@ -19,7 +22,7 @@ export default function HomeStudyStatus() {
   const [assessed, setAssessed] = useState(0);
   const [subjectsWithProgress, setSubjectsWithProgress] = useState(0);
   const [minutesToClose, setMinutesToClose] = useState(0);
-  const [bestSubject, setBestSubject] = useState<string | null>(null);
+  const [bestSubject, setBestSubject] = useState<{ code: string; programId: ProgramId } | null>(null);
   const [topModule, setTopModule] = useState<string | null>(null);
   const [fallbackHref, setFallbackHref] = useState<string | null>(null);
 
@@ -34,14 +37,15 @@ export default function HomeStudyStatus() {
     let assessedCount = 0;
     let subjectsAssessed = 0;
     let minutesToClose = 0;
-    let bestCode: string | null = null;
+    let best: { code: string; programId: ProgramId } | null = null;
     let bestAttention = -1;
 
     for (const s of withContent) {
       const content = getSubjectContent(s.code, s.programId);
       if (!content) continue;
       const moduleIds = content.modules.map((m) => m.id);
-      const summary = calculateSubjectMastery(s.code, moduleIds, progress[s.code] ?? {});
+      const key = progressSubjectKey(s.programId, s.code);
+      const summary = calculateSubjectMastery(s.code, moduleIds, progress[key] ?? {});
 
       // Estimated minutes still needed for modules not yet strong.
       content.modules.forEach((m) => {
@@ -56,7 +60,7 @@ export default function HomeStudyStatus() {
         if (summary.overall >= 90) strongCount += 1;
         if (summary.needsAttention > bestAttention) {
           bestAttention = summary.needsAttention;
-          bestCode = s.code;
+          best = { code: s.code, programId: s.programId };
         }
       }
       attention += summary.needsAttention;
@@ -70,11 +74,13 @@ export default function HomeStudyStatus() {
     setAssessed(assessedCount);
     setSubjectsWithProgress(subjectsAssessed);
     setMinutesToClose(minutesToClose);
-    setBestSubject(bestCode);
-    if (bestCode) setTopModule(getTopRecommendation(bestCode, progress)?.moduleTitle ?? null);
+    setBestSubject(best);
+    if (best) setTopModule(getTopRecommendation(best.code, progress, best.programId)?.moduleTitle ?? null);
     const firstWritten = withContent[0];
     setFallbackHref(
-      firstWritten ? `/${firstWritten.semesterId}/${firstWritten.slug}` : "/s3"
+      firstWritten
+        ? subjectUrl(firstWritten.programId, firstWritten.semesterId, firstWritten.slug)
+        : "/syllabus/cse"
     );
     setReady(true);
   }, []);
@@ -82,9 +88,12 @@ export default function HomeStudyStatus() {
   if (!ready) return null;
 
   const hasData = assessed > 0;
-  const masteryHref = bestSubject
-    ? `/${subjects.find((s) => s.code === bestSubject)?.semesterId}/${subjects.find((s) => s.code === bestSubject)?.slug}/mastery`
-    : fallbackHref ?? "/s3";
+  const bestSubjectObj = bestSubject
+    ? subjects.find((s) => s.code === bestSubject.code && s.programId === bestSubject.programId)
+    : undefined;
+  const masteryHref = bestSubjectObj
+    ? masteryUrl(bestSubjectObj.programId, bestSubjectObj.semesterId, bestSubjectObj.slug)
+    : fallbackHref ?? "/syllabus/cse";
 
   if (!hasData) {
     return (
@@ -105,7 +114,7 @@ export default function HomeStudyStatus() {
             Build My Plan →
           </Link>
           <Link
-            href={fallbackHref ?? "/s3"}
+            href={fallbackHref ?? "/syllabus/cse"}
             className="font-mono text-xs uppercase tracking-wide px-4 py-2.5 rounded-card border border-bg-border text-ink-hi hover:border-signal hover:text-signal transition-colors text-center"
           >
             Start Practice
@@ -140,11 +149,11 @@ export default function HomeStudyStatus() {
           {subjectsWithProgress} subject{subjectsWithProgress !== 1 ? "s" : ""} assessed ·{" "}
           {assessed} module{assessed !== 1 ? "s" : ""}
         </span>
-        {topModule && bestSubject && (
+        {topModule && bestSubjectObj && (
           <span className="text-ink-lo">
             Next: <span className="text-ink-hi font-medium">{topModule}</span>
             <span className="text-ink-faint">
-              {" "}· {subjects.find((s) => s.code === bestSubject)?.name}
+              {" "}· {bestSubjectObj.name} ({bestSubjectObj.programId})
             </span>
           </span>
         )}

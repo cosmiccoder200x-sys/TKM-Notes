@@ -2,12 +2,15 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import registry from "@/lib/notes";
+import { getSubjectContent } from "@/lib/notes";
 import {
   getProgress,
   calculateSubjectMastery,
   getSubjectRecommendations,
+  progressSubjectKey,
 } from "@/lib/study";
+import { ProgramId } from "@/lib/types";
+import { subjectUrl, programSlug } from "@/lib/urls";
 import MasteryBar from "./MasteryBar";
 import { NavIcon } from "@/components/navigation/navItems";
 
@@ -15,10 +18,12 @@ export default function SubjectMasteryBar({
   subjectCode,
   subjectSlug,
   semesterId,
+  programId = "ER",
 }: {
   subjectCode: string;
   subjectSlug: string;
   semesterId: string;
+  programId?: ProgramId;
 }) {
   const [ready, setReady] = useState(false);
   const [overall, setOverall] = useState<number | null>(null);
@@ -28,24 +33,25 @@ export default function SubjectMasteryBar({
 
   useEffect(() => {
     const progress = getProgress();
-    const content = registry[subjectCode];
+    const content = getSubjectContent(subjectCode, programId);
     if (!content) {
       setReady(true);
       return;
     }
+    const key = progressSubjectKey(programId, subjectCode);
     const moduleIds = content.modules.map((m) => m.id);
-    const summary = calculateSubjectMastery(subjectCode, moduleIds, progress[subjectCode] ?? {});
+    const summary = calculateSubjectMastery(subjectCode, moduleIds, progress[key] ?? {});
     setOverall(summary.overall);
     setAssessed(summary.assessedModules);
     setTotal(summary.totalModules);
 
-    const recs = getSubjectRecommendations(subjectCode, progress).filter((r) => r.priority >= 0);
+    const recs = getSubjectRecommendations(subjectCode, progress, programId).filter((r) => r.priority >= 0);
     if (recs.length > 0) {
       const top = recs[0];
       setNextModule({ id: top.moduleId, title: top.moduleTitle });
     }
     setReady(true);
-  }, [subjectCode]);
+  }, [subjectCode, programId]);
 
   if (!ready) return null;
 
@@ -72,7 +78,7 @@ export default function SubjectMasteryBar({
           <span className="text-ink-faint">Next:</span>
           <span className="text-ink-hi font-medium">{nextModule.title}</span>
           <Link
-            href={`/${semesterId}/${subjectSlug}#${nextModule.id}`}
+            href={subjectUrl(programId, semesterId, subjectSlug, nextModule.id)}
             className="ml-auto font-mono text-xs uppercase tracking-wide px-3 py-1.5 rounded-md border border-signal text-signal hover:bg-signal/10 transition-colors"
           >
             Continue →
@@ -82,7 +88,7 @@ export default function SubjectMasteryBar({
 
       {nextModule === null && overall === null && (
         <Link
-          href={`/night-before?subject=${encodeURIComponent(subjectCode)}&time=60`}
+          href={`/night-before?subject=${encodeURIComponent(subjectCode)}&program=${programSlug(programId)}&time=60`}
           className="inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-wide px-3.5 py-2 rounded-md border border-bg-border text-ink-faint hover:border-signal hover:text-signal transition-colors"
         >
           <NavIcon name="revision" className="w-4 h-4" /> Start a 1-hour last-minute plan

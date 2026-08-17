@@ -14,6 +14,8 @@ import {
   loadNightBeforeSession,
   clearNightBeforeSession,
 } from "@/lib/study";
+import { ProgramId } from "@/lib/types";
+import { programFromSlug } from "@/lib/urls";
 import NightBeforeSetup from "./NightBeforeSetup";
 import RevisionPlan from "./RevisionPlan";
 import RevisionSectionView from "./RevisionSection";
@@ -35,9 +37,11 @@ export default function NightBeforeMode() {
   const urlFresh = searchParams.get("fresh") === "1";
   const urlTime = TIME_PRESETS[searchParams.get("time") ?? ""] ?? 60;
   const urlTarget = (searchParams.get("target") ?? "pass") as NightBeforeTarget;
+  const urlProgram = programFromSlug(searchParams.get("program") ?? "") ?? "ER";
 
   const [step, setStep] = useState<Step>("setup");
   const [subjectCode, setSubjectCode] = useState(urlSubject);
+  const [programId, setProgramId] = useState<ProgramId>(urlProgram);
   const [config, setConfig] = useState<NightBeforeConfig>({ minutes: urlTime, target: urlTarget });
   const [session, setSession] = useState<NightBeforeSession | null>(null);
   const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
@@ -48,6 +52,7 @@ export default function NightBeforeMode() {
     const saved = loadNightBeforeSession(urlSubject);
     if (saved) {
       setSubjectCode(saved.subjectCode);
+      setProgramId(saved.programId ?? "ER");
       setConfig(saved.config);
       setSession(saved);
       setStep(saved.finished ? "done" : "plan");
@@ -62,10 +67,11 @@ export default function NightBeforeMode() {
 
   function buildPlan() {
     if (!subjectCode) return;
-    const plan = generateNightBeforePlan(subjectCode, config, getProgress());
+    const plan = generateNightBeforePlan(subjectCode, config, getProgress(), programId);
     if (!plan) return;
     const next: NightBeforeSession = {
       subjectCode,
+      programId,
       config,
       plan,
       completedSections: [],
@@ -133,9 +139,15 @@ export default function NightBeforeMode() {
       {step === "setup" && (
         <NightBeforeSetup
           initialSubject={subjectCode}
+          programId={programId}
           config={config}
           onChangeConfig={setConfig}
           onSubjectChange={setSubjectCode}
+          onProgramChange={(id) => {
+            setProgramId(id);
+            setSubjectCode("");
+            setSession(null);
+          }}
           onBuild={buildPlan}
         />
       )}

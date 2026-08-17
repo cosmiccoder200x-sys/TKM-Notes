@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Module } from "@/lib/types";
+import { Module, ProgramId } from "@/lib/types";
 import { rankModulesForStudy, PriorityTier } from "@/lib/study";
 import { generatePromptLabUrl } from "@/lib/prompts/context";
 import { NavIcon } from "@/components/navigation/navItems";
+import { programSlug, subjectUrl } from "@/lib/urls";
 
 type ModeId = "learn" | "exam" | "last-minute" | "revision";
 
@@ -28,12 +29,14 @@ export default function StudyModeSwitcher({
   subjectName,
   subjectSlug,
   semesterId,
+  programId = "ER",
 }: {
   modules: Module[];
   subjectCode: string;
   subjectName: string;
   subjectSlug: string;
   semesterId: string;
+  programId?: ProgramId;
 }) {
   const [mode, setMode] = useState<ModeId>("learn");
   const ranked = rankModulesForStudy(modules);
@@ -51,12 +54,12 @@ export default function StudyModeSwitcher({
       return { href: generatePromptLabUrl({ subjectCode, moduleId, moduleName: moduleTitle }, "learn"), label: "Learn →" };
     }
     if (mode === "exam") {
-      return { href: `/${semesterId}/${subjectSlug}#${moduleId}`, label: "Open Exam Focus →" };
+      return { href: subjectUrl(programId, semesterId, subjectSlug, moduleId), label: "Open Exam Focus →" };
     }
     if (mode === "revision") {
       return { href: generatePromptLabUrl({ subjectCode, moduleId, moduleName: moduleTitle }, "revision"), label: "Revise →" };
     }
-    return { href: `/${semesterId}/${subjectSlug}#${moduleId}`, label: "Open →" };
+    return { href: subjectUrl(programId, semesterId, subjectSlug, moduleId), label: "Open →" };
   };
 
   return (
@@ -83,7 +86,7 @@ export default function StudyModeSwitcher({
         <span className="text-ink-lo">{MODES.find((m) => m.id === mode)!.description}</span>
         {mode === "last-minute" && (
           <Link
-            href={`/night-before?subject=${encodeURIComponent(subjectCode)}&time=60`}
+            href={`/night-before?subject=${encodeURIComponent(subjectCode)}&program=${programSlug(programId)}&time=60`}
             className="ml-auto inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-wide px-3 py-1.5 rounded-card border border-signal text-signal hover:bg-signal/10 transition-colors"
           >
             <NavIcon name="revision" className="w-3.5 h-3.5" /> Night-Before Plan

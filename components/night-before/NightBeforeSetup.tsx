@@ -3,6 +3,8 @@
 import { semesters, subjects } from "@/lib/content";
 import { hasAnyContent } from "@/lib/study";
 import { NightBeforeConfig, NightBeforeTarget } from "@/lib/study";
+import { ProgramId } from "@/lib/types";
+import { PROGRAM_OPTIONS } from "@/lib/branch";
 import TimeSelector from "./TimeSelector";
 
 const TARGETS: { id: NightBeforeTarget; label: string }[] = [
@@ -15,18 +17,22 @@ const TARGETS: { id: NightBeforeTarget; label: string }[] = [
 
 export default function NightBeforeSetup({
   initialSubject,
+  programId,
   config,
   onChangeConfig,
   onSubjectChange,
+  onProgramChange,
   onBuild,
 }: {
   initialSubject: string;
+  programId: ProgramId;
   config: NightBeforeConfig;
   onChangeConfig: (c: NightBeforeConfig) => void;
   onSubjectChange: (code: string) => void;
+  onProgramChange: (id: ProgramId) => void;
   onBuild: () => void;
 }) {
-  const withNotes = subjects.filter((s) => hasAnyContent(s.code));
+  const withNotes = subjects.filter((s) => s.programId === programId && hasAnyContent(s.code, programId));
   const groups = semesters
     .map((sem) => ({ semester: sem, list: withNotes.filter((s) => s.semesterId === sem.id) }))
     .filter((g) => g.list.length > 0);
@@ -45,6 +51,24 @@ export default function NightBeforeSetup({
       </div>
 
       <div className="space-y-2">
+        <label htmlFor="nb-program" className="block text-xs font-mono uppercase tracking-wide text-ink-lo">
+          Program
+        </label>
+        <select
+          id="nb-program"
+          value={programId}
+          onChange={(e) => onProgramChange(e.target.value as ProgramId)}
+          className="w-full bg-bg-surface border border-bg-border rounded-md px-3 py-2.5 text-sm text-ink-hi focus:border-signal outline-none"
+        >
+          {PROGRAM_OPTIONS.map((p) => (
+            <option key={p.id} value={p.id}>
+              {p.label}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="space-y-2">
         <label htmlFor="nb-subject" className="block text-xs font-mono uppercase tracking-wide text-ink-lo">
           Choose your subject
         </label>
@@ -58,7 +82,7 @@ export default function NightBeforeSetup({
           {groups.map((g) => (
             <optgroup key={g.semester.id} label={g.semester.label}>
               {g.list.map((s) => (
-                <option key={s.code} value={s.code}>
+                <option key={`${programId}-${s.code}`} value={s.code}>
                   {s.name}
                 </option>
               ))}

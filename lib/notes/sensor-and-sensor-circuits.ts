@@ -313,7 +313,7 @@ const content: SubjectContent = {
         { question: "Why does a sensor's small output signal specifically need an op-amp with HIGH CMRR, not just high gain?", answer: "A sensor signal is often buried in common-mode noise picked up by both input leads equally. High gain would amplify the noise right along with the signal. High CMRR specifically rejects whatever is common to both inputs, preserving only the genuine differential signal." },
       ],
       crossLinks: [
-        { label: "Hall effect sensors & instrumentation amplifiers also covered in the VI Lab course (Module IV)", href: "/s3/system-simulation-and-virtual-instrumentation-lab#m4" },
+        { label: "Hall effect sensors & instrumentation amplifiers also covered in the VI Lab course (Module IV)", href: "/syllabus/er/s3/system-simulation-and-virtual-instrumentation-lab#m4" },
       ],
     },
 

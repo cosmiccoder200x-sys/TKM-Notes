@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Subject } from "@/lib/types";
 import { getSubjectCategoryMeta } from "@/lib/branch";
 import { NavIcon } from "@/components/navigation/navItems";
+import { subjectUrl, masteryUrl, semesterUrl, programUrl, programSlug } from "@/lib/urls";
 
 export default function SubjectHeader({
   subject,
@@ -24,8 +25,14 @@ export default function SubjectHeader({
           </li>
           <li>/</li>
           <li>
+            <Link href={programUrl(subject.programId)} className="hover:text-signal transition-colors">
+              {subject.programId}
+            </Link>
+          </li>
+          <li>/</li>
+          <li>
             <Link
-              href={`/${subject.semesterId}`}
+              href={semesterUrl(subject.programId, subject.semesterId)}
               className="hover:text-signal transition-colors"
             >
               {semesterLabel}
@@ -57,13 +64,13 @@ export default function SubjectHeader({
       {moduleCount > 0 && (
         <div className="flex flex-wrap gap-2">
           <Link
-            href={`/${subject.semesterId}/${subject.slug}/mastery`}
+            href={masteryUrl(subject.programId, subject.semesterId, subject.slug)}
             className="font-mono text-[11px] uppercase tracking-wide px-3.5 py-2 rounded-md border border-bg-border text-ink-hi hover:border-signal hover:bg-signal/5 hover:text-signal transition-colors"
           >
             ▦ Mastery Map
           </Link>
           <Link
-            href={`/night-before?subject=${encodeURIComponent(subject.code)}&time=60`}
+            href={`/night-before?subject=${encodeURIComponent(subject.code)}&program=${programSlug(subject.programId)}&time=60`}
             className="inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-wide px-3.5 py-2 rounded-md border border-signal text-signal hover:bg-signal/10 transition-colors"
           >
             <NavIcon name="revision" className="w-4 h-4" /> Night-Before

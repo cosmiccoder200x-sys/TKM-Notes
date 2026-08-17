@@ -137,8 +137,14 @@ app/
   not-found.tsx                    → 404 page
   loading.tsx                      → homepage skeleton
   planner/page.tsx                 → AI study planner ("what should I study now?")
-  [semester]/page.tsx              → subject list for a semester
-  [semester]/[subject]/page.tsx    → subject workspace with module accordion + study modes
+  syllabus/page.tsx                → branch-aware syllabus index
+  syllabus/[program]/page.tsx      → branch hub (er / cse / cse-ai)
+  syllabus/[program]/[semester]/page.tsx → subject grid for a branch+semester
+  syllabus/[program]/[semester]/[subject]/page.tsx → subject workspace + module accordion
+  syllabus/[program]/[semester]/[subject]/mastery/page.tsx → mastery map
+  coverage/page.tsx                → per-branch notes/PYQ/module coverage dashboard
+  admin/page.tsx                   → data-integrity overview
+  [semester]/page.tsx              → legacy ER route (redirects to /syllabus/er/<sem>)
   prompt-lab/page.tsx              → AI study prompt builder
   layout.tsx, globals.css          → dark theme shell, fonts
 
@@ -167,11 +173,13 @@ components/
 
 lib/
   types.ts                         → content data model
-  content.ts                       → semester + subject metadata (S3–S8)
+  content.ts                       → 259 subjects (ER 38 + CSE 108 + CSE [AI] 113), S3–S8
+  syllabusData.ts                  → AUTO-GENERATED CSE/CSE[AI] syllabus from KTU 2024 JSON
+  urls.ts                          → branch-aware URL helpers (subjectUrl, masteryUrl, …)
   branch.ts                        → product identity + branch + subject categories
   search.ts                        → search logic (all content types)
   notes/                           → ONE FILE PER SUBJECT (content data)
-    index.ts                       → registry: subject code → content
+    index.ts                       → registry: programId-subjectCode → content
   study/                           → exam-preparation engine (pure, deterministic)
     priority.ts                    → topic priority + study-time estimates
     questionTypes.ts               → exam-question grouping by answer type
@@ -185,7 +193,7 @@ lib/
     types.ts, utils.ts             → prompt types and utilities
 
 docs/
-  syllabus-reference.txt           → KTU syllabus source of truth
+  syllabus-reference.txt           → KTU syllabus source of truth (ER branch)
 ```
 
 ## Every module always has exactly 7 core sections
@@ -207,13 +215,10 @@ Plus optional sections: `intuition`, `workedExamples`, `comparisons`, `selfCheck
 1. Open `docs/syllabus-reference.txt`, find the subject's module breakdown.
 2. Copy `lib/notes/data-structures-and-algorithms.ts` as a template.
 3. Fill in all 7 sections per module, save as `lib/notes/<subject-slug>.ts`.
-4. Register it in `lib/notes/index.ts`:
+4. Register it in `lib/notes/index.ts` under its program's list (keyed `${programId}-${subjectCode}`):
    ```ts
    import myNewSubject from "./my-new-subject";
-   const registry = {
-     "24ERP304": dsa,
-     "24XXXXXX": myNewSubject,   // ← add this line
-   };
+   // erNotes.push({ content: myNewSubject, programId: "ER" });  // for an ER subject
    ```
 5. That's it — the subject page, search, and "coming soon" badge all update automatically.
 
@@ -227,7 +232,7 @@ Add a new function + registry entry in `components/Diagrams.tsx`, then reference
 ## Running locally / deploying
 
 - **Local preview:** `npm install` then `npm run dev` → open `http://localhost:3000`
-- **Production build:** `npm run build` — generates 49 static pages
+- **Production build:** `npm run build` — generates 1083 static pages
 - **Deploy:** push to GitHub → Vercel auto-deploys. No config needed.
 
 ## Prompt Lab
@@ -254,7 +259,10 @@ These are all optional fields on `Module` — a module renders fine with just th
 
 ## Current content status
 
-- ✅ **All 7 S3 subjects — fully written** (Advanced Linear Algebra/Complex Analysis/PDE, Network Theory, Digital Electronics & Logic Design, Data Structures and Algorithms, Sensor & Sensor Circuits, Life Skills and Professional Ethics, System Simulation & VI Lab)
+- ✅ **All 7 S3 subjects (ER) — fully written** (Advanced Linear Algebra/Complex Analysis/PDE, Network Theory, Digital Electronics & Logic Design, Data Structures and Algorithms, Sensor & Sensor Circuits, Life Skills and Professional Ethics, System Simulation & VI Lab)
+- ✅ **Full branch-aware syllabus** — CSE (108) + CSE [AI] (113) subjects imported from the official KTU 2024 JSON; `/syllabus/{er,cse,cse-ai}`, `/coverage`, `/admin`
+- ✅ **Branch-isolated progress/search/notes** — subjects are keyed by programId + subject code so branches never mix
+- ✅ **Legacy `/s3/...` routes** — redirect to their canonical branch URLs
 - ✅ **Topic priority system** — Must Learn / Core / Support badges with reasons, everywhere modules are listed
 - ✅ **AI Study Planner** — prioritized, reason-backed study plans from verified syllabus data + your mastery marks
 - ✅ **Study Modes** — Learn / Exam / Last-Minute / Revision on every subject page
@@ -283,6 +291,13 @@ If you ever want live multi-device admin editing:
 2. Add Prisma, paste in the connection string as a Vercel environment variable.
 3. Convert `lib/notes/*.ts` into seed data for a `modules` table.
 4. Admin panel writes to the DB via Next.js API routes.
+
+## Regenerating the syllabus data
+
+CSE and CSE [AI] subjects come from the official KTU 2024 JSON via `scripts/import-syllabus.mjs`:
+
+- `node scripts/import-syllabus.mjs [path-to-json]` — idempotent; regenerates `lib/syllabusData.ts`
+- `node scripts/verify-data.js` — P0 acceptance checks (counts, collisions, slug sanity); exit 0 = all pass
 
 ---
 

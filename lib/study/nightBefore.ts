@@ -2,11 +2,12 @@
 // Pure algorithm: gathers existing content, prioritizes by exam weightage + (optional)
 // mastery data, allocates time, and returns a structured revision plan. No JSX here.
 
-import registry from "@/lib/notes";
+import { getSubjectContent } from "@/lib/notes";
 import { subjects } from "@/lib/content";
-import { Module } from "@/lib/types";
+import { Module, ProgramId } from "@/lib/types";
 import { ProgressMap, MasteryStatus } from "./types";
 import { calculateModuleMastery } from "./mastery";
+import { progressSubjectKey } from "./progress";
 import {
   NightBeforePlan,
   NightBeforeConfig,
@@ -40,8 +41,8 @@ export const MASTERY_ADJUST: Record<MasteryStatus, number> = {
   "not-assessed": 1.0, // unknown — keep neutral, never claim frequency
 };
 
-export function subjectNameFor(code: string): string {
-  return subjects.find((s) => s.code === code)?.name ?? code;
+export function subjectNameFor(code: string, programId: ProgramId = "ER"): string {
+  return subjects.find((s) => s.code === code && s.programId === programId)?.name ?? code;
 }
 
 interface ScoredModule {
@@ -51,13 +52,14 @@ interface ScoredModule {
   masteryScore: number | null;
 }
 
-function scoreModules(subjectCode: string, progress?: ProgressMap): ScoredModule[] {
-  const content = registry[subjectCode];
+function scoreModules(subjectCode: string, progress?: ProgressMap, programId: ProgramId = "ER"): ScoredModule[] {
+  const content = getSubjectContent(subjectCode, programId);
   if (!content) return [];
+  const key = progressSubjectKey(programId, subjectCode);
 
   return content.modules.map((module) => {
     const examScore = module.examFocus.reduce((sum, q) => sum + (WEIGHTAGE_SCORE[q.weightage] ?? 1), 0);
-    const mastery = calculateModuleMastery(progress?.[subjectCode]?.[module.id]);
+    const mastery = calculateModuleMastery(progress?.[key]?.[module.id]);
     const adjustment = MASTERY_ADJUST[mastery.status];
     return {
       module,
@@ -152,13 +154,14 @@ function allocate(availableMinutes: number, weights: { id: string; w: number }[]
 export function generateNightBeforePlan(
   subjectCode: string,
   config: NightBeforeConfig,
-  progress?: ProgressMap
+  progress?: ProgressMap,
+  programId: ProgramId = "ER"
 ): NightBeforePlan | null {
-  const content = registry[subjectCode];
+  const content = getSubjectContent(subjectCode, programId);
   if (!content) return null;
 
   const minutes = Math.max(30, config.minutes);
-  const scored = scoreModules(subjectCode, progress);
+  const scored = scoreModules(subjectCode, progress, programId);
 
   const sections: RevisionSection[] = [];
   const weights: { id: string; w: number }[] = [];
@@ -185,7 +188,7 @@ export function generateNightBeforePlan(
 
   return {
     subjectCode,
-    subjectName: subjectNameFor(subjectCode),
+    subjectName: subjectNameFor(subjectCode, programId),
     availableMinutes: minutes,
     target: config.target,
     sections,
@@ -193,8 +196,8 @@ export function generateNightBeforePlan(
   };
 }
 
-export function hasAnyContent(subjectCode: string): boolean {
-  return Boolean(registry[subjectCode]);
+export function hasAnyContent(subjectCode: string, programId: ProgramId = "ER"): boolean {
+  return Boolean(getSubjectContent(subjectCode, programId));
 }
 
 // --- Night-Before session persistence (localStorage) ---
@@ -254,8 +257,12 @@ export interface ResolvedRevisionItem {
 }
 
 // Resolve a plan item back to its existing content entry (no duplication).
-export function resolveRevisionItem(subjectCode: string, item: RevisionItem): ResolvedRevisionItem | null {
-  const content = registry[subjectCode];
+export function resolveRevisionItem(
+  subjectCode: string,
+  item: RevisionItem,
+  programId: ProgramId = "ER"
+): ResolvedRevisionItem | null {
+  const content = getSubjectContent(subjectCode, programId);
   if (!content) return null;
   const mod = content.modules.find((m) => m.id === item.moduleId);
   if (!mod) return null;

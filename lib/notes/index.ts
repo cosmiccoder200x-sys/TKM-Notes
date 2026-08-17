@@ -28,6 +28,8 @@ import computerVision from "./computer-vision";
 import energySystems from "./energy-systems";
 
 // CS [AI] note files that exist on disk.
+// Only advMathAi exists; other CS_AI subjects fall through to "not written yet"
+/// state at the page level and never crash the app.
 import advMathAi from "./advanced-linear-algebra-complex-analysis-pde-ai";
 
 // Registry built only from note files that actually exist.

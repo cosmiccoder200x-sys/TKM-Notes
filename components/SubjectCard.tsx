@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Subject } from "@/lib/types";
 import { NavIcon } from "@/components/navigation/navItems";
+import { subjectUrl } from "@/lib/urls";
 
 function getSubjectIcon(subject: Subject): string {
   const slug = subject.slug;
@@ -27,7 +28,7 @@ export default function SubjectCard({ subject }: { subject: Subject }) {
 
   return (
     <Link
-      href={`/${subject.semesterId}/${subject.slug}`}
+      href={subjectUrl(subject.programId, subject.semesterId, subject.slug)}
       className="card flex items-center gap-4 px-5 py-4 group no-underline h-[110px]"
     >
       <div className="icon-box w-[68px] h-[68px] shrink-0 flex-shrink-0">

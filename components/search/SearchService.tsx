@@ -1,8 +1,9 @@
 "use client";
 
 import { useMemo, useState, useEffect, useCallback } from "react";
-import type { Subject, Module } from "@/lib/types";
+import type { Subject, Module, ProgramId } from "@/lib/types";
 import { getSubjectContent } from "@/lib/notes";
+import { subjectUrl } from "@/lib/urls";
 
 export type ContentType =
   | "subject"
@@ -28,6 +29,7 @@ export interface SearchDoc {
   subjectName: string;
   subjectSlug: string;
   semesterId: string;
+  programId: ProgramId;
   moduleId?: string;
   moduleTitle?: string;
   href: string;
@@ -105,9 +107,9 @@ export function buildSearchIndex(
   const docs: SearchDoc[] = [];
 
   for (const subject of subjects) {
-    const base = `/${subject.semesterId}/${subject.slug}`;
+    const base = subjectUrl(subject.programId, subject.semesterId, subject.slug);
     docs.push({
-      id: `subject-${subject.code}`,
+      id: `subject-${subject.programId}-${subject.code}`,
       type: "subject",
       title: subject.name,
       text: `${subject.name} ${subject.code}`,
@@ -115,6 +117,7 @@ export function buildSearchIndex(
       subjectName: subject.name,
       subjectSlug: subject.slug,
       semesterId: subject.semesterId,
+      programId: subject.programId,
       href: base,
     });
 
@@ -125,13 +128,14 @@ export function buildSearchIndex(
       const modHref = `${base}#${mod.id}`;
 
       docs.push({
-        id: `module-${subject.code}-${mod.id}`,
+        id: `module-${subject.programId}-${subject.code}-${mod.id}`,
         type: "module",
         title: mod.title,
         text: mod.title,
         subjectCode: subject.code,
         subjectName: subject.name,
         subjectSlug: subject.slug,
+        programId: subject.programId,
         semesterId: subject.semesterId,
         moduleId: mod.id,
         moduleTitle: mod.title,
@@ -147,6 +151,7 @@ export function buildSearchIndex(
           subjectCode: subject.code,
           subjectName: subject.name,
           subjectSlug: subject.slug,
+          programId: subject.programId,
           semesterId: subject.semesterId,
           moduleId: mod.id,
           moduleTitle: mod.title,
@@ -163,6 +168,7 @@ export function buildSearchIndex(
           subjectCode: subject.code,
           subjectName: subject.name,
           subjectSlug: subject.slug,
+          programId: subject.programId,
           semesterId: subject.semesterId,
           moduleId: mod.id,
           moduleTitle: mod.title,
@@ -179,6 +185,7 @@ export function buildSearchIndex(
           subjectCode: subject.code,
           subjectName: subject.name,
           subjectSlug: subject.slug,
+          programId: subject.programId,
           semesterId: subject.semesterId,
           moduleId: mod.id,
           moduleTitle: mod.title,
@@ -195,6 +202,7 @@ export function buildSearchIndex(
           subjectCode: subject.code,
           subjectName: subject.name,
           subjectSlug: subject.slug,
+          programId: subject.programId,
           semesterId: subject.semesterId,
           moduleId: mod.id,
           moduleTitle: mod.title,
@@ -211,6 +219,7 @@ export function buildSearchIndex(
           subjectCode: subject.code,
           subjectName: subject.name,
           subjectSlug: subject.slug,
+          programId: subject.programId,
           semesterId: subject.semesterId,
           moduleId: mod.id,
           moduleTitle: mod.title,
@@ -227,6 +236,7 @@ export function buildSearchIndex(
           subjectCode: subject.code,
           subjectName: subject.name,
           subjectSlug: subject.slug,
+          programId: subject.programId,
           semesterId: subject.semesterId,
           moduleId: mod.id,
           moduleTitle: mod.title,
@@ -243,6 +253,7 @@ export function buildSearchIndex(
           subjectCode: subject.code,
           subjectName: subject.name,
           subjectSlug: subject.slug,
+          programId: subject.programId,
           semesterId: subject.semesterId,
           moduleId: mod.id,
           moduleTitle: mod.title,
@@ -259,6 +270,7 @@ export function buildSearchIndex(
           subjectCode: subject.code,
           subjectName: subject.name,
           subjectSlug: subject.slug,
+          programId: subject.programId,
           semesterId: subject.semesterId,
           moduleId: mod.id,
           moduleTitle: mod.title,
@@ -275,6 +287,7 @@ export function buildSearchIndex(
           subjectCode: subject.code,
           subjectName: subject.name,
           subjectSlug: subject.slug,
+          programId: subject.programId,
           semesterId: subject.semesterId,
           moduleId: mod.id,
           moduleTitle: mod.title,
@@ -291,6 +304,7 @@ export function buildSearchIndex(
           subjectCode: subject.code,
           subjectName: subject.name,
           subjectSlug: subject.slug,
+          programId: subject.programId,
           semesterId: subject.semesterId,
           moduleId: mod.id,
           moduleTitle: mod.title,
@@ -307,6 +321,7 @@ export function buildSearchIndex(
           subjectCode: subject.code,
           subjectName: subject.name,
           subjectSlug: subject.slug,
+          programId: subject.programId,
           semesterId: subject.semesterId,
           moduleId: mod.id,
           moduleTitle: mod.title,
@@ -331,7 +346,7 @@ export function searchDocs(
   for (const doc of index) {
     if (filters.contentType !== "all" && doc.type !== filters.contentType) continue;
     if (filters.semester !== "all" && doc.semesterId !== filters.semester) continue;
-    if (filters.subject !== "all" && doc.subjectCode !== filters.subject) continue;
+    if (filters.subject !== "all" && `${doc.programId}:${doc.subjectCode}` !== filters.subject) continue;
     if (filters.module !== "all" && doc.moduleId !== filters.module) continue;
 
     const titleScore = fuzzyScore(q, doc.title);

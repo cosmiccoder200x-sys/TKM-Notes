@@ -18,7 +18,8 @@ export function isActive(item: NavItem, pathname: string): boolean {
 export const PRIMARY_NAV = [
   { label: "Library", href: "/", icon: "library" },
   { label: "Learn CS", href: "/learn-cs", icon: "learn" },
-  { label: "Subjects", href: "/s3", icon: "subjects" },
+  { label: "Subjects", href: "/syllabus/er", icon: "subjects" },
+  { label: "Coverage", href: "/coverage", icon: "subjects" },
   { label: "PYQs", href: "/pyqs", icon: "pyq" },
   { label: "Planner", href: "/planner", icon: "planner" },
   { label: "Practice", href: "/prompt-lab", icon: "practice" },
@@ -35,7 +36,7 @@ export const MOBILE_NAV = [
   { label: "Library", href: "/", icon: "library" },
   { label: "Learn CS", href: "/learn-cs", icon: "learn" },
   { label: "Planner", href: "/planner", icon: "planner" },
-  { label: "Subjects", href: "/s3", icon: "subjects" },
+  { label: "Subjects", href: "/syllabus/er", icon: "subjects" },
   { label: "Practice", href: "/prompt-lab", icon: "practice" },
   { label: "Revision", href: "/night-before", icon: "revision" },
   { label: "Typing", href: "/typing", icon: "typing" },
@@ -46,7 +47,7 @@ export const MOBILE_NAV = [
 export const MOBILE_BOTTOM_NAV = [
   { label: "Library", href: "/", icon: "library" },
   { label: "Learn CS", href: "/learn-cs", icon: "learn" },
-  { label: "Subjects", href: "/s3", icon: "subjects" },
+  { label: "Subjects", href: "/syllabus/er", icon: "subjects" },
   { label: "Practice", href: "/prompt-lab", icon: "practice" },
   { label: "Search", onClick: () => window.dispatchEvent(new CustomEvent("tkm:open-palette")), icon: "search" },
 ];
@@ -55,7 +56,8 @@ export const MOBILE_DRAWER_ITEMS = [
   { href: "/", label: "Library", icon: "library" },
   { href: "/learn-cs", label: "Learn CS", icon: "learn" },
   { href: "/planner", label: "Planner", icon: "planner" },
-  { href: "/s3", label: "Subjects", icon: "subjects" },
+  { href: "/syllabus/er", label: "Subjects", icon: "subjects" },
+  { href: "/coverage", label: "Coverage", icon: "subjects" },
   { href: "/prompt-lab", label: "Practice", icon: "practice" },
   { href: "/night-before", label: "Revision", icon: "revision" },
   { href: "/typing", label: "Typing", icon: "typing" },

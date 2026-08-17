@@ -2,6 +2,8 @@
 // Kept fully separate from the academic content model (lib/types.ts, lib/notes/).
 // Everything is stored locally; stable subject codes + module ids are used as keys.
 
+import type { ProgramId } from "../types";
+
 export type AttemptResult = "correct" | "partial" | "incorrect";
 
 export interface ModuleProgress {
@@ -81,6 +83,7 @@ export interface NightBeforeConfig {
 
 export interface NightBeforeSession {
   subjectCode: string;
+  programId: ProgramId;
   config: NightBeforeConfig;
   plan: NightBeforePlan;
   completedSections: string[];

@@ -1,12 +1,16 @@
 import Link from "next/link";
 import { StudyRecommendation } from "@/lib/study";
+import { ProgramId } from "@/lib/types";
+import { programSlug } from "@/lib/urls";
 
 export default function NextStudyRecommendation({
   recommendations,
   subjectCode,
+  programId = "ER",
 }: {
   recommendations: StudyRecommendation[];
   subjectCode: string;
+  programId?: ProgramId;
 }) {
   const top = recommendations.slice(0, 3);
   if (top.length === 0) return null;
@@ -26,7 +30,7 @@ export default function NextStudyRecommendation({
         ))}
       </ol>
       <Link
-        href={`/night-before?subject=${encodeURIComponent(subjectCode)}`}
+        href={`/night-before?subject=${encodeURIComponent(subjectCode)}&program=${programSlug(programId)}`}
         className="inline-block font-mono text-xs uppercase tracking-wide px-4 py-2.5 rounded-card bg-signal text-bg font-semibold hover:bg-signal/90 transition-colors"
       >
         Start Session →

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Subject, Module } from "@/lib/types";
+import { subjectUrl } from "@/lib/urls";
 
 export default function ModuleCard({
   index,
@@ -15,7 +16,7 @@ export default function ModuleCard({
 
   return (
     <Link
-      href={`/${subject.semesterId}/${subject.slug}#${module.id}`}
+      href={subjectUrl(subject.programId, subject.semesterId, subject.slug, module.id)}
       className="card flex items-center gap-4 px-5 py-4 group no-underline h-[88px]"
     >
       <span className="font-mono text-sm text-ink-faint shrink-0 w-6 text-center">

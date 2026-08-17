@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { getSubjectContent } from "@/lib/notes";
@@ -14,6 +14,8 @@ import {
   estimatedModuleMinutes,
   getProgress,
 } from "@/lib/study";
+import { ProgramId } from "@/lib/types";
+import { programFromSlug, subjectUrl } from "@/lib/urls";
 
 const PREP_LEVELS: { id: PrepLevel; label: string; hint: string }[] = [
   { id: "behind", label: "Behind", hint: "Starting fresh / missed a lot" },
@@ -32,12 +34,20 @@ const ACTION_TAB: Record<PlanAction["kind"], string> = {
   "self-check": "Self-Check",
 };
 
-function ActionLink({ subjectCode, action }: { subjectCode: string; action: PlanAction }) {
-  const subject = subjects.find((s) => s.code === subjectCode);
+function ActionLink({
+  subjectCode,
+  programId,
+  action,
+}: {
+  subjectCode: string;
+  programId: ProgramId;
+  action: PlanAction;
+}) {
+  const subject = subjects.find((s) => s.code === subjectCode && s.programId === programId);
   if (!subject) return null;
   return (
     <Link
-      href={`/${subject.semesterId}/${subject.slug}#${action.moduleId}`}
+      href={subjectUrl(programId, subject.semesterId, subject.slug, action.moduleId)}
       className="flex items-center gap-2 text-xs font-mono px-3 py-2 rounded-card border border-bg-border text-ink-lo hover:border-signal hover:text-signal transition-colors"
     >
       <span className="text-signal">›</span>
@@ -51,7 +61,15 @@ function ActionLink({ subjectCode, action }: { subjectCode: string; action: Plan
   );
 }
 
-function BlockCard({ block, subjectCode }: { block: PlanBlock; subjectCode: string }) {
+function BlockCard({
+  block,
+  subjectCode,
+  programId,
+}: {
+  block: PlanBlock;
+  subjectCode: string;
+  programId: ProgramId;
+}) {
   return (
     <div className="card p-4 space-y-3">
       <div className="flex items-baseline justify-between gap-3 flex-wrap">
@@ -90,7 +108,7 @@ function BlockCard({ block, subjectCode }: { block: PlanBlock; subjectCode: stri
       {block.actions.length > 0 && (
         <div className="grid sm:grid-cols-2 gap-2">
           {block.actions.map((a) => (
-            <ActionLink key={`${a.moduleId}:${a.kind}`} subjectCode={subjectCode} action={a} />
+            <ActionLink key={`${a.moduleId}:${a.kind}`} subjectCode={subjectCode} programId={programId} action={a} />
           ))}
         </div>
       )}
@@ -104,17 +122,29 @@ function BlockCard({ block, subjectCode }: { block: PlanBlock; subjectCode: stri
 export default function StudyPlanner() {
   const params = useSearchParams();
   const withNotes = useMemo(() => subjects.filter((s) => getSubjectContent(s.code, s.programId)), []);
+  const first = withNotes[0];
+  const urlProgram = programFromSlug(params.get("program") ?? "");
 
-  const [subjectCode, setSubjectCode] = useState(params.get("subject") ?? withNotes[0]?.code ?? "");
+  const [subjectCode, setSubjectCode] = useState(params.get("subject") ?? first?.code ?? "");
+  const [programId, setProgramId] = useState<ProgramId>(urlProgram ?? first?.programId ?? "ER");
   const [minutes, setMinutes] = useState(Number(params.get("minutes")) || 60);
   const [prepLevel, setPrepLevel] = useState<PrepLevel>(
     (params.get("prep") as PrepLevel) || "ok"
   );
   const [generated, setGenerated] = useState(false);
 
-  const content = subjectCode
-    ? getSubjectContent(subjectCode, subjects.find((s) => s.code === subjectCode)?.programId)
-    : null;
+  useEffect(() => {
+    if (params.get("subject") && !params.get("program")) {
+      const code = params.get("subject");
+      const match = subjects.find((s) => s.code === code);
+      if (match) setProgramId(match.programId);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const subject = subjects.find((s) => s.code === subjectCode && s.programId === programId);
+  const effectiveProgramId: ProgramId = subject?.programId ?? programId;
+  const content = subjectCode ? getSubjectContent(subjectCode, effectiveProgramId) : null;
   const allModuleIds = content?.modules.map((m) => m.id) ?? [];
   const [selected, setSelected] = useState<Set<string> | null>(null);
   const effectiveSelected = selected ?? new Set(allModuleIds);
@@ -124,14 +154,13 @@ export default function StudyPlanner() {
     .filter((g) => g.list.length > 0);
 
   const plan: StudyPlan | null = generated && subjectCode
-    ? generateStudyPlan(subjectCode, { subjectCode, minutes, prepLevel, moduleIds: [...effectiveSelected] }, getProgress())
+    ? generateStudyPlan(
+        subjectCode,
+        { subjectCode, minutes, prepLevel, moduleIds: [...effectiveSelected] },
+        getProgress(),
+        effectiveProgramId
+      )
     : null;
-
-  function changeSubject(code: string) {
-    setSubjectCode(code);
-    setSelected(null);
-    setGenerated(false);
-  }
 
   function toggleModule(id: string) {
     const next = new Set(effectiveSelected);
@@ -171,16 +200,24 @@ export default function StudyPlanner() {
           </label>
           <select
             id="planner-subject"
-            value={subjectCode}
-            onChange={(e) => changeSubject(e.target.value)}
+            value={subjectCode ? `${programId}:${subjectCode}` : ""}
+            onChange={(e) => {
+              const v = e.target.value;
+              if (!v) return;
+              const [pid, code] = v.split(":");
+              setProgramId(pid as ProgramId);
+              setSubjectCode(code);
+              setSelected(null);
+              setGenerated(false);
+            }}
             className="w-full bg-bg-surface border border-bg-border rounded-card px-3 py-2.5 text-sm text-ink-hi focus:border-signal outline-none"
           >
             {withNotes.length === 0 && <option value="">No subjects with notes yet</option>}
             {groups.map((g) => (
               <optgroup key={g.semester.id} label={g.semester.label}>
                 {g.list.map((s) => (
-                  <option key={s.code} value={s.code}>
-                    {s.name}
+                  <option key={`${s.programId}:${s.code}`} value={`${s.programId}:${s.code}`}>
+                    {s.name} ({s.programId})
                   </option>
                 ))}
               </optgroup>
@@ -294,7 +331,7 @@ export default function StudyPlanner() {
 
           <div className="space-y-3">
             {plan.blocks.map((b) => (
-              <BlockCard key={b.id} block={b} subjectCode={plan.subjectCode} />
+              <BlockCard key={b.id} block={b} subjectCode={plan.subjectCode} programId={effectiveProgramId} />
             ))}
           </div>
 

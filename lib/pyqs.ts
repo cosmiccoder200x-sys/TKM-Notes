@@ -1,6 +1,6 @@
 import { subjects } from "./content";
 import { getSubjectContent } from "./notes";
-import type { Weightage } from "./types";
+import type { Weightage, ProgramId } from "./types";
 
 export interface PyqEntry {
   id: string;
@@ -8,6 +8,7 @@ export interface PyqEntry {
   subjectName: string;
   subjectSlug: string;
   semesterId: string;
+  programId: ProgramId;
   subjectCategory: string;
   moduleIndex: string;
   moduleId: string;
@@ -31,11 +32,12 @@ export function getQuestionBank(): PyqEntry[] {
     content.modules.forEach((mod, mi) => {
       mod.examFocus.forEach((q, qi) => {
         entries.push({
-          id: `${subject.code}-${mod.id}-${qi}`,
+          id: `${subject.programId}-${subject.code}-${mod.id}-${qi}`,
           subjectCode: subject.code,
           subjectName: subject.name,
           subjectSlug: subject.slug,
           semesterId: subject.semesterId,
+          programId: subject.programId,
           subjectCategory: mod.title,
           moduleIndex: String(mi + 1).padStart(2, "0"),
           moduleId: mod.id,
@@ -53,7 +55,7 @@ export function getQuestionBank(): PyqEntry[] {
 
 export function getQuestionBankStats(bank: PyqEntry[]) {
   const high = bank.filter((q) => q.weightage === "high").length;
-  const subjectsWithQuestions = new Set(bank.map((q) => q.subjectCode)).size;
+  const subjectsWithQuestions = new Set(bank.map((q) => `${q.programId}:${q.subjectCode}`)).size;
   const semestersCovered = new Set(bank.map((q) => q.semesterId)).size;
   return { total: bank.length, high, subjectsWithQuestions, semestersCovered };
 }

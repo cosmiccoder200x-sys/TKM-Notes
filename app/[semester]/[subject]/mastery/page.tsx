@@ -1,31 +1,20 @@
-import { notFound } from "next/navigation";
-import { Metadata } from "next";
-import MasteryMap from "@/components/mastery/MasteryMap";
-import { subjects, findSubject } from "@/lib/content";
+import { redirect, notFound } from "next/navigation";
+import { findSubject, semesters, subjects } from "@/lib/content";
+import { masteryUrl } from "@/lib/urls";
 
 export function generateStaticParams() {
-  return subjects.map((s) => ({ semester: s.semesterId, subject: s.slug }));
+  return subjects
+    .filter((s) => s.programId === "ER")
+    .map((s) => ({ semester: s.semesterId, subject: s.slug }));
 }
 
-export async function generateMetadata({ params }: { params: { semester: string; subject: string } }): Promise<Metadata> {
-  const subject = findSubject(params.semester, params.subject);
-  return {
-    title: subject ? `${subject.name} — Mastery` : "Subject Mastery",
-  };
-}
-
-export default function MasteryPage({ params }: { params: { semester: string; subject: string } }) {
-  const subject = findSubject(params.semester, params.subject);
+export default function LegacyMasteryPage({
+  params,
+}: {
+  params: { semester: string; subject: string };
+}) {
+  if (!semesters.some((s) => s.id === params.semester)) notFound();
+  const subject = findSubject("ER", params.semester, params.subject);
   if (!subject) notFound();
-
-  return (
-    <main className="max-w-6xl mx-auto px-4 py-8">
-      <MasteryMap
-        subjectCode={subject.code}
-        subjectName={subject.name}
-        subjectSlug={subject.slug}
-        semesterId={subject.semesterId}
-      />
-    </main>
-  );
+  redirect(masteryUrl("ER", subject.semesterId, subject.slug));
 }

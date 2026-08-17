@@ -1,9 +1,11 @@
 // "What should I study next?" — ranks modules by weakness + exam importance.
 // Becomes the bridge toward the exam score optimizer.
 
-import registry from "@/lib/notes";
+import { getSubjectContent } from "@/lib/notes";
+import { ProgramId } from "../types";
 import { ProgressMap, MasteryStatus } from "./types";
 import { calculateModuleMastery, masteryLabel } from "./mastery";
+import { progressSubjectKey } from "./progress";
 
 export interface StudyRecommendation {
   moduleId: string;
@@ -30,13 +32,15 @@ function examBand(module: { examFocus: { weightage: string }[] }): "High" | "Med
 
 export function getSubjectRecommendations(
   subjectCode: string,
-  progress?: ProgressMap
+  progress?: ProgressMap,
+  programId: ProgramId = "ER"
 ): StudyRecommendation[] {
-  const content = registry[subjectCode];
+  const content = getSubjectContent(subjectCode, programId);
   if (!content) return [];
 
+  const key = progressSubjectKey(programId, subjectCode);
   const recs: StudyRecommendation[] = content.modules.map((module) => {
-    const mastery = calculateModuleMastery(progress?.[subjectCode]?.[module.id]);
+    const mastery = calculateModuleMastery(progress?.[key]?.[module.id]);
     const band = examBand(module);
     const reasons: string[] = [];
 
@@ -69,6 +73,10 @@ export function getSubjectRecommendations(
   });
 }
 
-export function getTopRecommendation(subjectCode: string, progress?: ProgressMap): StudyRecommendation | undefined {
-  return getSubjectRecommendations(subjectCode, progress)[0];
+export function getTopRecommendation(
+  subjectCode: string,
+  progress?: ProgressMap,
+  programId: ProgramId = "ER"
+): StudyRecommendation | undefined {
+  return getSubjectRecommendations(subjectCode, progress, programId)[0];
 }

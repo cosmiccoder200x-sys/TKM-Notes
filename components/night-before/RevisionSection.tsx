@@ -8,7 +8,7 @@ import {
   RevisionItem,
   resolveRevisionItem,
 } from "@/lib/study";
-import { markModuleReviewed } from "@/lib/study";
+import { markModuleReviewed, progressSubjectKey } from "@/lib/study";
 import { generatePromptLabUrl } from "@/lib/prompts/context";
 import WeightMeter from "../WeightMeter";
 import SelfCheck from "../SelfCheck";
@@ -29,16 +29,18 @@ const KIND_LABEL: Record<string, string> = {
 
 function ItemView({
   subjectCode,
+  programId,
   item,
   reviewed,
   onToggleReviewed,
 }: {
   subjectCode: string;
+  programId: string;
   item: RevisionItem;
   reviewed: boolean;
   onToggleReviewed: (id: string) => void;
 }) {
-  const resolved = resolveRevisionItem(subjectCode, item);
+  const resolved = resolveRevisionItem(subjectCode, item, programId as "ER" | "CS" | "CS_AI");
   const c = resolved?.content;
 
   if (!resolved || !c) return null;
@@ -123,6 +125,7 @@ function ItemView({
           index={Number(item.id.split(":")[2] ?? 0)}
           subjectCode={subjectCode}
           moduleId={item.moduleId}
+          programId={programId}
         />
       )}
 
@@ -169,13 +172,14 @@ export default function RevisionSectionView({
 }) {
   const completed = session.completedSections.includes(section.id);
   const subjectCode = session.subjectCode;
+  const programId = session.programId ?? "ER";
 
   const markAllReviewed = () => {
     for (const item of section.items) {
       if (!session.reviewedItems.includes(item.id)) onItemReviewed(item.id);
     }
     const moduleIds = Array.from(new Set(section.items.map((it) => it.moduleId)));
-    for (const id of moduleIds) markModuleReviewed(subjectCode, id);
+    for (const id of moduleIds) markModuleReviewed(progressSubjectKey(programId, subjectCode), id);
     onComplete(section.id);
   };
 
@@ -203,6 +207,7 @@ export default function RevisionSectionView({
           <ItemView
             key={item.id}
             subjectCode={subjectCode}
+            programId={programId}
             item={item}
             reviewed={session.reviewedItems.includes(item.id)}
             onToggleReviewed={onItemReviewed}

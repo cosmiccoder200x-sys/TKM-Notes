@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { searchAll, SearchHit } from "@/lib/search";
+import { subjectUrl } from "@/lib/urls";
 
 interface SearchBarProps {
   compact?: boolean;
@@ -48,7 +49,7 @@ export default function SearchBar({
   function goTo(hit: SearchHit) {
     setOpen(false);
     if (!isControlled) setQuery("");
-    const path = `/${hit.semesterId}/${hit.subjectSlug}${hit.moduleId ? `#${hit.moduleId}` : ""}`;
+    const path = hit.href ?? subjectUrl(hit.programId ?? "ER", hit.semesterId, hit.subjectSlug, hit.moduleId ?? undefined);
     router.push(path);
   }
 
@@ -86,7 +87,7 @@ export default function SearchBar({
               className="w-full text-left px-3 py-2 hover:bg-bg-surface border-b border-bg-border last:border-0"
             >
               <div className="text-[11px] font-mono text-signal uppercase tracking-wide">
-                {hit.matchType} · {hit.subjectCode}
+                {hit.href ? "learn-cs" : hit.matchType} · {hit.subjectCode}
               </div>
               <div className="text-sm text-ink-hi truncate">{hit.snippet}</div>
             </button>

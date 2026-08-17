@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Module } from "@/lib/types";
+import { Module, ProgramId } from "@/lib/types";
 import Diagram from "./Diagrams";
 import PriorityLabel from "./PriorityLabel";
 import WorkedExampleCard from "./WorkedExampleCard";
@@ -145,6 +145,7 @@ export default function ModuleView({
   subjectCode = "",
   subjectName = "",
   headless = false,
+  programId = "ER",
 }: {
   module: Module;
   defaultSection?: SectionKey;
@@ -152,6 +153,7 @@ export default function ModuleView({
   subjectCode?: string;
   subjectName?: string;
   headless?: boolean;
+  programId?: ProgramId;
 }) {
   const [active, setActive] = useState<SectionKey>(defaultSection);
 
@@ -194,7 +196,7 @@ export default function ModuleView({
             <h3 className="font-display font-semibold text-ink-hi text-xl sm:text-2xl leading-snug">
               {module.title}
             </h3>
-            {subjectCode && <ModuleMasteryChip subjectCode={subjectCode} moduleId={module.id} />}
+            {subjectCode && <ModuleMasteryChip subjectCode={subjectCode} moduleId={module.id} programId={programId} />}
           </div>
           {subjectCode && (
             <div className="flex gap-1.5 shrink-0 flex-wrap justify-end">
@@ -476,7 +478,7 @@ export default function ModuleView({
               </header>
               {module.selfCheck.map((item, i) => (
                 <div key={i} className="relative">
-                  <SelfCheck item={item} index={i} subjectCode={subjectCode} moduleId={module.id} />
+                  <SelfCheck item={item} index={i} subjectCode={subjectCode} moduleId={module.id} programId={programId} />
                   {subjectCode && (
                     <div className="mt-2 flex flex-wrap gap-2">
                       <QuestionActionButton

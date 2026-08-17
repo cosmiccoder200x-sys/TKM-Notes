@@ -35,7 +35,7 @@ export function listSyllabusSubjects(program: string, semester: string): { slug:
 }
 
 export function listSyllabusModules(program: string, semester: string, subjectSlug: string): { id: string; title: string }[] {
-  const subject = findSubject(semester, subjectSlug, program as ProgramId);
+  const subject = findSubject(program as ProgramId, semester, subjectSlug);
   if (!subject) return [];
   const content = getSubjectContent(subject.code, subject.programId);
   if (!content) return [];
@@ -53,7 +53,7 @@ export function sentencesForSyllabusModule(
   moduleId: string,
   difficulty: TypingDifficulty = "intermediate"
 ): TopicSource {
-  const subject = findSubject(semester, subjectSlug, program as ProgramId);
+  const subject = findSubject(program as ProgramId, semester, subjectSlug);
   const content = subject ? getSubjectContent(subject.code, subject.programId) : undefined;
   const moduleEntry = content?.modules.find((m) => m.id === moduleId);
 

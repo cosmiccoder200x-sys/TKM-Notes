@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { PROGRAM_OPTIONS, normalizeProgramId } from "@/lib/branch";
 import { ProgramId } from "@/lib/types";
+import { programUrl } from "@/lib/urls";
 
 const STORAGE_KEY = "tkm_program_id";
 
@@ -20,7 +21,7 @@ export default function BranchSelect() {
     const next = e.target.value as ProgramId;
     setProgramId(next);
     localStorage.setItem(STORAGE_KEY, next);
-    router.push("/s3");
+    router.push(programUrl(next));
   }
 
   return (

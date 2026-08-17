@@ -98,7 +98,8 @@ export default function SearchResults({
   const subjects = useMemo(() => {
     const map = new Map<string, { code: string; name: string }>();
     for (const d of index) {
-      if (!map.has(d.subjectCode)) map.set(d.subjectCode, { code: d.subjectCode, name: d.subjectName });
+      const key = `${d.programId}:${d.subjectCode}`;
+      if (!map.has(key)) map.set(key, { code: `${d.programId}:${d.subjectCode}`, name: d.subjectName });
     }
     return Array.from(map.values()).sort((a, b) => a.name.localeCompare(b.name));
   }, [index]);
@@ -306,7 +307,7 @@ export default function SearchResults({
                             )}
                           </span>
                           <span className="block text-[11px] font-mono text-ink-faint truncate">
-                            {r.semesterId.toUpperCase()} · {r.subjectName}
+                            {r.programId} · {r.semesterId.toUpperCase()} · {r.subjectName}
                             {r.moduleTitle ? ` · ${r.moduleTitle}` : ""}
                           </span>
                         </span>

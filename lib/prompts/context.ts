@@ -3,6 +3,7 @@
 import { Subject, Module } from "@/lib/types";
 import { subjects, semesters, findSubject, subjectsForSemester } from "@/lib/content";
 import { getSubjectContent } from "@/lib/notes";
+import { normalizeProgramId } from "@/lib/branch";
 
 export type ContentType = 
   | "module"
@@ -69,7 +70,8 @@ export function buildContextFromParams(params: {
   }
   
   if (params.subject) {
-    const subject = findSubject(params.semester || "", params.subject);
+    const programId = normalizeProgramId(localStorage.getItem("tkm_program_id")) ?? "ER";
+    const subject = findSubject(programId, params.semester || "", params.subject);
     if (subject) {
       context.subjectCode = subject.code;
       context.subjectSlug = subject.slug;

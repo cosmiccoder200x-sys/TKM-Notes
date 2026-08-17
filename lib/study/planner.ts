@@ -3,11 +3,13 @@
 // (exam weightage, module order) and, when available, the student's own mastery
 // data. All reasons are honest statements about the content — no invented claims.
 
-import registry from "@/lib/notes";
+import { getSubjectContent } from "@/lib/notes";
 import { subjects } from "@/lib/content";
+import { ProgramId } from "../types";
 import { ProgressMap, NightBeforeTarget } from "./types";
 import { MASTERY_ADJUST } from "./nightBefore";
 import { calculateModuleMastery } from "./mastery";
+import { progressSubjectKey } from "./progress";
 import { modulePriority, PriorityTier, estimatedSubjectMinutes } from "./priority";
 
 export type PrepLevel = "behind" | "ok" | "ahead";
@@ -69,15 +71,21 @@ interface Ranked {
   statusLabel: string;
 }
 
-function rankModules(subjectCode: string, moduleIds?: string[], progress?: ProgressMap): Ranked[] {
-  const content = registry[subjectCode];
+function rankModules(
+  subjectCode: string,
+  moduleIds?: string[],
+  progress?: ProgressMap,
+  programId: ProgramId = "ER"
+): Ranked[] {
+  const content = getSubjectContent(subjectCode, programId);
   if (!content) return [];
+  const key = progressSubjectKey(programId, subjectCode);
   const modules = content.modules.filter((m) => !moduleIds || moduleIds.length === 0 || moduleIds.includes(m.id));
 
   return modules
     .map((m, index) => {
       const pri = modulePriority(m, index, content.modules.length);
-      const mastery = calculateModuleMastery(progress?.[subjectCode]?.[m.id]);
+      const mastery = calculateModuleMastery(progress?.[key]?.[m.id]);
       const adjustment = MASTERY_ADJUST[mastery.status] ?? 1;
       let high = 0;
       let medium = 0;
@@ -130,12 +138,17 @@ function cap(kind: PlanActionKind, minutes: number, available: number): number {
   return Math.min(max, available);
 }
 
-export function generateStudyPlan(subjectCode: string, config: PlannerConfig, progress?: ProgressMap): StudyPlan | null {
-  const content = registry[subjectCode];
+export function generateStudyPlan(
+  subjectCode: string,
+  config: PlannerConfig,
+  progress?: ProgressMap,
+  programId: ProgramId = "ER"
+): StudyPlan | null {
+  const content = getSubjectContent(subjectCode, programId);
   if (!content) return null;
 
   const minutes = Math.max(20, config.minutes);
-  const ranked = rankModules(subjectCode, config.moduleIds, progress);
+  const ranked = rankModules(subjectCode, config.moduleIds, progress, programId);
   const availableSelfCheck = content.modules.some((m) => m.selfCheck && m.selfCheck.length > 0);
 
   let learnR = PREP_RATIOS[config.prepLevel].learn;
@@ -271,7 +284,8 @@ export function generateStudyPlan(subjectCode: string, config: PlannerConfig, pr
 
   return {
     subjectCode,
-    subjectName: subjects.find((s) => s.code === subjectCode)?.name ?? subjectCode,
+    subjectName:
+      subjects.find((s) => s.code === subjectCode && s.programId === programId)?.name ?? subjectCode,
     config: { ...config, minutes },
     blocks,
     totalMinutes: minutes,

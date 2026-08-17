@@ -1,11 +1,15 @@
 import { subjects } from "./content";
 import { getSubjectContent } from "./notes";
+import { ProgramId } from "./types";
+import { subjectUrl } from "./urls";
+import { LEARN_SUBJECTS, subjectTopics, getLearnSubject, findLearnTopic } from "./learn-cs";
 
 export interface SearchHit {
   subjectCode: string;
   subjectName: string;
   semesterId: string;
   subjectSlug: string;
+  programId: ProgramId;
   moduleId?: string;
   moduleTitle?: string;
   matchType:
@@ -19,8 +23,11 @@ export interface SearchHit {
     | "worked-example"
     | "selfcheck"
     | "comparison"
-    | "intuition";
+    | "intuition"
+    | "learn-subject"
+    | "learn-topic";
   snippet: string;
+  href?: string; // custom route (learn-cs); otherwise derived from TKM subjectUrl
 }
 
 // Builds a flat list once; cheap enough to redo on every search given the data size.
@@ -36,6 +43,7 @@ export function searchAll(query: string): SearchHit[] {
         subjectCode: subject.code,
         subjectName: subject.name,
         semesterId: subject.semesterId,
+        programId: subject.programId,
         subjectSlug: subject.slug,
         matchType: "subject",
         snippet: subject.name,
@@ -51,6 +59,7 @@ export function searchAll(query: string): SearchHit[] {
           subjectCode: subject.code,
           subjectName: subject.name,
           semesterId: subject.semesterId,
+          programId: subject.programId,
           subjectSlug: subject.slug,
           moduleId: mod.id,
           moduleTitle: mod.title,
@@ -65,6 +74,7 @@ export function searchAll(query: string): SearchHit[] {
             subjectCode: subject.code,
             subjectName: subject.name,
             semesterId: subject.semesterId,
+            programId: subject.programId,
             subjectSlug: subject.slug,
             moduleId: mod.id,
             moduleTitle: mod.title,
@@ -80,6 +90,7 @@ export function searchAll(query: string): SearchHit[] {
             subjectCode: subject.code,
             subjectName: subject.name,
             semesterId: subject.semesterId,
+            programId: subject.programId,
             subjectSlug: subject.slug,
             moduleId: mod.id,
             moduleTitle: mod.title,
@@ -99,6 +110,7 @@ export function searchAll(query: string): SearchHit[] {
             subjectCode: subject.code,
             subjectName: subject.name,
             semesterId: subject.semesterId,
+            programId: subject.programId,
             subjectSlug: subject.slug,
             moduleId: mod.id,
             moduleTitle: mod.title,
@@ -114,6 +126,7 @@ export function searchAll(query: string): SearchHit[] {
             subjectCode: subject.code,
             subjectName: subject.name,
             semesterId: subject.semesterId,
+            programId: subject.programId,
             subjectSlug: subject.slug,
             moduleId: mod.id,
             moduleTitle: mod.title,
@@ -129,6 +142,7 @@ export function searchAll(query: string): SearchHit[] {
             subjectCode: subject.code,
             subjectName: subject.name,
             semesterId: subject.semesterId,
+            programId: subject.programId,
             subjectSlug: subject.slug,
             moduleId: mod.id,
             moduleTitle: mod.title,
@@ -144,6 +158,7 @@ export function searchAll(query: string): SearchHit[] {
             subjectCode: subject.code,
             subjectName: subject.name,
             semesterId: subject.semesterId,
+            programId: subject.programId,
             subjectSlug: subject.slug,
             moduleId: mod.id,
             moduleTitle: mod.title,
@@ -159,6 +174,7 @@ export function searchAll(query: string): SearchHit[] {
             subjectCode: subject.code,
             subjectName: subject.name,
             semesterId: subject.semesterId,
+            programId: subject.programId,
             subjectSlug: subject.slug,
             moduleId: mod.id,
             moduleTitle: mod.title,
@@ -174,6 +190,7 @@ export function searchAll(query: string): SearchHit[] {
             subjectCode: subject.code,
             subjectName: subject.name,
             semesterId: subject.semesterId,
+            programId: subject.programId,
             subjectSlug: subject.slug,
             moduleId: mod.id,
             moduleTitle: mod.title,
@@ -188,11 +205,48 @@ export function searchAll(query: string): SearchHit[] {
           subjectCode: subject.code,
           subjectName: subject.name,
           semesterId: subject.semesterId,
+          programId: subject.programId,
           subjectSlug: subject.slug,
           moduleId: mod.id,
           moduleTitle: mod.title,
           matchType: "intuition",
           snippet: mod.intuition,
+        });
+      }
+    }
+  }
+
+  // Learn CS catalog (learn-cs subjects + their topics).
+  for (const subject of LEARN_SUBJECTS) {
+    if (subject.name.toLowerCase().includes(q)) {
+      hits.push({
+        subjectCode: subject.slug,
+        subjectName: subject.name,
+        semesterId: "learn-cs",
+        programId: "CS",
+        subjectSlug: subject.slug,
+        matchType: "learn-subject",
+        snippet: subject.description,
+        href: `/learn-cs/${subject.slug}`,
+      });
+    }
+
+    for (const topic of subjectTopics(subject)) {
+      if (
+        topic.title.toLowerCase().includes(q) ||
+        topic.summary.toLowerCase().includes(q) ||
+        (topic.keyIdea ?? "").toLowerCase().includes(q) ||
+        (topic.intuition ?? "").toLowerCase().includes(q)
+      ) {
+        hits.push({
+          subjectCode: subject.slug,
+          subjectName: subject.name,
+          semesterId: "learn-cs",
+          programId: "CS",
+          subjectSlug: subject.slug,
+          matchType: "learn-topic",
+          snippet: topic.title,
+          href: `/learn-cs/${subject.slug}/${topic.slug}`,
         });
       }
     }

@@ -52,7 +52,7 @@ export default function FinalCheck({
 
       <div className="flex flex-col sm:flex-row gap-2">
         <Link
-          href={`/night-before?subject=${encodeURIComponent(session.subjectCode)}&fresh=1`}
+          href={`/night-before?subject=${encodeURIComponent(session.subjectCode)}&program=${encodeURIComponent(session.programId ?? "ER")}&fresh=1`}
           className="flex-1 text-center font-mono text-sm uppercase tracking-wide py-3 rounded-card bg-signal text-bg font-semibold hover:bg-signal/90 transition-colors"
         >
           Final Self-Check

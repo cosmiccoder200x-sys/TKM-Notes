@@ -2,27 +2,31 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { getProgress, calculateModuleMastery, masteryLabel } from "@/lib/study";
+import { getProgress, calculateModuleMastery, masteryLabel, progressSubjectKey } from "@/lib/study";
+import { ProgramId } from "@/lib/types";
+import { programSlug } from "@/lib/urls";
 import { NavIcon } from "@/components/navigation/navItems";
 
 export default function ModuleMasteryChip({
   subjectCode,
   moduleId,
+  programId = "ER",
 }: {
   subjectCode: string;
   moduleId: string;
+  programId?: ProgramId;
 }) {
   const [ready, setReady] = useState(false);
   const [score, setScore] = useState<number | null>(null);
   const [status, setStatus] = useState<ReturnType<typeof calculateModuleMastery>["status"]>("not-assessed");
 
   useEffect(() => {
-    const p = getProgress()[subjectCode]?.[moduleId];
+    const p = getProgress()[progressSubjectKey(programId, subjectCode)]?.[moduleId];
     const mastery = calculateModuleMastery(p);
     setScore(mastery.score);
     setStatus(mastery.status);
     setReady(true);
-  }, [subjectCode, moduleId]);
+  }, [subjectCode, moduleId, programId]);
 
   if (!ready) return null;
 
@@ -42,7 +46,7 @@ export default function ModuleMasteryChip({
         {assessed ? `Mastery ${score}% · ${masteryLabel(status)}` : "Not assessed"}
       </span>
       <Link
-        href={`/night-before?subject=${encodeURIComponent(subjectCode)}&time=60`}
+        href={`/night-before?subject=${encodeURIComponent(subjectCode)}&program=${programSlug(programId)}&time=60`}
         className="inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-wide px-2.5 py-1 rounded-card border border-signal text-signal hover:bg-signal/10 transition-colors"
       >
         <NavIcon name="revision" className="w-3.5 h-3.5" /> Night-Before

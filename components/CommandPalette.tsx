@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { searchAll, SearchHit } from "@/lib/search";
+import { subjectUrl } from "@/lib/urls";
 
 const TYPE_LABEL: Record<SearchHit["matchType"], string> = {
   subject: "Subject",
@@ -16,6 +17,8 @@ const TYPE_LABEL: Record<SearchHit["matchType"], string> = {
   selfcheck: "Self-Check",
   comparison: "Compare",
   intuition: "Intuition",
+  "learn-subject": "CS Path",
+  "learn-topic": "CS Topic",
 };
 
 export default function CommandPalette() {
@@ -61,7 +64,7 @@ export default function CommandPalette() {
 
   function goTo(hit: SearchHit) {
     setOpen(false);
-    const path = `/${hit.semesterId}/${hit.subjectSlug}${hit.moduleId ? `#${hit.moduleId}` : ""}`;
+    const path = hit.href ?? subjectUrl(hit.programId, hit.semesterId, hit.subjectSlug, hit.moduleId);
     router.push(path);
   }
 
@@ -153,7 +156,9 @@ export default function CommandPalette() {
                     <span className="min-w-0 flex-1">
                       <span className="block text-sm text-ink-hi truncate">{hit.snippet}</span>
                       <span className="block text-[11px] font-mono text-ink-faint truncate">
-                        {hit.semesterId.toUpperCase()} · {hit.subjectName}
+                        {hit.href
+                          ? `Learn CS · ${hit.subjectName}`
+                          : `${hit.programId} · ${hit.semesterId.toUpperCase()} · ${hit.subjectName}`}
                         {hit.moduleTitle ? ` · ${hit.moduleTitle}` : ""}
                       </span>
                     </span>

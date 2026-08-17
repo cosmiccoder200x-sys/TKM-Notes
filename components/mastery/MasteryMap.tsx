@@ -2,15 +2,18 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import registry from "@/lib/notes";
+import { getSubjectContent } from "@/lib/notes";
 import {
   getProgress,
   calculateSubjectMastery,
   getSubjectRecommendations,
   masteryLabel,
+  progressSubjectKey,
   ProgressMap,
 } from "@/lib/study";
 import { ModuleProgress } from "@/lib/study";
+import { ProgramId } from "@/lib/types";
+import { subjectUrl, programSlug } from "@/lib/urls";
 import MasteryBar from "./MasteryBar";
 import MasteryStatus from "./MasteryStatus";
 import ModuleMasteryCard from "./ModuleMasteryCard";
@@ -22,11 +25,13 @@ export default function MasteryMap({
   subjectName,
   subjectSlug,
   semesterId,
+  programId = "ER",
 }: {
   subjectCode: string;
   subjectName: string;
   subjectSlug: string;
   semesterId: string;
+  programId?: ProgramId;
 }) {
   const [selected, setSelected] = useState<string | null>(null);
   // Read localStorage after mount to avoid hydration mismatch.
@@ -35,13 +40,14 @@ export default function MasteryMap({
     setProgress(getProgress());
   }, []);
 
-  const subjectProgress = progress[subjectCode] ?? {};
-  const content = registry[subjectCode];
+  const key = progressSubjectKey(programId, subjectCode);
+  const subjectProgress = progress[key] ?? {};
+  const content = getSubjectContent(subjectCode, programId);
   const moduleIds = content?.modules.map((m) => m.id) ?? [];
   const summary = calculateSubjectMastery(subjectCode, moduleIds, subjectProgress);
-  const recs = getSubjectRecommendations(subjectCode, progress);
+  const recs = getSubjectRecommendations(subjectCode, progress, programId);
 
-  const subjectHref = `/${semesterId}/${subjectSlug}`;
+  const subjectHref = subjectUrl(programId, semesterId, subjectSlug);
   const hasData = summary.assessedModules > 0;
 
   const selectedModule = selected ? content?.modules.find((m) => m.id === selected) : undefined;
@@ -105,7 +111,7 @@ export default function MasteryMap({
       </div>
 
       {/* Weak areas */}
-      {hasData && <WeakAreas recommendations={recs} subjectCode={subjectCode} />}
+      {hasData && <WeakAreas recommendations={recs} subjectCode={subjectCode} programId={programId} />}
 
       {/* Module grid */}
       <div className="space-y-3">
@@ -193,7 +199,7 @@ export default function MasteryMap({
 
           <div className="flex flex-wrap gap-2">
             <Link
-              href={`/night-before?subject=${encodeURIComponent(subjectCode)}&time=120`}
+              href={`/night-before?subject=${encodeURIComponent(subjectCode)}&program=${programSlug(programId)}&time=120`}
               className="font-mono text-xs uppercase tracking-wide px-4 py-2.5 rounded-card bg-signal text-bg font-semibold hover:bg-signal/90 transition-colors"
             >
               Start Practice →
@@ -209,7 +215,7 @@ export default function MasteryMap({
       )}
 
       {/* What should I study next */}
-      {recs.length > 0 && <NextStudyRecommendation recommendations={recs} subjectCode={subjectCode} />}
+      {recs.length > 0 && <NextStudyRecommendation recommendations={recs} subjectCode={subjectCode} programId={programId} />}
 
       <div className="flex flex-wrap gap-2">
         <button

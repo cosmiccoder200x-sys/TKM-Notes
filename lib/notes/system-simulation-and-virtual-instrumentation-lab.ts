@@ -285,7 +285,7 @@ const content: SubjectContent = {
         { question: "What specifically makes an instrumentation amplifier better suited than a plain op-amp differential amplifier for amplifying a sensor's small signal?", answer: "An instrumentation amplifier has much higher input impedance (so it doesn't load down/distort the sensor's weak signal) and much higher CMRR (so it rejects common-mode noise far more effectively) than a basic op-amp differential stage." },
       ],
       crossLinks: [
-        { label: "LVDT and op-amp slew rate/CMRR also covered in Sensor & Sensor Circuits (Module IV)", href: "/s3/sensor-and-sensor-circuits#m4" },
+        { label: "LVDT and op-amp slew rate/CMRR also covered in Sensor & Sensor Circuits (Module IV)", href: "/syllabus/er/s3/sensor-and-sensor-circuits#m4" },
       ],
     },
 

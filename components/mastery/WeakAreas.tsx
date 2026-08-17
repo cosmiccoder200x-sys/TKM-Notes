@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { StudyRecommendation } from "@/lib/study";
+import { ProgramId } from "@/lib/types";
+import { programSlug } from "@/lib/urls";
 
 const DOT: Record<string, string> = {
   weak: "bg-critical",
@@ -10,9 +12,11 @@ const DOT: Record<string, string> = {
 export default function WeakAreas({
   recommendations,
   subjectCode,
+  programId = "ER",
 }: {
   recommendations: StudyRecommendation[];
   subjectCode: string;
+  programId?: ProgramId;
 }) {
   const weak = recommendations.filter(
     (r) => r.status === "weak" || r.status === "needs-practice" || r.status === "not-assessed"
@@ -35,7 +39,7 @@ export default function WeakAreas({
         ))}
       </ul>
       <Link
-        href={`/night-before?subject=${encodeURIComponent(subjectCode)}`}
+        href={`/night-before?subject=${encodeURIComponent(subjectCode)}&program=${programSlug(programId)}`}
         className="inline-block font-mono text-xs uppercase tracking-wide px-4 py-2.5 rounded-card border border-signal text-signal hover:bg-signal/10 transition-colors"
       >
         Practice Weak Areas →

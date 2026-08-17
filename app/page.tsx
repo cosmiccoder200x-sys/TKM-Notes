@@ -106,7 +106,7 @@ export default function HomePage() {
           <div className="flex items-baseline gap-3">
             <span className="eyebrow text-ink-hi">Current Semester</span>
           </div>
-          <Link href="/s3" className="font-mono text-[11px] text-signal hover:text-signal-dim transition-colors uppercase tracking-wider">
+          <Link href="/syllabus/er" className="font-mono text-[11px] text-signal hover:text-signal-dim transition-colors uppercase tracking-wider">
             Continue Reading →
           </Link>
         </div>

@@ -6,6 +6,7 @@ import { semesters } from "@/lib/content";
 import { getQuestionBankStats, type PyqEntry } from "@/lib/pyqs";
 import { generatePromptLabUrl } from "@/lib/prompts/context";
 import PriorityLabel from "@/components/PriorityLabel";
+import { subjectUrl } from "@/lib/urls";
 
 const SERVER = "s3";
 
@@ -163,7 +164,7 @@ export default function PyqsExplorer({ entries }: { entries: PyqEntry[] }) {
                   {subject.subjectName}
                 </h2>
                 <Link
-                  href={`/${subject.semesterId}/${subject.subjectSlug}`}
+                  href={subjectUrl(subject.programId, subject.semesterId, subject.subjectSlug)}
                   className="font-mono text-[11px] text-signal hover:text-signal-dim transition-colors uppercase tracking-wider"
                 >
                   Open subject →
@@ -209,7 +210,7 @@ export default function PyqsExplorer({ entries }: { entries: PyqEntry[] }) {
                               Practice with AI
                             </Link>
                             <Link
-                              href={`/${q.semesterId}/${q.subjectSlug}#${q.moduleId}`}
+                              href={subjectUrl(q.programId, q.semesterId, q.subjectSlug, q.moduleId)}
                               className="font-mono text-[10px] uppercase tracking-wide px-2.5 py-1.5 rounded-card border border-bg-border text-ink-faint hover:border-signal hover:text-signal transition-colors"
                             >
                               Open in notes

@@ -2,25 +2,27 @@
 
 import { useState } from "react";
 import { SelfCheckItem } from "@/lib/types";
-import { recordAttempt, AttemptResult } from "@/lib/study";
+import { recordAttempt, progressSubjectKey, AttemptResult } from "@/lib/study";
 
 export default function SelfCheck({
   item,
   index,
   subjectCode,
   moduleId,
+  programId = "ER",
 }: {
   item: SelfCheckItem;
   index: number;
   subjectCode?: string;
   moduleId?: string;
+  programId?: string;
 }) {
   const [revealed, setRevealed] = useState(false);
   const [rated, setRated] = useState<AttemptResult | null>(null);
 
   function rate(result: AttemptResult) {
     if (!subjectCode || !moduleId) return;
-    recordAttempt(subjectCode, moduleId, result);
+    recordAttempt(progressSubjectKey(programId, subjectCode), moduleId, result);
     setRated(result);
   }
 

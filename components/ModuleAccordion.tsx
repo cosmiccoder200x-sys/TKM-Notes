@@ -8,21 +8,24 @@ import ModulePriorityBadge from "@/components/ModulePriorityBadge";
 import ModuleProgressBar from "@/components/ModuleProgressBar";
 import { NavIcon } from "@/components/navigation/navItems";
 import { generatePromptLabUrl } from "@/lib/prompts/context";
-import { getProgress, calculateModuleMastery, estimatedModuleMinutes, ModuleProgress } from "@/lib/study";
+import { getProgress, calculateModuleMastery, estimatedModuleMinutes, progressSubjectKey, ModuleProgress } from "@/lib/study";
+import { ProgramId } from "@/lib/types";
+import { programSlug } from "@/lib/urls";
 
 interface Props {
   modules: Module[];
   subjectCode: string;
   subjectName: string;
+  programId?: ProgramId;
 }
 
-export default function ModuleAccordion({ modules, subjectCode, subjectName }: Props) {
+export default function ModuleAccordion({ modules, subjectCode, subjectName, programId = "ER" }: Props) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [progress, setProgress] = useState<Record<string, ModuleProgress>>({});
 
   useEffect(() => {
-    setProgress(getProgress()[subjectCode] ?? {});
-  }, [subjectCode]);
+    setProgress(getProgress()[progressSubjectKey(programId, subjectCode)] ?? {});
+  }, [subjectCode, programId]);
 
   // Deep links like #m3 open the right module (used by the Study Planner).
   useEffect(() => {
@@ -123,7 +126,7 @@ export default function ModuleAccordion({ modules, subjectCode, subjectName }: P
                   </Link>
                 ))}
                 <Link
-                  href={`/night-before?subject=${encodeURIComponent(subjectCode)}&time=60`}
+                  href={`/night-before?subject=${encodeURIComponent(subjectCode)}&program=${programSlug(programId)}&time=60`}
                   onClick={(e) => e.stopPropagation()}
                   className="inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-wide px-2.5 py-1.5 rounded-card border border-signal-dim text-signal hover:bg-signal/10 transition-colors"
                 >
@@ -144,6 +147,7 @@ export default function ModuleAccordion({ modules, subjectCode, subjectName }: P
                   subjectCode={subjectCode}
                   subjectName={subjectName}
                   headless
+                  programId={programId}
                 />
               </div>
             )}

@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getSubjectContent } from "@/lib/notes";
 import { semesters, subjects } from "@/lib/content";
+import { programSlug } from "@/lib/urls";
 
 const MINUTES = [30, 60, 90, 120];
 
@@ -14,12 +15,15 @@ export default function QuickPlannerForm() {
     .map((sem) => ({ semester: sem, list: withNotes.filter((s) => s.semesterId === sem.id) }))
     .filter((g) => g.list.length > 0);
 
-  const [subject, setSubject] = useState(withNotes[0]?.code ?? "");
+  const [subject, setSubject] = useState(
+    withNotes[0] ? `${withNotes[0].programId}:${withNotes[0].code}` : ""
+  );
   const [minutes, setMinutes] = useState(60);
 
   function go() {
     if (!subject) return;
-    router.push(`/planner?subject=${encodeURIComponent(subject)}&minutes=${minutes}`);
+    const [pid, code] = subject.split(":");
+    router.push(`/planner?subject=${encodeURIComponent(code)}&program=${programSlug(pid as "ER" | "CS" | "CS_AI")}&minutes=${minutes}`);
   }
 
   return (
@@ -33,8 +37,8 @@ export default function QuickPlannerForm() {
         {groups.map((g) => (
           <optgroup key={g.semester.id} label={g.semester.label}>
             {g.list.map((s) => (
-              <option key={s.code} value={s.code}>
-                {s.name}
+              <option key={`${s.programId}:${s.code}`} value={`${s.programId}:${s.code}`}>
+                {s.name} ({s.programId})
               </option>
             ))}
           </optgroup>
