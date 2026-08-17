@@ -2,7 +2,7 @@
 // committed data/syllabus/ sources must be byte-identical every run.
 import { describe, it, expect, afterAll } from "vitest";
 import { execFileSync } from "node:child_process";
-import { readFileSync, copyFileSync, existsSync } from "node:fs";
+import { readFileSync, copyFileSync, existsSync, rmSync } from "node:fs";
 import { join, dirname } from "node:path";
 
 const ROOT = join(__dirname, "..");
@@ -43,6 +43,7 @@ describe("import-syllabus.mjs", () => {
       expect(out1).toContain('"CS_AI": 113');
     } finally {
       copyFileSync(BACKUP, OUT);
+      rmSync(BACKUP, { force: true });
     }
   });
 
@@ -50,6 +51,7 @@ describe("import-syllabus.mjs", () => {
     // restore whatever the last writer left (belt & suspenders)
     if (existsSync(BACKUP)) {
       copyFileSync(BACKUP, OUT);
+      rmSync(BACKUP, { force: true });
     }
   });
 });
