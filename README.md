@@ -1,6 +1,6 @@
 # TKM Notes
 
-**Your AI exam preparation system.** Study less. Prioritize better.
+**Your AI exam preparation system.** Study less. Prioritize better
 
 AI exam preparation workspace for TKM College of Engineering (EC Engineering, 2024 scheme), S3–S8. **TKM Notes ranks every topic by real exam weightage** and turns your available time into a prioritized, reason-backed study plan. Prompt Lab supplies the AI prompts — find the best prompt for whatever you need to do, copy it, and use it with ChatGPT, Gemini, Claude or any AI. Exam-focused notes are the verified context that makes everything specific. One job only: help you score full marks. No chatbots, no trackers, no fluff.
 
