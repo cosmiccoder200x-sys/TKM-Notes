@@ -11,6 +11,7 @@ import {
   getEffectiveModules,
 } from "@/lib/syllabus/versions";
 import { matchSyllabus } from "@/lib/syllabus/match";
+import { syllabusToText } from "@/lib/syllabus/export";
 
 const STORE = new Map<string, string>();
 
@@ -152,5 +153,37 @@ describe("matchSyllabus", () => {
     ]);
     expect(match.modulesWithNotes).toBe(0);
     expect(match.pyqTotal).toBe(0);
+  });
+});
+
+describe("syllabusToText", () => {
+  it("exports modules and topics as copy-ready text", () => {
+    const { modules } = parseSubjectSyllabus(SUBJECT_RAW);
+    const text = syllabusToText(
+      {
+        id: "v1",
+        subjectKey: "ER:24ERP304",
+        programId: "ER",
+        subjectCode: "24ERP304",
+        source: "user_pasted",
+        createdAt: 1,
+        updatedAt: 1,
+        active: true,
+        modules,
+      },
+      "Data Structures and Algorithms",
+      "24ERP304"
+    );
+    expect(text).toContain("Data Structures and Algorithms (24ERP304)");
+    expect(text).toContain("Module 1: Introduction");
+    expect(text).toContain("- Arrays");
+    expect(text).not.toMatch(/\bundefined\b/);
+  });
+
+  it("falls back to official content text when topics are absent", () => {
+    const official = buildOfficialVersion("CS", "24CSP304");
+    const text = syllabusToText(official, "Algorithms", "24CSP304");
+    expect(text).toContain("Module 1");
+    expect(text.length).toBeGreaterThan(50);
   });
 });

@@ -21,3 +21,4 @@ export {
   getEffectiveModules,
 } from "./versions";
 export { matchSyllabus } from "./match";
+export { syllabusToText } from "./export";

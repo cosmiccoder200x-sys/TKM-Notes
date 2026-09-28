@@ -74,6 +74,7 @@ export default function SubjectPage({
         semesterId={subject.semesterId}
         subjectCode={subject.code}
         subjectSlug={subject.slug}
+        subjectName={subject.name}
       />
 
       <ContinueLearning
