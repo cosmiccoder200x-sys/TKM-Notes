@@ -1,5 +1,6 @@
-import { learningSubjectKey, logSession } from "./state";
+import { learningSubjectKey, logSession, recordEvidence, resolveMistake, openMistakes, getLearningState } from "./state";
 import type { RecommendedAction, SessionStep, StudySessionPlan } from "./types";
+import type { EvidenceKind, EvidenceResult } from "./types";
 import type { LearningTask } from "./prompts/types";
 import type { ProgramId } from "@/lib/types";
 
@@ -55,4 +56,57 @@ export function startSession(
     finishedAt: null,
   });
   return plan;
+}
+
+export type SessionOutcome = "strong" | "partial" | "struggled";
+
+const OUTCOME_EVIDENCE: Record<LearningTask, EvidenceKind> = {
+  teach: "selfcheck",
+  recall: "recall",
+  practice: "practice",
+  exam: "pyq",
+  fix: "practice",
+};
+
+const OUTCOME_RESULT: Record<SessionOutcome, EvidenceResult> = {
+  strong: "correct",
+  partial: "partial",
+  struggled: "incorrect",
+};
+
+export function finishSession(input: {
+  programId: ProgramId;
+  subjectCode: string;
+  plan: StudySessionPlan;
+  moduleCode: string | null;
+  outcome: SessionOutcome;
+}): { resolvedMistakes: number } {
+  const { programId, subjectCode, plan, moduleCode, outcome } = input;
+  let resolvedMistakes = 0;
+  if (plan.topicRef && moduleCode) {
+    recordEvidence({
+      programId,
+      subjectCode,
+      topicRef: plan.topicRef,
+      moduleCode,
+      topicIndex: null,
+      title: plan.topicTitle ?? plan.topicRef,
+      kind: OUTCOME_EVIDENCE[plan.task],
+      result: OUTCOME_RESULT[outcome],
+    });
+  }
+  if (plan.task === "fix" && plan.topicRef && (outcome === "strong" || outcome === "partial")) {
+    const open = openMistakes(getLearningState(programId, subjectCode));
+    for (const m of open.filter((x) => x.topicRef === plan.topicRef)) {
+      if (resolveMistake(programId, subjectCode, m.id)) resolvedMistakes += 1;
+    }
+  }
+  logSession(programId, subjectCode, {
+    task: plan.task,
+    topicRef: plan.topicRef,
+    topicTitle: plan.topicTitle,
+    minutes: plan.minutes,
+    finishedAt: Date.now(),
+  });
+  return { resolvedMistakes };
 }

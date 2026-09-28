@@ -5,11 +5,8 @@ import SubjectHeader from "@/components/subject/SubjectHeader";
 import SyllabusSourceStrip from "@/components/subject/SyllabusSourceStrip";
 import ContinueLearning from "@/components/subject/ContinueLearning";
 import SubjectMasteryBar from "@/components/mastery/SubjectMasteryBar";
-import ModuleMasteryBadges from "@/components/mastery/ModuleMasteryBadges";
 import ModuleCard from "@/components/subject/ModuleCard";
-import StudyModeSwitcher from "@/components/StudyModeSwitcher";
 import ModuleAccordion from "@/components/ModuleAccordion";
-import { NavIcon } from "@/components/navigation/navItems";
 import { ProgramId } from "@/lib/types";
 import { findSubject, semesters, subjects, syllabusModulesFor } from "@/lib/content";
 import { getSubjectContent } from "@/lib/notes";
@@ -51,37 +48,6 @@ export async function generateMetadata({
   };
 }
 
-const STUDY_ACTIONS = [
-  {
-    label: "Practice",
-    description: "Answer real exam questions and track accuracy",
-    icon: "practice" as const,
-    hrefFor: (programId: ProgramId, subject: { code: string; semesterId: string }) =>
-      `/practice?program=${programSlug(programId)}&semester=${subject.semesterId}&subject=${encodeURIComponent(subject.code)}`,
-  },
-  {
-    label: "PYQs",
-    description: "Browse every previous-year question for this subject",
-    icon: "pyq" as const,
-    hrefFor: (programId: ProgramId, subject: { code: string; semesterId: string }) =>
-      `/pyqs?program=${programSlug(programId)}&semester=${subject.semesterId}&subject=${encodeURIComponent(subject.code)}`,
-  },
-  {
-    label: "AI Study",
-    description: "Explain, quiz, or revise with AI — built-in context",
-    icon: "learn" as const,
-    hrefFor: (programId: ProgramId, subject: { code: string; semesterId: string }) =>
-      `/ai-study?program=${programSlug(programId)}&semester=${subject.semesterId}&subject=${encodeURIComponent(subject.code)}`,
-  },
-  {
-    label: "Revision",
-    description: "High-value last-minute revision plan",
-    icon: "revision" as const,
-    hrefFor: (programId: ProgramId, subject: { code: string }) =>
-      `/night-before?subject=${encodeURIComponent(subject.code)}&program=${programSlug(programId)}&time=60`,
-  },
-];
-
 export default function SubjectPage({
   params,
 }: {
@@ -97,6 +63,7 @@ export default function SubjectPage({
   const notesModules = content?.modules ?? [];
   const syllabusMods = syllabusModulesFor(programId, subject.code);
   const estimatedMinutes = estimatedSubjectMinutes(notesModules);
+  const pyqCount = notesModules.reduce((n, m) => n + m.examFocus.length, 0);
 
   return (
     <main className="max-w-4xl mx-auto px-4 py-8 space-y-8">
@@ -109,44 +76,13 @@ export default function SubjectPage({
         subjectSlug={subject.slug}
       />
 
-      <ContinueLearning programId={programId} subjectCode={subject.code} subjectName={subject.name} subjectSlug={subject.slug} />
-
-      <details className="card px-5 py-4 group">
-        <summary className="cursor-pointer list-none flex items-center justify-between gap-2">
-          <span className="font-display font-semibold text-sm text-ink-hi">All study tools</span>
-          <span className="font-mono text-[10px] text-ink-faint uppercase tracking-wide">expand</span>
-        </summary>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-3">
-          {STUDY_ACTIONS.map((a) => (
-            <Link
-              key={a.label}
-              href={a.hrefFor(programId, subject)}
-              className="flex items-center gap-3 px-4 py-3 rounded-card border border-bg-border hover:border-signal/60 hover:bg-signal/5 transition-colors group no-underline"
-            >
-              <span className="text-signal shrink-0">
-                <NavIcon name={a.icon} className="w-5 h-5" />
-              </span>
-              <span className="min-w-0">
-                <span className="block font-display font-semibold text-sm text-ink-hi group-hover:text-signal transition-colors">
-                  {a.label}
-                </span>
-                <span className="block text-xs text-ink-lo leading-snug">{a.description}</span>
-              </span>
-            </Link>
-          ))}
-          <Link
-            href={`/planner?subject=${encodeURIComponent(subject.code)}&program=${programSlug(programId)}&minutes=60`}
-            className="flex items-center gap-3 px-4 py-3 rounded-card border border-bg-border hover:border-signal/60 hover:bg-signal/5 transition-colors group no-underline"
-          >
-            <span className="min-w-0">
-              <span className="block font-display font-semibold text-sm text-ink-hi group-hover:text-signal transition-colors">
-                Build My Plan
-              </span>
-              <span className="block text-xs text-ink-lo leading-snug">Time-boxed plan for this subject</span>
-            </span>
-          </Link>
-        </div>
-      </details>
+      <ContinueLearning
+        programId={programId}
+        subjectCode={subject.code}
+        subjectName={subject.name}
+        semesterId={subject.semesterId}
+        subjectSlug={subject.slug}
+      />
 
       {/* Progress */}
       {notesModules.length > 0 && (
@@ -172,29 +108,11 @@ export default function SubjectPage({
         </div>
 
         {notesModules.length > 0 && (
-          <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {notesModules.map((m, i) => (
-                <ModuleCard key={m.id} index={i} module={m} subject={subject} />
-              ))}
-            </div>
-
-            <div className="flex items-center justify-between gap-3 flex-wrap pt-1">
-              <span className="font-display font-semibold text-base text-ink-hi">
-                Study order & progress
-              </span>
-              <ModuleMasteryBadges subjectCode={subject.code} modules={notesModules} programId={programId} />
-            </div>
-
-            <StudyModeSwitcher
-              modules={notesModules}
-              subjectCode={subject.code}
-              subjectName={subject.name}
-              subjectSlug={subject.slug}
-              semesterId={subject.semesterId}
-              programId={programId}
-            />
-          </>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {notesModules.map((m, i) => (
+              <ModuleCard key={m.id} index={i} module={m} subject={subject} />
+            ))}
+          </div>
         )}
 
         {notesModules.length === 0 && syllabusMods.length > 0 && (
@@ -234,17 +152,22 @@ export default function SubjectPage({
       </section>
 
       {/* PYQs */}
-      {notesModules.length > 0 && (
-        <section className="space-y-4">
+      {notesModules.length > 0 && pyqCount > 0 && (
+        <section className="space-y-2">
           <div className="flex items-center justify-between gap-2 flex-wrap border-b border-bg-border/40 pb-2">
-            <span className="eyebrow text-ink-hi">PYQs</span>
+            <span className="eyebrow text-ink-hi">PYQs · {pyqCount} questions</span>
             <Link
               href={`/pyqs?program=${programSlug(programId)}&semester=${subject.semesterId}&subject=${encodeURIComponent(subject.code)}`}
               className="font-mono text-[11px] text-signal hover:text-signal-dim transition-colors uppercase tracking-wider"
             >
-              Open full question bank →
+              Full bank →
             </Link>
           </div>
+          <details className="card px-5 py-4 group">
+            <summary className="cursor-pointer list-none flex items-center justify-between gap-2">
+              <span className="font-display font-semibold text-sm text-ink-hi">Browse by module</span>
+              <span className="font-mono text-[10px] text-ink-faint uppercase tracking-wide">expand</span>
+            </summary>
           <div className="space-y-2">
             {notesModules.map((m) => (
               <section key={m.id} className="space-y-2">
@@ -274,6 +197,7 @@ export default function SubjectPage({
               </section>
             ))}
           </div>
+        </details>
         </section>
       )}
 
@@ -282,7 +206,7 @@ export default function SubjectPage({
         <div className="border-b border-bg-border/40 pb-2">
           <span className="eyebrow text-ink-hi">Notes / Resources</span>
           <p className="text-xs text-ink-lo mt-1 max-w-xl">
-            Exam-focused notes are optional context — the study tools above work even without them.
+            Exam-focused notes are optional context — Continue Learning above works even without them.
           </p>
         </div>
 
@@ -297,8 +221,7 @@ export default function SubjectPage({
           <div className="card p-8 text-center">
             <p className="text-base text-ink-hi mb-1">Notes for this subject aren&apos;t written yet</p>
             <p className="text-sm text-ink-lo">
-              You can still practice, browse PYQs and study with AI — use AI Study below to generate
-              your own notes for this subject.
+              Continue Learning above adapts to this subject anyway — it teaches from your active syllabus.
             </p>
           </div>
         )}

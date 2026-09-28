@@ -21,7 +21,8 @@ export {
   logSession,
 } from "./state";
 export { decideNextAction } from "./decision";
-export { planSession, startSession } from "./session";
+export { planSession, startSession, finishSession } from "./session";
+export type { SessionOutcome } from "./session";
 export { applyMasteryEvidence, masteryLabel6, MASTERY_MIN, MASTERY_MAX } from "./mastery";
 export type { MasteryEvidence } from "./mastery";
 export { mapPyqsToTopics, topicPyqCounts } from "./pyqmap";

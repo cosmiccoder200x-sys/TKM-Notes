@@ -2,11 +2,13 @@ import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import {
   decideNextAction,
   planSession,
+  startSession,
   recordEvidence,
   markRevisionDue,
   logMistake,
   getLearningState,
   learningSubjectKey,
+  finishSession,
 } from "@/lib/learning";
 import { saveVersion } from "@/lib/syllabus";
 import { topicId } from "@/lib/domain";
@@ -146,5 +148,45 @@ describe("planSession", () => {
     expect(plan.steps.length).toBeGreaterThanOrEqual(3);
     expect(plan.steps.reduce((n, s) => n + s.minutes, 0)).toBe(45);
     expect(plan.steps.every((s) => s.minutes >= 1)).toBe(true);
+  });
+});
+
+describe("finishSession", () => {
+  it("strong recall outcome raises mastery from evidence", () => {
+    seed();
+    const a = decideNextAction("ER", "24ERP304", 45);
+    const plan = planSession({ ...a, task: "recall", topicRef: ref("m1", 0), topicTitle: "Arrays" }, 20, "ER", "24ERP304");
+    finishSession({ programId: "ER", subjectCode: "24ERP304", plan, moduleCode: "m1", outcome: "strong" });
+    expect(getLearningState("ER", "24ERP304").topics[ref("m1", 0)].mastery).toBe(1);
+  });
+
+  it("struggled outcome lowers mastery", () => {
+    seed();
+    const a = decideNextAction("ER", "24ERP304", 45);
+    const plan = planSession({ ...a, task: "recall", topicRef: ref("m1", 0), topicTitle: "Arrays" }, 20, "ER", "24ERP304");
+    finishSession({ programId: "ER", subjectCode: "24ERP304", plan, moduleCode: "m1", outcome: "strong" });
+    finishSession({ programId: "ER", subjectCode: "24ERP304", plan, moduleCode: "m1", outcome: "struggled" });
+    expect(getLearningState("ER", "24ERP304").topics[ref("m1", 0)].mastery).toBe(0);
+  });
+
+  it("strong fix outcome resolves the open mistake", () => {
+    seed();
+    logMistake({ programId: "ER", subjectCode: "24ERP304", topicRef: ref("m1", 0), topicTitle: "Arrays", note: "bounds" });
+    const a = decideNextAction("ER", "24ERP304", 30);
+    expect(a.task).toBe("fix");
+    const plan = planSession(a, 30, "ER", "24ERP304");
+    const { resolvedMistakes } = finishSession({ programId: "ER", subjectCode: "24ERP304", plan, moduleCode: "m1", outcome: "strong" });
+    expect(resolvedMistakes).toBe(1);
+    expect(decideNextAction("ER", "24ERP304", 30).task).not.toBe("fix");
+  });
+
+  it("opening a session awards nothing — only the recorded outcome does", () => {
+    seed();
+    const a = decideNextAction("ER", "24ERP304", 45);
+    const plan = planSession({ ...a, task: "teach", topicRef: ref("m1", 0), topicTitle: "Arrays" }, 20, "ER", "24ERP304");
+    startSession("ER", "24ERP304", plan);
+    expect(getLearningState("ER", "24ERP304").topics[ref("m1", 0)]?.mastery ?? null).toBeNull();
+    finishSession({ programId: "ER", subjectCode: "24ERP304", plan, moduleCode: "m1", outcome: "strong" });
+    expect(getLearningState("ER", "24ERP304").topics[ref("m1", 0)].mastery).toBe(1);
   });
 });

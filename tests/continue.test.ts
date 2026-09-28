@@ -8,6 +8,7 @@ import {
   aiStudyHref,
   revisionHref,
 } from "@/lib/learning/continue";
+import { learnUrl } from "@/lib/urls";
 import type { RecommendedAction } from "@/lib/learning";
 
 function actionFor(task: RecommendedAction["task"]): RecommendedAction {
@@ -23,14 +24,21 @@ function actionFor(task: RecommendedAction["task"]): RecommendedAction {
 }
 
 describe("continue learning links", () => {
-  it("maps every task to a prompt-lab mode", () => {
+  it("maps every task to a prompt-lab mode for advanced/manual use", () => {
     expect(Object.keys(MODE_FOR_TASK).sort()).toEqual(["exam", "fix", "practice", "recall", "teach"]);
     for (const task of Object.keys(MODE_FOR_TASK) as RecommendedAction["task"][]) {
       expect(TASK_LABEL[task].length).toBeGreaterThan(0);
     }
   });
 
-  it("continueHref points at prompt-lab with the mapped mode and subject context", () => {
+  it("Continue Learning targets the session route, never Prompt Lab", () => {
+    const href = learnUrl("ER", "s3", "data-structures-and-algorithms");
+    expect(href).toBe("/syllabus/er/s3/data-structures-and-algorithms/learn");
+    expect(href).not.toContain("prompt-lab");
+    expect(learnUrl("CS_AI", "s3", "data-structures-and-algorithms")).toContain("/syllabus/cse-ai/");
+  });
+
+  it("continueHref still builds prompt-lab URLs for advanced use", () => {
     const href = continueHref(actionFor("teach"), "ER", "24ERP304", "data-structures-and-algorithms");
     expect(href).toContain("/prompt-lab");
     expect(href).toContain("mode=learn");

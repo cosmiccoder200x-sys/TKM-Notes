@@ -1,17 +1,16 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { ProgramId } from "@/lib/types";
 import { getEffectiveModules } from "@/lib/syllabus";
 import { getQuestionBank } from "@/lib/pyqs";
+import { learnUrl } from "@/lib/urls";
 import {
   decideNextAction,
   planSession,
   startSession,
   getLearningState,
-  continueHref,
   TASK_LABEL,
 } from "@/lib/learning";
 import type { RecommendedAction } from "@/lib/learning";
@@ -20,11 +19,13 @@ export default function ContinueLearning({
   programId,
   subjectCode,
   subjectName,
+  semesterId,
   subjectSlug,
 }: {
   programId: ProgramId;
   subjectCode: string;
   subjectName: string;
+  semesterId: string;
   subjectSlug: string;
 }) {
   const router = useRouter();
@@ -65,12 +66,10 @@ export default function ContinueLearning({
 
   if (!action || !stats) return null;
 
-  const href = continueHref(action, programId, subjectCode, subjectSlug);
-
   function handleContinue() {
     const plan = planSession(action as RecommendedAction, (action as RecommendedAction).sessionMinutes, programId, subjectCode);
     startSession(programId, subjectCode, plan);
-    router.push(href);
+    router.push(learnUrl(programId, semesterId, subjectSlug));
   }
 
   return (
@@ -89,31 +88,23 @@ export default function ContinueLearning({
       </div>
 
       <div className="space-y-1">
-        <div className="text-xs font-mono uppercase tracking-wider text-ink-faint">Next recommended action</div>
+        <div className="text-xs font-mono uppercase tracking-wider text-ink-faint">Recommended</div>
         <div className="font-display font-semibold text-lg text-ink-hi">
           {TASK_LABEL[action.task]}
           {action.topicTitle ? <span className="text-ink-lo font-normal"> → {action.topicTitle}</span> : null}
         </div>
         <p className="text-sm text-ink-lo">{action.reason}</p>
         <p className="font-mono text-[10px] uppercase tracking-wider text-ink-faint">
-          ≈ {action.sessionMinutes} min · {action.moduleTitle ? `Module: ${action.moduleTitle}` : subjectName}
+          ≈ {action.sessionMinutes} minutes · {action.moduleTitle ? `Module: ${action.moduleTitle}` : subjectName}
         </p>
       </div>
 
-      <div className="flex flex-wrap gap-2">
-        <button
-          onClick={handleContinue}
-          className="font-mono text-[12px] uppercase tracking-wide px-5 py-2.5 rounded-card bg-signal text-bg font-semibold hover:bg-signal/90 transition-colors"
-        >
-          Continue Learning →
-        </button>
-        <Link
-          href={href}
-          className="font-mono text-[11px] uppercase tracking-wide px-4 py-2.5 rounded-card border border-bg-border text-ink-hi hover:border-signal/60 transition-colors"
-        >
-          Open prompt
-        </Link>
-      </div>
+      <button
+        onClick={handleContinue}
+        className="font-mono text-[12px] uppercase tracking-wide px-5 py-2.5 rounded-card bg-signal text-bg font-semibold hover:bg-signal/90 transition-colors"
+      >
+        Continue Learning →
+      </button>
     </section>
   );
 }
