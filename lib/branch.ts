@@ -10,11 +10,11 @@ export const PRODUCT_NAME = "TKM Notes";
 export const PRODUCT_TAGLINE = "Exam-focused notes & AI study tools for TKM CE.";
 export const PRODUCT_POSITIONING = "Study less. Prioritize better.";
 
-export const BRANCH_NAME = "ECE";
+export const BRANCH_NAME = "Electrical & Computer Engineering";
 export const BRANCH_SHORT = "EC Engineering";
 export const BRANCH_RANGE = "S3–S8";
 export const BRANCH_TAGLINE = "Exam-focused · No distractions";
-export const BRANCH_FULL = "TKM College of Engineering · ECE";
+export const BRANCH_FULL = "TKM College of Engineering · Electrical & Computer Engineering";
 
 // Derived from the canonical program registry in lib/domain.ts.
 export const PROGRAM_OPTIONS: { id: "ER" | "CS" | "CS_AI"; label: string; short: string }[] = PROGRAMS.map((p) => ({
