@@ -194,18 +194,38 @@ export function generatePromptLabUrl(
 // Subject category for tailored instructions
 export type SubjectCategory = "dsa" | "math" | "digital" | "circuit" | "theory" | "general";
 
+// Name-based keyword classifier covering ER, CS and CS_AI.
+// Looks up the canonical subject name so shared codes (e.g. 24CSP304)
+// resolve correctly for their program, and electives/seminars fall
+// back to "general" rather than a wrong category.
+// Keywords use leading \b only so plurals like "Algorithms" still match.
+const SUBJECT_NAME_RULES: [SubjectCategory, RegExp][] = [
+  ["math", /\b(mathemat|signal|control|transform|discrete|optimization|differential|probability|statistics|linear program|fuzzy|network theory|time series|engineering mechanics)\b/i],
+  ["digital", /\b(digital|computer\s*graphics|augmented|virtual\s*reality|image\s*processing|architecture)\b/i],
+  ["circuit", /\b(circuit|power electron|sensor|electronics|electrical|energy\s*system|energy)\b/i],
+  ["theory", /\b(human|management|economics|environment|constitution|life skill|professional ethic|project management|finance|accounting|entrepreneurship|business analytic|commerce)\b/i],
+  ["dsa", /\b(algorithm|data\s*struct|computation|automata|compiler|programming|computing|software|database|web\s*tech|mobile|cloud|security|machine\s*learning|deep\s*learning|artificial\s*intelligence|neural|natural\s*language|computer\s*vision|computer\s*network|speech|data\s*mining|mining|data|bioinformatics|bio|embedded\s*system|internet\s*of\s*things|iot|cyber|ethical|blockchain|distributed|parallel|high\s*performance|graph|object\s*oriented|design\s*and\s*analysis|operating|medical|information|secure|coding|retrieval|compression|analytics|reinforcement|explainable|swarm|devops|agile|scripting|responsible|sensing)/i],
+];
+
 export function getSubjectCategory(subjectCode: string): SubjectCategory {
-  const dsa = ["24ERP304", "24ERP504", "24ERT507", "24ERP601", "24ERP701"];
-  const math = ["24MAP301", "24ERT402", "24ERT501", "24ERT603"];
-  const digital = ["24ERJ303", "24ERJ404", "24ERJ502"];
-  const circuit = ["24EST332", "24ERP403", "24ERT305", "24ESP307", "24ERP602"];
-  const theory = ["24HUT310", "24HUT435", "24HUT535", "24MCT406", "24MCT506"];
-  
-  if (dsa.includes(subjectCode)) return "dsa";
-  if (math.includes(subjectCode)) return "math";
-  if (digital.includes(subjectCode)) return "digital";
-  if (circuit.includes(subjectCode)) return "circuit";
-  if (theory.includes(subjectCode)) return "theory";
+  // Explicit code list — authoritative, program-aware where codes collide.
+  const dsaCodes = ["24ERP304", "24ERP504", "24ERT507", "24ERP601", "24ERP701"];
+  const mathCodes = ["24MAP301", "24MAP300", "24ERT402", "24ERT501", "24ERT603"];
+  const digitalCodes = ["24ERJ303", "24ERJ404", "24ERJ502"];
+  const circuitCodes = ["24EST332", "24ERP403", "24ERT305", "24ESP307", "24ERP602"];
+  const theoryCodes = ["24HUT310", "24HUT435", "24HUT535", "24MCT406", "24MCT506"];
+
+  if (dsaCodes.includes(subjectCode)) return "dsa";
+  if (mathCodes.includes(subjectCode)) return "math";
+  if (digitalCodes.includes(subjectCode)) return "digital";
+  if (circuitCodes.includes(subjectCode)) return "circuit";
+  if (theoryCodes.includes(subjectCode)) return "theory";
+
+  // Fallback: keyword classification by canonical subject name.
+  const name = subjects.find((s) => s.code === subjectCode)?.name ?? "";
+  for (const [category, pattern] of SUBJECT_NAME_RULES) {
+    if (pattern.test(name)) return category;
+  }
   return "general";
 }
 
