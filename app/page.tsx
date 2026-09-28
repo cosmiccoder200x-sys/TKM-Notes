@@ -1,6 +1,5 @@
 import Link from "next/link";
 import SemesterExplorer from "@/components/SemesterExplorer";
-import StudyTools from "@/components/StudyTools";
 import PaletteButton from "@/components/PaletteButton";
 import BranchSelect from "@/components/navigation/BranchSelect";
 import BranchPicker from "@/components/BranchPicker";

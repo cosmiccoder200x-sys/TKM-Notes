@@ -163,9 +163,15 @@ describe("finishSession", () => {
   it("struggled outcome lowers mastery", () => {
     seed();
     const a = decideNextAction("ER", "24ERP304", 45);
-    const plan = planSession({ ...a, task: "recall", topicRef: ref("m1", 0), topicTitle: "Arrays" }, 20, "ER", "24ERP304");
-    finishSession({ programId: "ER", subjectCode: "24ERP304", plan, moduleCode: "m1", outcome: "strong" });
-    finishSession({ programId: "ER", subjectCode: "24ERP304", plan, moduleCode: "m1", outcome: "struggled" });
+    const first = planSession({ ...a, task: "recall", topicRef: ref("m1", 0), topicTitle: "Arrays" }, 20, "ER", "24ERP304");
+    startSession("ER", "24ERP304", first);
+    finishSession({ programId: "ER", subjectCode: "24ERP304", plan: first, moduleCode: "m1", outcome: "strong" });
+    expect(getLearningState("ER", "24ERP304").topics[ref("m1", 0)].mastery).toBe(1);
+
+    // A genuinely separate session, not a re-finish of the same plan
+    const second = planSession({ ...a, task: "recall", topicRef: ref("m1", 0), topicTitle: "Arrays" }, 20, "ER", "24ERP304");
+    startSession("ER", "24ERP304", second);
+    finishSession({ programId: "ER", subjectCode: "24ERP304", plan: second, moduleCode: "m1", outcome: "struggled" });
     expect(getLearningState("ER", "24ERP304").topics[ref("m1", 0)].mastery).toBe(0);
   });
 
@@ -248,6 +254,35 @@ describe("session lifecycle regression", () => {
     expect(stateAfterSecondFinish.sessions.length).toBe(1);
   });
 
+  it("re-finishing the same plan records evidence only once", () => {
+    seed();
+    const a = decideNextAction("ER", "24ERP304", 45);
+    const plan = planSession({ ...a, task: "recall", topicRef: ref("m1", 0), topicTitle: "Arrays" }, 20, "ER", "24ERP304");
+    startSession("ER", "24ERP304", plan);
+
+    const first = finishSession({ programId: "ER", subjectCode: "24ERP304", plan, moduleCode: "m1", outcome: "strong" });
+    expect(first.duplicate).toBe(false);
+    expect(getLearningState("ER", "24ERP304").topics[ref("m1", 0)].mastery).toBe(1);
+
+    const second = finishSession({ programId: "ER", subjectCode: "24ERP304", plan, moduleCode: "m1", outcome: "strong" });
+    expect(second.duplicate).toBe(true);
+    // Mastery must not inflate on the second finish
+    expect(getLearningState("ER", "24ERP304").topics[ref("m1", 0)].mastery).toBe(1);
+    expect(getLearningState("ER", "24ERP304").sessions.length).toBe(1);
+  });
+
+  it("re-finishing a fix session does not resolve the same mistake twice", () => {
+    seed();
+    logMistake({ programId: "ER", subjectCode: "24ERP304", topicRef: ref("m1", 0), topicTitle: "Arrays", note: "bounds" });
+    const a = decideNextAction("ER", "24ERP304", 30);
+    const plan = planSession(a, 30, "ER", "24ERP304");
+
+    const first = finishSession({ programId: "ER", subjectCode: "24ERP304", plan, moduleCode: "m1", outcome: "strong" });
+    expect(first.resolvedMistakes).toBe(1);
+    const second = finishSession({ programId: "ER", subjectCode: "24ERP304", plan, moduleCode: "m1", outcome: "strong" });
+    expect(second.resolvedMistakes).toBe(0);
+  });
+
   it("mastery remains unchanged before evidence", () => {
     seed();
     const a = decideNextAction("ER", "24ERP304", 45);
@@ -284,17 +319,20 @@ describe("session lifecycle regression", () => {
 
   it("next recommendation changes according to new evidence", () => {
     seed();
-    // Initially, topic is unstarted, should recommend teach
-    let a = decideNextAction("ER", "24ERP304", 45);
-    expect(a.task).toBe("teach");
+    // Nothing assessed yet — the engine walks the syllabus in order
+    const initial = decideNextAction("ER", "24ERP304", 45);
+    expect(initial.task).toBe("teach");
+    expect(initial.topicTitle).toBe("Arrays");
 
-    // After correct recall, topic should be ready for practice/revision
+    // Giving evidence to a LATER topic must pull the recommendation onto it,
+    // because an assessed-but-weak topic outranks a merely unstarted one.
     recordEvidence({
-      programId: "ER", subjectCode: "24ERP304", topicRef: ref("m1", 0),
-      moduleCode: "m1", topicIndex: 0, title: "Arrays", kind: "recall", result: "correct",
+      programId: "ER", subjectCode: "24ERP304", topicRef: ref("m2", 0),
+      moduleCode: "m2", topicIndex: 0, title: "Bubble sort", kind: "recall", result: "correct",
     });
-    a = decideNextAction("ER", "24ERP304", 45);
-    // Recommendation should change based on updated state
-    expect(a.task).toBeDefined();
+
+    const after = decideNextAction("ER", "24ERP304", 45);
+    expect(after.topicTitle).toBe("Bubble sort");
+    expect(after.reason).toContain("Bubble sort");
   });
 });

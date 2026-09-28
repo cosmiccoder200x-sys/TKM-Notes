@@ -19,6 +19,8 @@ export {
   resolveMistake,
   openMistakes,
   logSession,
+  completeSession,
+  isSessionFinished,
 } from "./state";
 export { decideNextAction } from "./decision";
 export { planSession, startSession, finishSession } from "./session";

@@ -2,6 +2,24 @@
   "name": "tkm-s3-s8-notes",
   "version": "1.0.0",
   "private": true,
+  "description": "Adaptive university exam-learning platform for TKM College of Engineering (KTU 2024) that turns syllabus, PYQs, mastery, mistakes, and available study time into a single prioritized learning session.",
+  "keywords": [
+    "nextjs",
+    "typescript",
+    "education",
+    "exam-preparation",
+    "spaced-repetition",
+    "ktu"
+  ],
+  "homepage": "https://github.com/cosmicoder200x-sys/TKM-Notes#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cosmicoder200x-sys/TKM-Notes.git"
+  },
+  "author": "Sreerang <sreerang@tkm.edu>",
+  "bugs": {
+    "url": "https://github.com/cosmicoder200x-sys/TKM-Notes/issues"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",

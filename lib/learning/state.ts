@@ -199,3 +199,8 @@ export function completeSession(
   saveLearningState(state);
   return true;
 }
+
+export function isSessionFinished(programId: ProgramId, subjectCode: string, planId: string): boolean {
+  const state = getLearningState(programId, subjectCode);
+  return state.sessions.some((s) => s.planId === planId && s.finishedAt !== null);
+}

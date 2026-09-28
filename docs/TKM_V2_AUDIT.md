@@ -7,6 +7,11 @@ This document is the pre-implementation baseline required by the V2 spec (§4).
 No code was changed to produce it. A companion target design lives in
 `docs/TKM_V2_ARCHITECTURE.md`.
 
+> **Historical document.** The UI names described below (`StudyModeSwitcher`, the
+> "What do you want to do?" grid, "Build My Plan") are recorded as-found at the baseline
+> commit and no longer exist in the app. For the architecture as actually implemented, read
+> [`docs/ARCHITECTURE.md`](ARCHITECTURE.md) and [`README.md`](../README.md).
+
 ## 1. Existing architecture
 
 ### Frontend

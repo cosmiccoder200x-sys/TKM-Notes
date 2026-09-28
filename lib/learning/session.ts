@@ -1,4 +1,4 @@
-import { learningSubjectKey, logSession, completeSession, recordEvidence, resolveMistake, openMistakes, getLearningState } from "./state";
+import { learningSubjectKey, logSession, completeSession, isSessionFinished, recordEvidence, resolveMistake, openMistakes, getLearningState } from "./state";
 import type { RecommendedAction, SessionStep, StudySessionPlan } from "./types";
 import type { EvidenceKind, EvidenceResult } from "./types";
 import type { LearningTask } from "./prompts/types";
@@ -75,14 +75,29 @@ const OUTCOME_RESULT: Record<SessionOutcome, EvidenceResult> = {
   struggled: "incorrect",
 };
 
+function topicIndexFromRef(ref: string): number | null {
+  const parts = ref.split(":");
+  if (parts.length < 4) return null;
+  const index = Number(parts[3]);
+  return Number.isInteger(index) ? index : null;
+}
+
 export function finishSession(input: {
   programId: ProgramId;
   subjectCode: string;
   plan: StudySessionPlan;
   moduleCode: string | null;
   outcome: SessionOutcome;
-}): { resolvedMistakes: number } {
+}): { resolvedMistakes: number; duplicate: boolean } {
   const { programId, subjectCode, plan, moduleCode, outcome } = input;
+
+  // Evidence and completion are recorded exactly once per plan. Re-finishing an
+  // already-finished plan is a no-op so a double-click, a re-render, or a
+  // retried event cannot inflate mastery or drain the mistake queue twice.
+  if (isSessionFinished(programId, subjectCode, plan.id)) {
+    return { resolvedMistakes: 0, duplicate: true };
+  }
+
   let resolvedMistakes = 0;
   if (plan.topicRef && moduleCode) {
     recordEvidence({
@@ -90,7 +105,7 @@ export function finishSession(input: {
       subjectCode,
       topicRef: plan.topicRef,
       moduleCode,
-      topicIndex: null,
+      topicIndex: topicIndexFromRef(plan.topicRef),
       title: plan.topicTitle ?? plan.topicRef,
       kind: OUTCOME_EVIDENCE[plan.task],
       result: OUTCOME_RESULT[outcome],
@@ -113,5 +128,5 @@ export function finishSession(input: {
       finishedAt: Date.now(),
     });
   }
-  return { resolvedMistakes };
+  return { resolvedMistakes, duplicate: false };
 }

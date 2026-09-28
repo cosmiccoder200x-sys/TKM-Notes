@@ -108,16 +108,10 @@ export default function HomeStudyStatus() {
         </div>
         <div className="flex flex-col gap-2 shrink-0">
           <Link
-            href="/planner"
+            href={fallbackHref ?? "/syllabus/cse"}
             className="font-mono text-xs uppercase tracking-wide px-4 py-2.5 rounded-card bg-signal text-bg font-semibold hover:bg-signal/90 transition-colors text-center"
           >
-            Build My Plan →
-          </Link>
-          <Link
-            href={fallbackHref ?? "/syllabus/cse"}
-            className="font-mono text-xs uppercase tracking-wide px-4 py-2.5 rounded-card border border-bg-border text-ink-hi hover:border-signal hover:text-signal transition-colors text-center"
-          >
-            Start Practice
+            Start learning →
           </Link>
         </div>
       </section>

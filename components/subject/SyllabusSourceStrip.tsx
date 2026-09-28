@@ -3,9 +3,16 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import type { ProgramId } from "@/lib/types";
+import type { SyllabusSource, SyllabusVersion } from "@/lib/syllabus";
 import { getEffectiveVersion, syllabusToText } from "@/lib/syllabus";
 import { syllabusManagerUrl } from "@/lib/urls";
 import { copyToClipboard } from "@/lib/prompts/utils";
+
+const SOURCE_LABEL: Record<SyllabusSource, string> = {
+  official: "Official syllabus",
+  user_pasted: "Pasted syllabus",
+  user_edited: "Edited syllabus",
+};
 
 export default function SyllabusSourceStrip({
   programId,
@@ -20,7 +27,7 @@ export default function SyllabusSourceStrip({
   subjectSlug: string;
   subjectName: string;
 }) {
-  const [version, setVersion] = useState<any | null>(null);
+  const [version, setVersion] = useState<SyllabusVersion | null>(null);
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
@@ -28,10 +35,7 @@ export default function SyllabusSourceStrip({
   }, [programId, subjectCode]);
 
   const modules = version?.modules.length ?? 0;
-  const topics = version?.modules.reduce(
-    (n: number, m: { title: string; topics: { title: string }[] }) => n + m.topics.length,
-    0
-  ) ?? 0;
+  const topics = version?.modules.reduce((n, m) => n + m.topics.length, 0) ?? 0;
 
   async function handleCopy() {
     if (!version) return;
@@ -49,7 +53,7 @@ export default function SyllabusSourceStrip({
         <div className="text-xs text-ink-lo">
           {version ? (
             <>
-              Official syllabus
+              {SOURCE_LABEL[version.source]}
               {modules > 0 && (
                 <span className="text-ink-faint">
                   {" "}· {modules} modules{topics > 0 ? ` · ${topics} topics` : ""}

@@ -80,7 +80,10 @@ components/
   SemesterExplorer.tsx, SubjectCard.tsx, DeepDivePrompt.tsx
   ModuleAccordion.tsx        One-module-at-a-time accordion.
   ModuleView.tsx, ModulePriorityBadge.tsx, ModuleView.tsx
-  StudyModeSwitcher.tsx      Learn / Practice / Exam / Revise mode tabs on subject page.
+  subject/                   ContinueLearning.tsx (decision CTA — navigates only, never
+                             starts a session), LearnSession.tsx (overview/active/finish
+                             lifecycle), SyllabusSourceStrip.tsx (source label + copy),
+                             SubjectHeader.tsx, SubjectProgress.tsx, ModuleCard.tsx
   WeightMeter.tsx, PriorityLabel.tsx, TopicTOC.tsx
   Notes.tsx, Diagrams.tsx, InteractiveDiagrams.tsx, ComparisonCard.tsx,
   WorkedExampleCard.tsx, SelfCheck.tsx
@@ -128,6 +131,41 @@ lib/
     data-structures-and-algorithms.ts, network-theory.ts, advanced-linear-algebra-*.ts,
     digital-electronics-and-logic-design.ts, sensor-and-sensor-circuits.ts,
     life-skills-and-professional-ethics.ts, system-simulation-and-virtual-instrumentation-lab.ts
+  learning/                   V2 LEARNING ENGINE — pure, synchronous, no React imports.
+    index.ts, types.ts        Barrel + domain types (TopicLearningState, MistakeRecord,
+                              StudySessionRecord with planId, RecommendedAction, SessionStep).
+    state.ts                  localStorage store `tkm.v2.learning.v1` keyed by
+                              "programId:subjectCode". recordEvidence, markRevisionDue,
+                              logMistake/resolveMistake/openMistakes, logSession
+                              (idempotent per planId), completeSession, isSessionFinished.
+                              Caps: 20 sessions, 50 mistakes. safeRead/safeWrite degrade
+                              silently when storage is unavailable.
+    decision.ts               decideNextAction() — PURE deterministic priority cascade:
+                              open mistake → due revision → weak-but-assessed → next
+                              unassessed → exam check. Returns task + topic + reason.
+    session.ts                planSession() (weighted steps, remainder to last step so
+                              minutes sum exactly to budget), startSession(), finishSession()
+                              (idempotent per planId: evidence + mistake resolution +
+                              completion recorded exactly once, returns {resolvedMistakes,
+                              duplicate}).
+    mastery.ts                applyMasteryEvidence() 0–6. taught = no change; partial = 0;
+                              correct pyq = +2, correct practice = +2 hard/+1, other = +1;
+                              incorrect = −1. null ≠ 0 (null = unassessed).
+    pyqmap.ts                 mapPyqsToTopics() token-overlap mapping (≥2 shared significant
+                              tokens required), topicPyqCounts(). Program-scoped.
+    continue.ts               MODE_FOR_TASK / TASK_LABEL / continueHref etc.
+    prompts/                  buildTaskPrompt() for TEACH (Zero→Pro), RECALL, PRACTICE,
+                              EXAM (high-yield pack), FIX. Context = syllabus + state +
+                              mistakes + PYQs + priority + minutes.
+  syllabus/                   Versioned syllabus store `tkm.v2.syllabus.v1`.
+    types.ts                  SyllabusSource ("official"|"user_pasted"|"user_edited"),
+                              SyllabusVersion, SyllabusModule, SyllabusTopic.
+    versions.ts               listVersions, getActiveVersion, saveVersion, activateVersion,
+                              deleteVersion, buildOfficialVersion, getEffectiveVersion,
+                              getEffectiveModules.
+    parse.ts                  parseSubjectSyllabus, detectSubjects, parseFullSyllabus.
+    match.ts, export.ts       notes/PYQ matching; syllabusToText for copy action.
+  pyqs.ts                     Question bank (ACTUAL / variation / new-practice labels).
   prompts/                   Prompt system (definitions separate from UI).
     prompts.ts               The 11 StudyPrompt definitions + subject-specific instruction builders.
     context.ts               StudyContext type, buildContextFromParams, generatePromptLabUrl,

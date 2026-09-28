@@ -151,8 +151,10 @@ export default function LearnSession({
                 <button
                   key={m}
                   onClick={() => setMinutes(m)}
+                  disabled={phase !== "overview"}
                   aria-pressed={minutes === m}
-                  className={`font-mono text-xs px-3 py-1.5 rounded-card border transition-colors ${
+                  title={phase === "overview" ? undefined : "Time is locked once the session starts"}
+                  className={`font-mono text-xs px-3 py-1.5 rounded-card border transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
                     minutes === m ? "border-signal text-signal bg-signal/10" : "border-bg-border text-ink-lo"
                   }`}
                 >

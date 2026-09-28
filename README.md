@@ -1,305 +1,286 @@
 # TKM Notes
 
-**Your AI exam preparation system.** Study less.Prioritize better
+> An adaptive university exam-learning platform that transforms syllabus, PYQs, mastery, mistakes, and study time into personalized learning sessions.
 
-AI exam preparation workspace for TKM College of Engineering (EC Engineering, 2024 scheme), S3–S8. **TKM Notes ranks every topic by real exam weightage** and turns your available time into a prioritized, reason-backed study plan. Prompt Lab supplies the AI prompts — find the best prompt for whatever you need to do, copy it, and use it with ChatGPT, Gemini, Claude or any AI. Exam-focused notes are the verified context that makes everything specific. One job only: help you score full marks. No chatbots, no trackers, no fluff.
-
----
-
-## How to Use This Website Effectively
-
-### The 30-second version
-
-> Open TKM Notes → answer "what should I study now?" → get a prioritized plan with reasons → open the modules in order → practice the HIGH PRIORITY questions → revise → score.
-
-### Step-by-step study workflow
-
-#### 1. Start from the homepage
-
-The homepage is your study dashboard. You'll see:
-
-- **Hero planner** — pick a subject + time, hit **Generate My Plan** for an instant prioritized plan
-- **My Preparation** — overall mastery %, weak areas, and how many hours it'll take to close them
-- **Current Semester** (S3 by default) with all subjects listed
-- **Study Tools** — quick links to Prompt Lab modes and Night-Before revision
-- **All Semesters** — switch to S3–S8 with one click
-
-#### 2. Open a subject
-
-Each subject card shows:
-- Subject code (e.g. `24ERJ303`)
-- Full name
-- Number of modules available
-- Category tag (Computer / Electronics / Mathematics / Core)
-
-Click any subject to open its study workspace.
-
-#### 3. Navigate modules with the accordion
-
-Modules are shown **one at a time** in an accordion layout. Module 01 opens by default. Click any other module header to switch to it. Each open module shows:
-
-- **Learn / Practice / Exam / Revise** buttons at the top — these take you to Prompt Lab pre-loaded with that module's context
-- **Section tabs** to navigate the module's content
-
-#### 4. Use the 9 section tabs inside each module
-
-Every module has up to 9 sections. Work through them in this order for best results:
-
-| Tab | What it's for | When to use it |
-|---|---|---|
-| **Overview** | 2-minute summary + why it matters in exams + intuition analogy | First pass — understand the big picture |
-| **Concepts** | Bullet-point core ideas in exam wording | After overview — build the mental framework |
-| **Definitions** | Must-memorize terms, exam-ready format | Write these down — they come up in 2-mark questions |
-| **Diagrams** | Visual explanations (some interactive with sliders) | Study alongside concepts — visuals stick better |
-| **Formulas** | Copy-friendly, monospace formula sheet | Keep this tab open during numerical practice |
-| **Practice** | Step-by-step worked examples (reveal one step at a time) | Try to predict each step before revealing it |
-| **Compare** | Side-by-side cards for confusing pairs (Mealy vs Moore, etc.) | Use when you keep mixing up two similar concepts |
-| **Exam Focus** | Real KTU-style questions, tagged **HIGH PRIORITY** / **IMPORTANT** / Low, grouped by question type | This is the most important tab before an exam |
-| **Self-Check** | Tap-to-reveal questions to test yourself | Final check — if you can answer these, you're ready |
-| **Revision** | Ultra-short one-page night-before-the-exam bullets | Last day before the exam, go through these |
-
-#### 4b. Study Planner (the core TKM Notes feature)
-
-- **Priority system** — every module shows a **Must Learn / Core / Support** badge. Click it for *why*: real exam weightage, module position, and high-priority question counts. Never a guess.
-- **AI Study Planner** (`/planner` or "Generate My Plan" anywhere) — pick a subject, tick the modules, choose time available and how far along you are. TKM Notes returns a time-boxed plan: what to learn, which HIGH PRIORITY questions to practice, what to revise, and honest reasons for each step — based on verified syllabus data plus your own mastery marks.
-- **Study Modes** — on every subject page: **Learn / Exam / Last-Minute / Revision**. Each mode re-curates the module list for that goal (Last-Minute shows only modules the paper actually rewards).
-- **Exam Focus grouping** — questions are grouped by answer type (Explain, Derive, Calculate, Compare, Design…) so you spot the pattern before the exam.
-
-#### 5. Use Prompt Lab for AI-powered study
-
-Prompt Lab is a library of copy-ready prompts for any AI (Claude, ChatGPT, Gemini, etc.). Every prompt works standalone: open a prompt, copy it, paste it into your AI. No subject, module or notes required. Add your notes as **optional context** (via semester → subject → module → topic) to make responses more specific.
-
-Access it from:
-- **Prompt Lab** section at the top of the homepage
-- **Study Tools** section on the homepage
-- **Learn / Practice / Exam / Revise** buttons on any module (auto-fills context)
-- The navigation bar
-
-Study prompts include:
-
-| Category | Prompt | What it does |
-|---|---|---|
-| LEARN | **Learn** | Explains a topic from scratch, step by step |
-| LEARN | **Active Recall** | Tests what you remember with one question at a time |
-| PRACTICE | **Problem Solver** | Builds problem-solving ability with guided hints |
-| PRACTICE | **Mistake Fixer** | Finds the exact error in a wrong answer |
-| EXAM | **PYQ Intelligence** | Analyzes previous year question patterns |
-| EXAM | **Exam Answer** | Writes a marks-focused model answer for a question |
-| EXAM | **Mock Exam** | Generates a full mock question paper |
-| EXAM | **Score 90+** | Builds a day-by-day marks-maximization strategy |
-| REVISION | **Revision** | Creates a compressed, time-boxed revision plan |
-| ANALYZE | **Strict Examiner** | Evaluates your answer like a university examiner |
-
-**Pro tip:** Use the module-level buttons (Learn / Practice / Exam / Revise) — they pre-fill the subject and module as optional context so the prompt is already tailored.
-
-#### 6. Use keyboard search (Ctrl+K / ⌘K)
-
-Press `Ctrl+K` (Windows) or `⌘K` (Mac) anywhere on the site to open the command palette. It searches across:
-
-- Subjects
-- Modules
-- Definitions
-- Concepts
-- Formulas
-- Exam questions
-- Revision bullets
-- Worked examples
-- Self-check questions
-- Comparison cards
-- Intuition analogies
-
-Type a keyword like "flip flop" or "Thevenin" and jump directly to the relevant module.
-
-#### 7. Exam-week strategy
-
-If you have limited time, follow this priority order for each subject:
-
-1. **Exam Focus tab** — study all HIGH PRIORITY questions first
-2. **Definitions tab** — memorize terms (easy marks)
-3. **Formulas tab** — have the formula sheet ready
-4. **Revision tab** — speed-read the bullets
-5. **Prompt Lab → Exam Answer mode** — generate model answers for questions you're unsure about
-
-### On mobile
-
-- Use the **bottom navigation bar** (Home / Subjects / Prompt Lab / Search)
-- All content is responsive — no pinch-zoom needed
-- Search works from the bottom nav too
+Built for TKM College of Engineering, KTU 2024 scheme, Semesters S3–S8.
 
 ---
 
-## Project structure
+## Problem
 
-```
-app/
-  page.tsx                         → homepage: study dashboard + quick planner
-  error.tsx                        → error boundary
-  not-found.tsx                    → 404 page
-  loading.tsx                      → homepage skeleton
-  planner/page.tsx                 → AI study planner ("what should I study now?")
-  syllabus/page.tsx                → branch-aware syllabus index
-  syllabus/[program]/page.tsx      → branch hub (er / cse / cse-ai)
-  syllabus/[program]/[semester]/page.tsx → subject grid for a branch+semester
-  syllabus/[program]/[semester]/[subject]/page.tsx → subject workspace + module accordion
-  syllabus/[program]/[semester]/[subject]/mastery/page.tsx → mastery map
-  coverage/page.tsx                → per-branch notes/PYQ/module coverage dashboard
-  admin/page.tsx                   → data-integrity overview
-  [semester]/page.tsx              → legacy ER route (redirects to /syllabus/er/<sem>)
-  prompt-lab/page.tsx              → AI study prompt builder
-  layout.tsx, globals.css          → dark theme shell, fonts
+Engineering students typically have all the raw material and none of the direction:
 
-components/
-  Header.tsx                       → sticky header with nav + search
-  MobileNav.tsx                    → bottom tab bar (mobile)
-  ModuleAccordion.tsx              → one-module-at-a-time accordion (hash-aware deep links)
-  ModuleView.tsx                   → renders all section tabs for a module (question-type groups)
-  ModulePriorityBadge.tsx          → Must Learn / Core / Support badge with "why" reasons
-  StudyModeSwitcher.tsx            → Learn / Exam / Last-Minute / Revision modes
-  SemesterExplorer.tsx             → semester tab selector + subject grid
-  StudyTools.tsx                   → study tool cards
-  SubjectCard.tsx                  → subject card with code, name, modules
-  CommandPalette.tsx               → Ctrl+K search modal
-  PaletteButton.tsx                → search trigger button
-  WeightMeter.tsx                  → exam-frequency indicator (low/med/high)
-  Diagrams.tsx                     → named inline-SVG diagrams
-  InteractiveDiagrams.tsx          → draggable-slider diagrams
-  DeepDivePrompt.tsx               → AI deep-dive prompt generator
-  WorkedExampleCard.tsx            → step-reveal practice problems
-  ComparisonCard.tsx               → side-by-side concept comparisons
-  SelfCheck.tsx                    → tap-to-reveal self-check questions
-  prompt-lab/                      → Prompt Lab UI components
-  planner/                         → Study Planner UI components
-  mastery/                         → mastery map + preparation dashboard components
+- a large official syllabus with little structure for revision
+- scattered notes that don't reflect exam weightage
+- previous-year questions with no clear topic mapping
+- topics they *think* they know but consistently get wrong
+- limited preparation time
 
-lib/
-  types.ts                         → content data model
-  content.ts                       → 259 subjects (ER 38 + CSE 108 + CSE [AI] 113), S3–S8
-  syllabusData.ts                  → AUTO-GENERATED CSE/CSE[AI] syllabus from KTU 2024 JSON
-  urls.ts                          → branch-aware URL helpers (subjectUrl, masteryUrl, …)
-  branch.ts                        → product identity + branch + subject categories
-  search.ts                        → search logic (all content types)
-  notes/                           → ONE FILE PER SUBJECT (content data)
-    index.ts                       → registry: programId-subjectCode → content
-  study/                           → exam-preparation engine (pure, deterministic)
-    priority.ts                    → topic priority + study-time estimates
-    questionTypes.ts               → exam-question grouping by answer type
-    planner.ts                     → AI study plan generator
-    nightBefore.ts                 → night-before revision plan generator
-    mastery.ts, progress.ts        → mastery scoring + localStorage progress
-    recommendations.ts             → "what should I study next"
-  prompts/                         → AI prompt system
-    prompts.ts                     → prompt definitions
-    context.ts                     → context-aware URL generation
-    types.ts, utils.ts             → prompt types and utilities
+Nobody tells them what to study **next**. They guess, or they re-read everything, or they
+avoid the weak modules entirely. TKM Notes replaces that guesswork with a decision engine
+that reads their syllabus, PYQs, mastery, mistakes, and revision state, and returns one
+recommended action with a stated reason.
 
-docs/
-  syllabus-reference.txt           → KTU syllabus source of truth (ER branch)
+## Core Learning Loop
+
+```text
+ASSESS
+   ↓
+PRIORITIZE
+   ↓
+LEARN
+   ↓
+RECALL
+   ↓
+PRACTICE / PYQ
+   ↓
+CHECK
+   ↓
+FIX
+   ↓
+UPDATE MASTERY
+   ↓
+RECOMMEND NEXT ACTION
 ```
 
-## Every module always has exactly 7 core sections
+The loop is closed: every session ends in recorded evidence, evidence updates mastery, and
+mastery drives the next recommendation.
 
-`Module` in `lib/types.ts` enforces this — there is no way to add a module without all 7:
+## How It Works
 
-1. `overview` — 2-minute summary + why it matters in exams
-2. `coreConcepts` — bullet points, exam wording
-3. `definitions` — must-memorize, card format
-4. `diagrams` — references a named SVG in `components/Diagrams.tsx`
-5. `formulas` — copy-friendly, monospace
-6. `examFocus` — real KTU-style questions tagged HIGH PRIORITY / IMPORTANT / Low
-7. `revisionNotes` — one-page, night-before-the-exam format
+1. **Syllabus provides the academic structure.** The official KTU syllabus is imported into a
+   versioned store. Modules and topics are the unit of study, and the syllabus is the source
+   of truth — not notes, not prompts.
+2. **PYQs provide exam relevance.** Questions map to topics, so a topic's priority reflects how
+   often it has actually been asked rather than how interesting it reads.
+3. **Learning State tracks the student.** Per topic: mastery (0–6), exposure, last studied, and
+   revision-due timestamps. Per subject: open mistakes and a bounded session log.
+4. **Decision Engine selects the next action.** `decideNextAction()` is a pure, deterministic
+   function. It resolves open mistakes to `FIX`, due revisions to `RECALL`, weak-but-started
+   topics to `PRACTICE`, unstarted topics to `TEACH`, and falls back to `EXAM` when a subject is
+   broadly assessed. It returns the task, the topic, and a human-readable reason.
+5. **Session Planner converts the action into a time-boxed session.** `planSession()` distributes
+   the chosen duration across task-specific steps that sum exactly to the budget.
+6. **Prompt Engine creates contextual study instructions.** The task, topic, syllabus titles,
+   topic states, mistakes, and mapped PYQs are assembled into a structured prompt. `TEACH` uses
+   the Zero→Pro teaching chain; `EXAM` uses the high-yield exam pack.
+7. **Evidence updates mastery.** The student records how the session went. Only that outcome
+   writes evidence — never opening a lesson or starting a session.
+8. **The next recommendation is recalculated** from the updated state.
 
-Plus optional sections: `intuition`, `workedExamples`, `comparisons`, `selfCheck`, `crossLinks`.
+## Key Engineering Features
 
-## Adding a new subject's notes
+- **Versioned syllabus system** — official, user-pasted, and user-edited versions with an
+  explicit active version; a paste never silently replaces the canonical official syllabus.
+- **Program-scoped academic identity** — course codes are *not* globally unique (`24CSP304` exists
+  in two programmes), so identity is always `(programId, subjectCode)` via namespaced stable ids.
+- **Deterministic recommendation engine** — same state in, same recommendation out. No
+  randomness, no clock dependence, no hidden heuristics; every recommendation carries its reason.
+- **Mastery model 0–6** — evidence-weighted, with deliberately small deltas so no single
+  interaction can jump a topic to "mastered".
+- **Mistake tracking** — open mistakes outrank all other signals until a `FIX` session resolves them.
+- **Revision scheduling** — topics carry a revision-due timestamp that routes to `RECALL`.
+- **PYQ mapping** — questions map to topics via significant-token overlap (a link requires at
+  least two shared non-stopword tokens), and actual questions stay distinguishable from
+  PYQ-based variations and new practice material. Mapped counts feed topic priority.
+- **Session planning** — deterministic minute allocation per task shape, summing exactly to budget.
+- **Contextual prompt generation** — provider-agnostic structured prompts assembled from real state.
+- **localStorage persistence** — no backend, no account, no network calls at runtime.
+- **TypeScript domain model** — strict mode, shared ID helpers, no `any` in domain code.
+- **Automated tests** — 159 tests across 14 Vitest suites covering identity, syllabus, decision, mastery, sessions, prompts, and data integrity.
 
-1. Open `docs/syllabus-reference.txt`, find the subject's module breakdown.
-2. Copy `lib/notes/data-structures-and-algorithms.ts` as a template.
-3. Fill in all 7 sections per module, save as `lib/notes/<subject-slug>.ts`.
-4. Register it in `lib/notes/index.ts` under its program's list (keyed `${programId}-${subjectCode}`):
-   ```ts
-   import myNewSubject from "./my-new-subject";
-   // erNotes.push({ content: myNewSubject, programId: "ER" });  // for an ER subject
-   ```
-5. That's it — the subject page, search, and "coming soon" badge all update automatically.
+## Architecture
 
-Subjects with no entry in the registry show a friendly "not written yet" state instead of breaking.
+```mermaid
+flowchart TD
+    A[University / User Syllabus] --> B[Syllabus Parser]
+    B --> C[Modules & Topics]
 
-## Adding a diagram
+    C --> D[PYQ Mapping]
+    C --> E[Learning State]
 
-Diagrams are inline SVG, not uploaded images — keeps the site fast and avoids image hosting.
-Add a new function + registry entry in `components/Diagrams.tsx`, then reference its key from any module's `diagrams` array.
+    D --> F[Decision Engine]
+    E --> F
 
-## Running locally / deploying
+    F --> G[Recommended Action]
 
-- **Local preview:** `npm install` then `npm run dev` → open `http://localhost:3000`
-- **Production build:** `npm run build` — generates 1083 static pages
-- **Deploy:** push to GitHub → Vercel auto-deploys. No config needed.
+    G --> H[TEACH]
+    G --> I[RECALL]
+    G --> J[PRACTICE]
+    G --> K[EXAM]
+    G --> L[FIX]
 
-## Prompt Lab
+    H --> M[Learning Session]
+    I --> M
+    J --> M
+    K --> M
+    L --> M
 
-Every subject page has context-aware AI study tools. The Prompt Lab system:
+    M --> N[Session Evidence]
+    N --> O[Mastery Update]
 
-- Lives in `lib/prompts/` — prompt definitions are separate from UI
-- Is a library of 10 copy-ready prompts that work standalone with any AI (no subject or module required)
-- Injects the exact subject, module, topic, and question context when provided as optional context
-- Can be accessed from module-level buttons, subject-level AI actions, or the dedicated `/prompt-lab` page
+    O --> E
+    E --> F
+```
 
-## Understanding features
+**Layered view:**
 
-Every module across all 7 S3 subjects also has, where it genuinely applies:
+```text
+UI (app/, components/subject/)
+        ↓
+Learning Engine (lib/learning/)      decision · session · mastery
+        ↓
+Decision Engine (lib/learning/decision.ts)
+        ↓
+Learning State (lib/learning/state.ts)          localStorage
+        ↓
+Syllabus (lib/syllabus/) · PYQs (lib/pyqs.ts) · Notes (lib/notes/)
+        ↓
+Prompt Engine (lib/learning/prompts/)
+```
 
-- **Intuition** — one "think of it like..." analogy for the module's hardest idea
-- **Worked Examples** — step-revealed numerical/derivation walkthroughs: see the problem, tap to reveal one step at a time
-- **Comparison Cards** — side-by-side "why this and not that" cards for near-twin concepts
-- **Self-Check Questions** — tap-to-reveal questions at the end of each module
-- **Cross-Links** — "this idea also appears in..." links between subjects
-- **Interactive Diagrams** — live sliders for R/L/C that redraw the actual curve in real time
+Full detail: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
-These are all optional fields on `Module` — a module renders fine with just the 7 core sections.
+### Session lifecycle
 
-## Current content status
+```text
+Continue Learning  →  (no session created)
+   ↓
+Session Overview   →  (no session created)
+   ↓
+Start Session      →  startSession() — exactly one record
+   ↓
+Active Session     →  prompt shown for copy/paste
+   ↓
+Finish Session     →  completes that same record; records evidence
+   ↓
+Mastery updated + next recommendation shown
+```
 
-- ✅ **All 7 S3 subjects (ER) — fully written** (Advanced Linear Algebra/Complex Analysis/PDE, Network Theory, Digital Electronics & Logic Design, Data Structures and Algorithms, Sensor & Sensor Circuits, Life Skills and Professional Ethics, System Simulation & VI Lab)
-- ✅ **Full branch-aware syllabus** — CSE (108) + CSE [AI] (113) subjects imported from the official KTU 2024 JSON; `/syllabus/{er,cse,cse-ai}`, `/coverage`, `/admin`
-- ✅ **Branch-isolated progress/search/notes** — subjects are keyed by programId + subject code so branches never mix
-- ✅ **Legacy `/s3/...` routes** — redirect to their canonical branch URLs
-- ✅ **Topic priority system** — Must Learn / Core / Support badges with reasons, everywhere modules are listed
-- ✅ **AI Study Planner** — prioritized, reason-backed study plans from verified syllabus data + your mastery marks
-- ✅ **Study Modes** — Learn / Exam / Last-Minute / Revision on every subject page
-- ✅ **Exam Focus grouping** — questions grouped by answer type
-- ✅ **My Preparation dashboard** — mastery %, weak areas, hours to close the gap
-- ✅ **Prompt Lab** — context-aware AI study modes across all subjects
-- ✅ **AI deep-dive prompt** — live on every subject page, syllabus-accurate for 29/38 subjects
-- ✅ **Module accordion** — one module at a time, focused study
-- ✅ **Exam focus badges** — HIGH PRIORITY / IMPORTANT labels on exam questions
-- ✅ **Error/loading states** — 404 page, error boundary, loading skeletons
-- ⬜ S4–S8 written notes — next
+`startSession()` is idempotent per plan id and `finishSession()` completes the existing record
+rather than appending a second one, so refreshes and double-clicks cannot duplicate records.
 
-## Tech stack
+## Mastery Model
 
-- **Next.js 14** (App Router, static generation)
-- **React 18**
-- **TypeScript**
-- **Tailwind CSS 3**
-- **No database** — content lives as typed TypeScript data files
-- **No external APIs** — AI prompts are generated client-side for copy-paste
+Mastery is a 0–6 integer, and it is deliberately hard to move.
 
-## Upgrading to a database later (optional)
+- **Opening a topic does not create mastery.** It marks exposure only; mastery stays `null`.
+- **Reading a lesson does not imply mastery.** `TEACH` sessions record exposure, not proof.
+- **Starting a session awards nothing.** No evidence, no mastery change.
+- **Evidence drives mastery.** Recall, practice, PYQ, and self-check results move the number.
+- Outcomes map to evidence: `strong` → correct, `partial` → partial, `struggled` → incorrect.
+- Different evidence kinds move mastery by different amounts — recall and PYQ move it fastest,
+  self-check slower — so repeated exposure alone cannot reach the top of the scale.
 
-If you ever want live multi-device admin editing:
-1. Create a free Neon or Vercel Postgres database.
-2. Add Prisma, paste in the connection string as a Vercel environment variable.
-3. Convert `lib/notes/*.ts` into seed data for a `modules` table.
-4. Admin panel writes to the DB via Next.js API routes.
+Unassessed is a real state and is displayed as such. "0%" means genuinely unassessed, not failed.
 
-## Regenerating the syllabus data
+## AI Approach
 
-CSE and CSE [AI] subjects come from the official KTU 2024 JSON via `scripts/import-syllabus.mjs`:
+TKM Notes currently provides **context-aware AI study prompt generation** rather than an embedded
+LLM tutor. Prompts can be copied into the student's preferred AI assistant (ChatGPT, Gemini,
+Claude), and the student returns to record the outcome.
 
-- `node scripts/import-syllabus.mjs [path-to-json]` — idempotent; regenerates `lib/syllabusData.ts`
-- `node scripts/verify-data.js` — P0 acceptance checks (counts, collisions, slug sanity); exit 0 = all pass
+This is a deliberate architectural choice, not a missing feature:
 
----
+- no API keys, no per-request cost, no vendor lock-in
+- the prompt is fully inspectable and editable before use
+- the product makes no claim to generate AI answers itself
+- the learning loop stays intact: evidence still comes from the student's own performance
+
+The product is not an AI chatbot and does not call an LLM. `/prompt-lab` remains available as an
+advanced, manual tool for building custom prompts outside the recommended flow.
+
+## Tech Stack
+
+| Layer | Choice |
+|---|---|
+| Framework | Next.js `14.2.35` (App Router, static generation) |
+| UI | React `^18.3.1` |
+| Language | TypeScript `^5.5.4` (strict) |
+| Styling | Tailwind CSS `^3.4.7` + CSS-variable design tokens |
+| Tests | Vitest `^2.1.9` |
+| Linting | ESLint `^8.57.1` + `eslint-config-next` `^14.2.35` |
+| State | React state + `localStorage` (no Redux/Zustand) |
+| Data | Static typed `.ts` files (no DB, no runtime API) |
+| Deploy | GitHub → Vercel |
+
+## Testing
+
+```bash
+npm test                 # Vitest — 159 tests across 14 suites
+npm run lint             # ESLint via next lint
+npx tsc --noEmit         # TypeScript strict type check
+npm run build            # Production build (1607 static pages)
+```
+
+Additional data-integrity validators:
+
+```bash
+npm run validate:content     # Content counts, collisions, registry checks
+npm run validate:syllabus    # Syllabus + Learn CS integrity (exit 0 = all pass)
+npm run import:syllabus      # Regenerate lib/syllabusData.ts (idempotent)
+```
+
+The syllabus importer is idempotent by design: two consecutive runs produce byte-identical
+output, and a test asserts this so a regeneration can never silently drift.
+
+## Screenshots
+
+> **TODO — not yet committed.** The following are the highest-value captures for a recruiter:
+>
+> 1. Subject page showing the **Continue Learning** card with recommendation + reason
+> 2. `/learn` session overview with the time-boxed plan
+> 3. Active session with the generated prompt and copy button
+> 4. Post-session evidence screen showing mastery change and the next recommendation
+> 5. Syllabus manager showing official vs user-pasted versions
+
+## Roadmap
+
+Short and honest.
+
+- **Expand written notes** — coverage is currently ~28 of 259 subjects; the learning engine
+  already works without notes, so this is content, not architecture.
+- **Export / import learning state** — progress is `localStorage`-only, so it does not follow the
+  student across devices. A JSON export/import is the cheapest meaningful unlock.
+- **Stronger PYQ confidence** — current mapping is token-overlap based and gated on a two-token
+  minimum, but it emits no graded confidence. Emitting a `high`/`medium`/`low` confidence on each
+  link (and downgrading weak links to a *suggested* mapping) would stop thin overlaps from reading
+  as authoritative.
+- **Multi-programme recommendation ranking** — the engine already reads branch preference; a
+  weighted version that optimises across a whole branch is a natural extension.
+
+Explicitly **not** planned: an embedded LLM tutor, accounts/social features, gamification, or
+additional study modes.
+
+## Status
+
+**Implemented and tested:**
+
+- versioned syllabus system (official / pasted / edited, active version, module parsing variants)
+- program-scoped domain model with stable subject / module / topic ids
+- deterministic decision engine across all five tasks
+- time-boxed session planner with exact minute budgets
+- evidence-based 0–6 mastery model
+- mistake tracking with `FIX` resolution
+- revision-due scheduling driving `RECALL`
+- PYQ → topic mapping via significant-token overlap; actual questions stay
+  distinguishable from PYQ-based variations and new practice material, and mapped counts
+  drive topic priority
+- contextual prompt generation for all five tasks
+- single-obvious-action subject UX (Continue Learning) with a clean session lifecycle
+- 159 automated tests, clean lint, clean type check, 1607-page production build
+
+**Not implemented:**
+
+- no backend, no database, no authentication
+- no real LLM calls — prompts are generated client-side for copy/paste
+- no multi-device sync (state is per-browser `localStorage`)
+- no analytics, PWA/offline support, or i18n
+- written notes for ~231 of 259 subjects (subjects without notes still work through the syllabus)
+
+## Author
+
+**Sreerang** — TKM College of Engineering
 
 <p align="center">
   <a href="https://github.com/cosmiccoder200x-sys">
@@ -307,3 +288,4 @@ CSE and CSE [AI] subjects come from the official KTU 2024 JSON via `scripts/impo
   </a>
 </p>
 
+Repository: [`cosmiccoder200x-sys/TKM-Notes`](https://github.com/cosmiccoder200x-sys/TKM-Notes)
