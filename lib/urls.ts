@@ -49,6 +49,10 @@ export function masteryUrl(programId: ProgramId, semesterId: string, subjectSlug
   return `/syllabus/${programSlug(programId)}/${semesterId}/${subjectSlug}/mastery`;
 }
 
+export function syllabusManagerUrl(programId: ProgramId, semesterId: string, subjectSlug: string): string {
+  return `/syllabus/${programSlug(programId)}/${semesterId}/${subjectSlug}/syllabus`;
+}
+
 export function programUrl(programId: ProgramId): string {
   return `/syllabus/${programSlug(programId)}`;
 }

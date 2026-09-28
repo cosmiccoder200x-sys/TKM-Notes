@@ -2,18 +2,18 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 import SubjectHeader from "@/components/subject/SubjectHeader";
+import ContinueLearning from "@/components/subject/ContinueLearning";
 import SubjectMasteryBar from "@/components/mastery/SubjectMasteryBar";
 import ModuleMasteryBadges from "@/components/mastery/ModuleMasteryBadges";
 import ModuleCard from "@/components/subject/ModuleCard";
 import StudyModeSwitcher from "@/components/StudyModeSwitcher";
 import ModuleAccordion from "@/components/ModuleAccordion";
-import DeepDivePrompt from "@/components/DeepDivePrompt";
 import { NavIcon } from "@/components/navigation/navItems";
 import { ProgramId } from "@/lib/types";
 import { findSubject, semesters, subjects, syllabusModulesFor } from "@/lib/content";
 import { getSubjectContent } from "@/lib/notes";
 import { PRODUCT_NAME } from "@/lib/branch";
-import { programFromSlug, programSlug } from "@/lib/urls";
+import { programFromSlug, programSlug, syllabusManagerUrl } from "@/lib/urls";
 import { PROGRAMS } from "@/lib/domain";
 import { estimatedSubjectMinutes } from "@/lib/study";
 
@@ -101,23 +101,14 @@ export default function SubjectPage({
     <main className="max-w-4xl mx-auto px-4 py-8 space-y-8">
       <SubjectHeader subject={subject} moduleCount={notesModules.length} />
 
-      {/* STUDY actions */}
-      <section className="card p-5 space-y-4">
-        <div className="flex items-center justify-between gap-2 flex-wrap">
-          <div>
-            <span className="eyebrow">Study</span>
-            <h2 className="font-display font-semibold text-lg text-ink-hi mt-0.5">
-              What do you want to do?
-            </h2>
-          </div>
-          <Link
-            href={`/planner?subject=${encodeURIComponent(subject.code)}&program=${programSlug(programId)}&minutes=60`}
-            className="font-mono text-[11px] uppercase tracking-wide px-3.5 py-2 rounded-md bg-signal text-bg font-semibold hover:bg-signal/90 transition-colors"
-          >
-            Build My Plan
-          </Link>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+      <ContinueLearning programId={programId} subjectCode={subject.code} subjectName={subject.name} subjectSlug={subject.slug} />
+
+      <details className="card px-5 py-4 group">
+        <summary className="cursor-pointer list-none flex items-center justify-between gap-2">
+          <span className="font-display font-semibold text-sm text-ink-hi">All study tools</span>
+          <span className="font-mono text-[10px] text-ink-faint uppercase tracking-wide">expand</span>
+        </summary>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-3">
           {STUDY_ACTIONS.map((a) => (
             <Link
               key={a.label}
@@ -135,8 +126,19 @@ export default function SubjectPage({
               </span>
             </Link>
           ))}
+          <Link
+            href={`/planner?subject=${encodeURIComponent(subject.code)}&program=${programSlug(programId)}&minutes=60`}
+            className="flex items-center gap-3 px-4 py-3 rounded-card border border-bg-border hover:border-signal/60 hover:bg-signal/5 transition-colors group no-underline"
+          >
+            <span className="min-w-0">
+              <span className="block font-display font-semibold text-sm text-ink-hi group-hover:text-signal transition-colors">
+                Build My Plan
+              </span>
+              <span className="block text-xs text-ink-lo leading-snug">Time-boxed plan for this subject</span>
+            </span>
+          </Link>
         </div>
-      </section>
+      </details>
 
       {/* Progress */}
       {notesModules.length > 0 && (
@@ -159,6 +161,12 @@ export default function SubjectPage({
               {notesModules.length} modules
             </span>
           )}
+          <Link
+            href={syllabusManagerUrl(programId, subject.semesterId, subject.slug)}
+            className="font-mono text-[10px] uppercase tracking-wider text-signal hover:underline ml-auto"
+          >
+            Manage syllabus →
+          </Link>
         </div>
 
         {notesModules.length > 0 && (
@@ -294,9 +302,7 @@ export default function SubjectPage({
         )}
       </section>
 
-      <DeepDivePrompt subject={subject} />
-
-      {notesModules.length > 0 && estimatedMinutes > 0 && (
+    {notesModules.length > 0 && estimatedMinutes > 0 && (
         <p className="text-xs text-ink-faint">
           ≈ {estimatedMinutes >= 60 ? `${Math.round(estimatedMinutes / 60)}h` : `${estimatedMinutes}m`} of
           curated content available across this subject.
