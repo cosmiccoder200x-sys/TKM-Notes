@@ -1,4 +1,4 @@
-import { learningSubjectKey, logSession, recordEvidence, resolveMistake, openMistakes, getLearningState } from "./state";
+import { learningSubjectKey, logSession, completeSession, recordEvidence, resolveMistake, openMistakes, getLearningState } from "./state";
 import type { RecommendedAction, SessionStep, StudySessionPlan } from "./types";
 import type { EvidenceKind, EvidenceResult } from "./types";
 import type { LearningTask } from "./prompts/types";
@@ -49,6 +49,7 @@ export function startSession(
   plan: StudySessionPlan
 ): StudySessionPlan {
   logSession(programId, subjectCode, {
+    planId: plan.id,
     task: plan.task,
     topicRef: plan.topicRef,
     topicTitle: plan.topicTitle,
@@ -101,12 +102,16 @@ export function finishSession(input: {
       if (resolveMistake(programId, subjectCode, m.id)) resolvedMistakes += 1;
     }
   }
-  logSession(programId, subjectCode, {
-    task: plan.task,
-    topicRef: plan.topicRef,
-    topicTitle: plan.topicTitle,
-    minutes: plan.minutes,
-    finishedAt: Date.now(),
-  });
+  const completed = completeSession(programId, subjectCode, plan.id);
+  if (!completed) {
+    logSession(programId, subjectCode, {
+      planId: plan.id,
+      task: plan.task,
+      topicRef: plan.topicRef,
+      topicTitle: plan.topicTitle,
+      minutes: plan.minutes,
+      finishedAt: Date.now(),
+    });
+  }
   return { resolvedMistakes };
 }

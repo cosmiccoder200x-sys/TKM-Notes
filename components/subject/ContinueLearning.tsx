@@ -9,7 +9,6 @@ import { learnUrl } from "@/lib/urls";
 import {
   decideNextAction,
   planSession,
-  startSession,
   getLearningState,
   TASK_LABEL,
 } from "@/lib/learning";
@@ -68,7 +67,6 @@ export default function ContinueLearning({
 
   function handleContinue() {
     const plan = planSession(action as RecommendedAction, (action as RecommendedAction).sessionMinutes, programId, subjectCode);
-    startSession(programId, subjectCode, plan);
     router.push(learnUrl(programId, semesterId, subjectSlug));
   }
 

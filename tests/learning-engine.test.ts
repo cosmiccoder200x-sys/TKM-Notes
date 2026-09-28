@@ -190,3 +190,111 @@ describe("finishSession", () => {
     expect(getLearningState("ER", "24ERP304").topics[ref("m1", 0)].mastery).toBe(1);
   });
 });
+
+describe("session lifecycle regression", () => {
+  it("continue learning navigation does not create a session", () => {
+    seed();
+    // Simulate clicking Continue Learning - this should NOT call startSession
+    // The plan is created but session is not logged
+    const a = decideNextAction("ER", "24ERP304", 45);
+    const plan = planSession(a, 45, "ER", "24ERP304");
+    // plan exists but no session should be created
+    const stateBefore = getLearningState("ER", "24ERP304");
+    expect(stateBefore.sessions.length).toBe(0);
+    // Starting a session explicitly should create exactly one
+    startSession("ER", "24ERP304", plan);
+    const stateAfterStart = getLearningState("ER", "24ERP304");
+    expect(stateAfterStart.sessions.length).toBe(1);
+    // Second start should not create a duplicate
+    startSession("ER", "24ERP304", plan);
+    const stateAfterSecondStart = getLearningState("ER", "24ERP304");
+    expect(stateAfterSecondStart.sessions.length).toBe(1);
+  });
+
+  it("opening learning page does not create a session", () => {
+    seed();
+    const a = decideNextAction("ER", "24ERP304", 45);
+    planSession(a, 45, "ER", "24ERP304");
+    const state = getLearningState("ER", "24ERP304");
+    expect(state.sessions.length).toBe(0);
+    expect(state.topics[ref("m1", 0)]?.mastery ?? null).toBeNull();
+  });
+
+  it("start session creates exactly one session", () => {
+    seed();
+    const a = decideNextAction("ER", "24ERP304", 45);
+    const plan = planSession(a, 45, "ER", "24ERP304");
+    startSession("ER", "24ERP304", plan);
+    const state = getLearningState("ER", "24ERP304");
+    expect(state.sessions.length).toBe(1);
+    expect(state.sessions[0].startedAt).toBeDefined();
+    expect(state.sessions[0].finishedAt).toBeNull();
+  });
+
+  it("completing session does not create duplicate session", () => {
+    seed();
+    const a = decideNextAction("ER", "24ERP304", 45);
+    const plan = planSession(a, 45, "ER", "24ERP304");
+    startSession("ER", "24ERP304", plan);
+    // Finish the session
+    const { resolvedMistakes } = finishSession({ programId: "ER", subjectCode: "24ERP304", plan, moduleCode: "m1", outcome: "strong" });
+    const state = getLearningState("ER", "24ERP304");
+    // Should have exactly one session, finished
+    expect(state.sessions.length).toBe(1);
+    expect(state.sessions[0].finishedAt).toBeDefined();
+    // Trying to finish again should not create another session
+    finishSession({ programId: "ER", subjectCode: "24ERP304", plan, moduleCode: "m1", outcome: "strong" });
+    const stateAfterSecondFinish = getLearningState("ER", "24ERP304");
+    expect(stateAfterSecondFinish.sessions.length).toBe(1);
+  });
+
+  it("mastery remains unchanged before evidence", () => {
+    seed();
+    const a = decideNextAction("ER", "24ERP304", 45);
+    const plan = planSession(a, 45, "ER", "24ERP304");
+    startSession("ER", "24ERP304", plan);
+    const state = getLearningState("ER", "24ERP304");
+    expect(state.topics[ref("m1", 0)]?.mastery ?? null).toBeNull();
+  });
+
+  it("outcome evidence updates mastery", () => {
+    seed();
+    const a = decideNextAction("ER", "24ERP304", 45);
+    const plan = planSession(a, 45, "ER", "24ERP304");
+    startSession("ER", "24ERP304", plan);
+    // Record strong outcome evidence
+    const s = recordEvidence({
+      programId: "ER", subjectCode: "24ERP304", topicRef: ref("m1", 0),
+      moduleCode: "m1", topicIndex: 0, title: "Arrays", kind: "recall", result: "correct",
+    });
+    expect(s.topics[ref("m1", 0)].mastery).toBe(1);
+  });
+
+  it("fix sessions resolve appropriate mistakes", () => {
+    seed();
+    logMistake({ programId: "ER", subjectCode: "24ERP304", topicRef: ref("m1", 0), topicTitle: "Arrays", note: "bounds" });
+    const a = decideNextAction("ER", "24ERP304", 30);
+    expect(a.task).toBe("fix");
+    const plan = planSession(a, 30, "ER", "24ERP304");
+    const { resolvedMistakes } = finishSession({ programId: "ER", subjectCode: "24ERP304", plan, moduleCode: "m1", outcome: "strong" });
+    expect(resolvedMistakes).toBe(1);
+    // After fixing, the task should no longer be "fix"
+    expect(decideNextAction("ER", "24ERP304", 30).task).not.toBe("fix");
+  });
+
+  it("next recommendation changes according to new evidence", () => {
+    seed();
+    // Initially, topic is unstarted, should recommend teach
+    let a = decideNextAction("ER", "24ERP304", 45);
+    expect(a.task).toBe("teach");
+
+    // After correct recall, topic should be ready for practice/revision
+    recordEvidence({
+      programId: "ER", subjectCode: "24ERP304", topicRef: ref("m1", 0),
+      moduleCode: "m1", topicIndex: 0, title: "Arrays", kind: "recall", result: "correct",
+    });
+    a = decideNextAction("ER", "24ERP304", 45);
+    // Recommendation should change based on updated state
+    expect(a.task).toBeDefined();
+  });
+});

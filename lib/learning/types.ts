@@ -26,6 +26,7 @@ export interface MistakeRecord {
 
 export interface StudySessionRecord {
   id: string;
+  planId: string;
   task: LearningTask;
   topicRef: string | null;
   topicTitle: string | null;

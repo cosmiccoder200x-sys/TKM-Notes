@@ -178,8 +178,24 @@ export function logSession(
   session: Omit<StudySessionRecord, "id" | "startedAt">
 ): StudySessionRecord {
   const state = getLearningState(programId, subjectCode);
+  const existing = state.sessions.find((s) => s.planId === session.planId);
+  if (existing) return existing;
   const record: StudySessionRecord = { ...session, id: newId(), startedAt: Date.now() };
   state.sessions = [record, ...state.sessions].slice(0, MAX_SESSIONS);
   saveLearningState(state);
   return record;
+}
+
+export function completeSession(
+  programId: ProgramId,
+  subjectCode: string,
+  planId: string,
+  finishedAt: number = Date.now()
+): boolean {
+  const state = getLearningState(programId, subjectCode);
+  const record = state.sessions.find((s) => s.planId === planId && s.finishedAt === null);
+  if (!record) return false;
+  record.finishedAt = finishedAt;
+  saveLearningState(state);
+  return true;
 }

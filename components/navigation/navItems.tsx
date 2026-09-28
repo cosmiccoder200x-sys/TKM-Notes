@@ -17,10 +17,9 @@ export function isActive(item: NavItem, pathname: string): boolean {
 
 export const PRIMARY_NAV: NavItem[] = [
   { label: "Home", href: "/", icon: "home" },
-  { label: "Syllabus", href: "/syllabus", icon: "subjects" },
-  { label: "Practice", href: "/practice", icon: "practice" },
-  { label: "PYQs", href: "/pyqs", icon: "pyq" },
   { label: "AI Study", href: "/ai-study", icon: "learn" },
+  { label: "Syllabus", href: "/syllabus", icon: "subjects" },
+  { label: "PYQs", href: "/pyqs", icon: "pyq" },
   { label: "Revision", href: "/revision", icon: "revision" },
 
   { label: "Planner", href: "/planner", icon: "planner" },
@@ -33,10 +32,9 @@ export const FOOTER_NAV: NavItem[] = [
 
 export const MOBILE_NAV: NavItem[] = [
   { label: "Home", href: "/", icon: "home" },
-  { label: "Syllabus", href: "/syllabus", icon: "subjects" },
-  { label: "Practice", href: "/practice", icon: "practice" },
-  { label: "PYQs", href: "/pyqs", icon: "pyq" },
   { label: "AI Study", href: "/ai-study", icon: "learn" },
+  { label: "Syllabus", href: "/syllabus", icon: "subjects" },
+  { label: "PYQs", href: "/pyqs", icon: "pyq" },
   { label: "Revision", href: "/revision", icon: "revision" },
 
   { label: "Planner", href: "/planner", icon: "planner" },
@@ -47,18 +45,17 @@ export const MOBILE_NAV: NavItem[] = [
 // Fixed 5-slot bottom navigation bar on phones.
 export const MOBILE_BOTTOM_NAV: NavItem[] = [
   { label: "Home", href: "/", icon: "home" },
+  { label: "AI Study", href: "/ai-study", icon: "learn" },
   { label: "Syllabus", href: "/syllabus", icon: "subjects" },
-  { label: "Practice", href: "/practice", icon: "practice" },
   { label: "Learn CS", href: "/learn-cs", icon: "terminal" },
   { label: "Search", onClick: () => window.dispatchEvent(new CustomEvent("tkm:open-palette")), icon: "search" },
 ];
 
 export const MOBILE_DRAWER_ITEMS: NavItem[] = [
   { href: "/", label: "Home", icon: "home" },
-  { href: "/syllabus", label: "Syllabus", icon: "subjects" },
-  { href: "/practice", label: "Practice", icon: "practice" },
-  { href: "/pyqs", label: "PYQs", icon: "pyq" },
   { href: "/ai-study", label: "AI Study", icon: "learn" },
+  { href: "/syllabus", label: "Syllabus", icon: "subjects" },
+  { href: "/pyqs", label: "PYQs", icon: "pyq" },
   { href: "/revision", label: "Revision", icon: "revision" },
 
   { href: "/planner", label: "Planner", icon: "planner" },
