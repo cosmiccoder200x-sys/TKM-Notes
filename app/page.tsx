@@ -23,7 +23,7 @@ export default function HomePage() {
             Prep less. <span className="text-signal">Prioritize better.</span>
           </h1>
           <p className="text-base sm:text-lg text-ink-lo leading-relaxed max-w-2xl font-light">
-            A premium study workspace for Electrical &amp; Computer Engineering — official syllabus,
+            A premium study workspace for ECE — official syllabus,
             prioritized practice, a PYQ bank, AI study tools, and progress tracking.
           </p>
           <BranchSelect />

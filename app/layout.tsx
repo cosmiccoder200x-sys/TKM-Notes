@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     template: `%s — ${PRODUCT_NAME}`,
   },
   description:
-    `${PRODUCT_NAME}: ${PRODUCT_TAGLINE} Study less, prioritize better. Exam-focused notes, AI study planner, revision tools and mastery tracking for Electrical & Computer Engineering at TKM College of Engineering (S3–S8).`,
+    `${PRODUCT_NAME}: ${PRODUCT_TAGLINE} Study less, prioritize better. Exam-focused notes, AI study planner, revision tools and mastery tracking for ECE at TKM College of Engineering (S3–S8).`,
 };
 
 export const viewport: Viewport = {

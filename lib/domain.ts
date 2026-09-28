@@ -43,9 +43,9 @@ export const PROGRAMS: ProgramDef[] = [
     id: "ER",
     schemeId: SCHEME_ID,
     slug: "er",
-    label: "ER / Electrical & Computer Engineering",
+    label: "ER / ECE",
     shortLabel: "ER",
-    name: "Electrical & Computer Engineering",
+    name: "ECE",
   },
   {
     id: "CS",
@@ -113,7 +113,7 @@ export function schemeForProgram(programId: ProgramId): Scheme {
 
 // Backward-compatible labels used for branch-aware prompt/header text.
 export const BRANCH_LABELS: Record<ProgramId, string> = {
-  ER: "Electrical & Computer Engineering",
+  ER: "ECE",
   CS: "Computer Science",
   CS_AI: "Computer Science (Artificial Intelligence)",
 };

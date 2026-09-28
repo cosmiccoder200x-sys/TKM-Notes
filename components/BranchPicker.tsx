@@ -9,7 +9,7 @@ import { programUrl } from "@/lib/urls";
 const STORAGE_KEY = "tkm_program_id";
 
 const BRANCH_DESCRIPTIONS: Record<ProgramId, string> = {
-  ER: "Electrical & Computer Engineering — the flagship branch with full exam notes.",
+  ER: "ECE — the flagship branch with full exam notes.",
   CS: "Computer Science — dedicated CS syllabus with curated subject list.",
   CS_AI: "Computer Science with AI — CS-AI scheme subjects and electives.",
 };
