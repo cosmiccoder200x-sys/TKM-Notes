@@ -22,7 +22,7 @@ export const PRIMARY_NAV: NavItem[] = [
   { label: "PYQs", href: "/pyqs", icon: "pyq" },
   { label: "AI Study", href: "/ai-study", icon: "learn" },
   { label: "Revision", href: "/revision", icon: "revision" },
-  { label: "Progress", href: "/progress", icon: "trend" },
+
   { label: "Planner", href: "/planner", icon: "planner" },
   { label: "Learn CS", href: "/learn-cs", icon: "terminal" },
 ];
@@ -38,7 +38,7 @@ export const MOBILE_NAV: NavItem[] = [
   { label: "PYQs", href: "/pyqs", icon: "pyq" },
   { label: "AI Study", href: "/ai-study", icon: "learn" },
   { label: "Revision", href: "/revision", icon: "revision" },
-  { label: "Progress", href: "/progress", icon: "trend" },
+
   { label: "Planner", href: "/planner", icon: "planner" },
   { label: "Learn CS", href: "/learn-cs", icon: "terminal" },
   { label: "Search", onClick: () => window.dispatchEvent(new CustomEvent("tkm:open-palette")), icon: "search" },
@@ -60,7 +60,7 @@ export const MOBILE_DRAWER_ITEMS: NavItem[] = [
   { href: "/pyqs", label: "PYQs", icon: "pyq" },
   { href: "/ai-study", label: "AI Study", icon: "learn" },
   { href: "/revision", label: "Revision", icon: "revision" },
-  { href: "/progress", label: "Progress", icon: "trend" },
+
   { href: "/planner", label: "Planner", icon: "planner" },
   { href: "/learn-cs", label: "Learn CS", icon: "terminal" },
 ];
@@ -73,9 +73,7 @@ export function NavIcon({ name, className = "w-[18px] h-[18px]" }: { name: strin
       return <svg className={c} viewBox="0 0 24 24" {...s}><path d="M4 20V6a3 3 0 013-3h13v14H7a3 3 0 00-3 3z"/><path d="M4 20h13"/></svg>;
     case "home":
       return <svg className={c} viewBox="0 0 24 24" {...s}><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M9 21v-6h6v6"/></svg>;
-    case "trend":
-      return <svg className={c} viewBox="0 0 24 24" {...s}><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>;
-    case "learn":
+    case "settings":
       return <svg className={c} viewBox="0 0 24 24" {...s}><path d="M22 9l-10-5L2 9l10 5 10-5z"/><path d="M6 11.5V15c0 1.66 2.69 3 6 3s6-1.34 6-3v-3.5"/><path d="M22 9v5"/></svg>;
     case "terminal":
       return <svg className={c} viewBox="0 0 24 24" {...s}><path d="M4 17l6-5-6-5"/><path d="M12 19h8"/></svg>;
