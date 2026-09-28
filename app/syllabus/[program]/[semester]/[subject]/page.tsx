@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 import SubjectHeader from "@/components/subject/SubjectHeader";
+import SyllabusSourceStrip from "@/components/subject/SyllabusSourceStrip";
 import ContinueLearning from "@/components/subject/ContinueLearning";
 import SubjectMasteryBar from "@/components/mastery/SubjectMasteryBar";
 import ModuleMasteryBadges from "@/components/mastery/ModuleMasteryBadges";
@@ -13,7 +14,7 @@ import { ProgramId } from "@/lib/types";
 import { findSubject, semesters, subjects, syllabusModulesFor } from "@/lib/content";
 import { getSubjectContent } from "@/lib/notes";
 import { PRODUCT_NAME } from "@/lib/branch";
-import { programFromSlug, programSlug, syllabusManagerUrl } from "@/lib/urls";
+import { programFromSlug, programSlug } from "@/lib/urls";
 import { PROGRAMS } from "@/lib/domain";
 import { estimatedSubjectMinutes } from "@/lib/study";
 
@@ -101,6 +102,13 @@ export default function SubjectPage({
     <main className="max-w-4xl mx-auto px-4 py-8 space-y-8">
       <SubjectHeader subject={subject} moduleCount={notesModules.length} />
 
+      <SyllabusSourceStrip
+        programId={programId}
+        semesterId={subject.semesterId}
+        subjectCode={subject.code}
+        subjectSlug={subject.slug}
+      />
+
       <ContinueLearning programId={programId} subjectCode={subject.code} subjectName={subject.name} subjectSlug={subject.slug} />
 
       <details className="card px-5 py-4 group">
@@ -161,12 +169,6 @@ export default function SubjectPage({
               {notesModules.length} modules
             </span>
           )}
-          <Link
-            href={syllabusManagerUrl(programId, subject.semesterId, subject.slug)}
-            className="font-mono text-[10px] uppercase tracking-wider text-signal hover:underline ml-auto"
-          >
-            Manage syllabus →
-          </Link>
         </div>
 
         {notesModules.length > 0 && (
