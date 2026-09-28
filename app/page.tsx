@@ -119,12 +119,6 @@ export default function HomePage() {
         <HomeStudyStatus />
       </div>
 
-      {/* Study tools */}
-      <section className="space-y-6 pt-2">
-        <h2 className="font-display font-bold text-xl text-ink-hi tracking-wide">Academic Tool deck</h2>
-        <StudyTools />
-      </section>
-
       {/* All semesters */}
       <section className="space-y-6 pt-2">
         <h2 className="font-display font-bold text-xl text-ink-hi tracking-wide">All Semesters</h2>

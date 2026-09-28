@@ -45,8 +45,8 @@ Path alias: `@/*` → repo root (`tsconfig.json`).
 app/
   layout.tsx                 Root layout: fonts, ThemeScript, AppShell, CommandPalette,
                              MobileNav, footer. Sets PRODUCT_NAME metadata.
-  page.tsx                   Homepage: hero + search/planner widgets, semester explorer,
-                             HomeStudyStatus, StudyTools, all-semesters grid.
+page.tsx                   Homepage: hero + search/planner widgets, semester explorer,
+                              HomeStudyStatus. Study tools grid removed (choice overload);
   globals.css                Tailwind layers + CSS-variable design tokens (light + .dark),
                              glass/card/chip/progress utilities, gradient + dot-grid backgrounds.
   error.tsx, not-found.tsx, loading.tsx
@@ -59,8 +59,8 @@ app/
   syllabus/
     [program]/page.tsx             Branch hub (er/cse/cse-ai) → semester cards.
     [program]/[semester]/page.tsx  Branch+semester subject grid.
-    [program]/[semester]/[subject]/page.tsx  Subject workspace: breadcrumb, header, stats,
-                                             StudyModeSwitcher, ModuleAccordion, DeepDivePrompt.
+[program]/[semester]/[subject]/page.tsx  Subject workspace: breadcrumb, header, stats,
+                                              ModuleAccordion, MasteryBar, DeepDivePrompt.
     [program]/[semester]/[subject]/mastery/page.tsx  Mastery map (<MasteryMap>).
   planner/page.tsx           Study planner UI.
   prompt-lab/page.tsx        Prompt Lab UI.
@@ -77,7 +77,7 @@ components/
   layout/AppShell.tsx        Collapsible sidebar (desktop) + mobile drawer + bottom nav + theme toggle.
   Header.tsx, MobileNav.tsx, ThemeToggle.tsx, ThemeScript.tsx,
   CommandPalette.tsx, PaletteButton.tsx, SearchBar.tsx
-  SemesterExplorer.tsx, SubjectCard.tsx, StudyTools.tsx, DeepDivePrompt.tsx
+  SemesterExplorer.tsx, SubjectCard.tsx, DeepDivePrompt.tsx
   ModuleAccordion.tsx        One-module-at-a-time accordion.
   ModuleView.tsx, ModulePriorityBadge.tsx, ModuleView.tsx
   StudyModeSwitcher.tsx      Learn / Practice / Exam / Revise mode tabs on subject page.
@@ -290,8 +290,8 @@ interface SubjectContent { subjectCode: string; modules: Module[]; }
 **Features live:**
 - Redesigned dark/light/system theme with multi-layer radial gradient + dot-grid + glow shadows.
 - AppShell: collapsible sidebar (desktop), mobile drawer, bottom nav, theme toggle.
-- Homepage redesign (editorial hero, search + planner deck, semester explorer, study tools).
-- Subject workspace: ModuleAccordion, StudyModeSwitcher (Learn/Practice/Exam/Revise), MasteryBar, DeepDivePrompt.
+- Homepage redesign (editorial hero, search + planner deck, semester explorer).
+- Subject workspace: ModuleAccordion, MasteryBar, DeepDivePrompt.
 - Mastery map + HomeStudyStatus + WeakAreas + NextStudyRecommendation.
 - Study Planner (`/planner`), Night-Before mode (`/night-before`), Prompt Lab (`/prompt-lab`) with 11 modes including **Syllabus Complete** (self-study basic→pro roadmap).
 - Command palette (Ctrl/⌘+K) search.
@@ -304,6 +304,7 @@ interface SubjectContent { subjectCode: string; modules: Module[]; }
 - Mastery/progress is `localStorage`-only; no export/import.
 - No analytics, no PWA/offline support, no i18n.
 - Prompt category heuristics in `lib/prompts/context.ts` (`getSubjectCategory`) still key off ER codes only — CS/CS_AI subjects fall back to "general" instructions.
+- StudyModeSwitcher removed from subject page (choice overload resolved; single primary CTA: Continue Learning).
 
 ---
 
