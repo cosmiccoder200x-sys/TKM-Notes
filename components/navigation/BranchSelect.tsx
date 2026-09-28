@@ -25,16 +25,16 @@ export default function BranchSelect() {
   }
 
   return (
-    <label className="flex items-center gap-2">
-      <span className="font-mono text-[10px] uppercase tracking-wider text-ink-faint">
+    <label className="flex items-center gap-3">
+      <span className="font-mono text-[11px] uppercase tracking-wider text-ink-faint">
         Branch
       </span>
-      <select
-        value={programId}
-        onChange={handleChange}
-        aria-label="Select branch"
-        className="bg-bg-surface border border-bg-border rounded-lg px-3 py-2 text-sm font-mono text-ink-hi focus:border-signal focus:outline-none appearance-none pr-8 cursor-pointer"
-      >
+       <select
+         value={programId}
+         onChange={handleChange}
+         aria-label="Select branch"
+         className="bg-bg-surface border-2 border-bg-border rounded-xl px-4 py-3 text-base font-mono text-ink-hi focus:border-signal focus:outline-none appearance-none pr-10 cursor-pointer hover:border-signal/50 transition-colors"
+       >
         {PROGRAM_OPTIONS.map((p) => (
           <option key={p.id} value={p.id}>
             {p.short}
