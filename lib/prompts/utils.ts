@@ -1,5 +1,6 @@
 // Prompt Lab Utilities
 
+import { sharedStudyInstructions } from "@/lib/learning/prompts/instructions";
 import { StudyPrompt, StudyPromptVariable, FavoritePrompt, RecentPrompt, StudyModeId } from "./types";
 import { Subject, Module, ProgramId } from "@/lib/types";
 import { semesters, subjects, findSubject, syllabusModulesFor } from "@/lib/content";
@@ -119,7 +120,7 @@ export function populatePromptVariables(prompt: StudyPrompt, subjectCode?: strin
 
 // Generate prompt from template
 export function generatePrompt(prompt: StudyPrompt, variables: Record<string, string>): string {
-  return prompt.template(variables);
+  return `${prompt.template(variables)}\n\n${sharedStudyInstructions()}`;
 }
 
 // Short, single-line preview of the actual prompt text for cards

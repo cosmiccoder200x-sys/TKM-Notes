@@ -4,8 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import type { ProgramId } from "@/lib/types";
 import { semesters } from "@/lib/content";
-import { programName } from "@/lib/domain";
-import { getEffectiveModules } from "@/lib/syllabus";
+import { programName, SCHEME_LABEL } from "@/lib/domain";
+import { getEffectiveModules, getEffectiveVersion } from "@/lib/syllabus";
 import { mapPyqsToTopics } from "@/lib/learning";
 import {
   decideNextAction,
@@ -20,6 +20,7 @@ import {
 import type { RecommendedAction, StudySessionPlan, SessionOutcome } from "@/lib/learning";
 import { copyToClipboard } from "@/lib/prompts/utils";
 import { subjectUrl } from "@/lib/urls";
+import ExternalAiHandoff from "@/components/subject/ExternalAiHandoff";
 
 const MINUTE_OPTIONS = [15, 30, 45, 60];
 
@@ -104,16 +105,18 @@ export default function LearnSession({
   }, [phase, isTimerRunning]);
 
   const promptText = useMemo(() => {
-    if (phase !== "active" || !action) return "";
+    if (phase === "overview" || !action) return "";
     const modules = getEffectiveModules(programId, subjectCode);
     const state = getLearningState(programId, subjectCode);
     const links = mapPyqsToTopics(programId, subjectCode).filter(
       (l) => l.topicRef === action.topicRef || l.moduleCode === action.moduleId
     );
     const semester = semesters.find((s) => s.id === semesterId)?.label ?? semesterId;
+    const syllabus = getEffectiveVersion(programId, subjectCode);
     return buildTaskPrompt(action.task, {
-      university: "TKM College of Engineering",
-      scheme: "KTU 2024",
+      college: "TKM College of Engineering",
+      university: "KTU",
+      scheme: SCHEME_LABEL,
       branch: programName(programId),
       semester,
       subjectCode,
@@ -122,6 +125,7 @@ export default function LearnSession({
       moduleTitle: action.moduleTitle ?? "",
       topic: action.topicRef && action.topicTitle ? { ref: action.topicRef, title: action.topicTitle } : undefined,
       syllabusTitles: modules.map((m) => m.title),
+      syllabusSource: syllabus.source,
       topics: Object.values(state.topics).map((t) => ({
         ref: t.ref,
         title: t.title,
@@ -155,22 +159,6 @@ export default function LearnSession({
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
-  }
-
-  function openChatGPT() {
-    if (!prompt) return;
-    window.open(`https://chatgpt.com/?q=${encodeURIComponent(prompt)}`, "_blank", "noopener,noreferrer");
-  }
-
-  function openClaude() {
-    if (!prompt) return;
-    window.open(`https://claude.ai/new?q=${encodeURIComponent(prompt)}`, "_blank", "noopener,noreferrer");
-  }
-
-  async function openGemini() {
-    if (!prompt) return;
-    await handleCopy();
-    window.open("https://gemini.google.com/app", "_blank", "noopener,noreferrer");
   }
 
   function formatTime(secs: number) {
@@ -315,58 +303,24 @@ export default function LearnSession({
         )}
       </section>
 
-      {/* Prompt Card with 1-Click AI Launchers */}
       {phase !== "overview" && (
         <section className="card p-5 sm:p-6 space-y-4">
           <div className="flex items-center justify-between gap-3 flex-wrap">
-            <span className="eyebrow">Your {TASK_LABEL[action.task]} Prompt</span>
-            
-            {/* One-Click AI Launch Deck */}
-            <div className="flex flex-wrap items-center gap-1.5">
-              <button
-                type="button"
-                onClick={handleCopy}
-                className={`font-mono text-[11px] uppercase tracking-wider px-3 py-1.5 rounded-lg border transition-all ${
-                  copied
-                    ? "border-emerald-500 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-semibold"
-                    : "border-bg-border bg-bg-raised text-ink-hi hover:border-signal/50"
-                }`}
-              >
-                {copied ? "Copied ✓" : "📋 Copy"}
-              </button>
-              <button
-                type="button"
-                onClick={openChatGPT}
-                className="font-mono text-[11px] uppercase tracking-wider px-3 py-1.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 transition-all inline-flex items-center gap-1"
-                title="Launch directly in ChatGPT"
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                ChatGPT ↗
-              </button>
-              <button
-                type="button"
-                onClick={openClaude}
-                className="font-mono text-[11px] uppercase tracking-wider px-3 py-1.5 rounded-lg border border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-400 transition-all inline-flex items-center gap-1"
-                title="Launch directly in Claude"
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                Claude ↗
-              </button>
-              <button
-                type="button"
-                onClick={openGemini}
-                className="font-mono text-[11px] uppercase tracking-wider px-3 py-1.5 rounded-lg border border-blue-500/30 bg-blue-500/10 hover:bg-blue-500/20 text-blue-700 dark:text-blue-400 transition-all inline-flex items-center gap-1"
-                title="Copy prompt & open Gemini"
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                Gemini ↗
-              </button>
-            </div>
+            <span className="eyebrow">Your {TASK_LABEL[action.task]} prompt</span>
+            <button
+              type="button"
+              onClick={handleCopy}
+              className={`font-mono text-[11px] uppercase tracking-wider px-3 py-1.5 rounded-lg border transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal ${
+                copied
+                  ? "border-signal bg-signal/10 text-signal font-semibold"
+                  : "border-bg-border bg-bg-raised text-ink-hi hover:border-signal/50"
+              }`}
+            >
+              {copied ? "Copied" : "Copy prompt"}
+            </button>
           </div>
 
-          <p className="text-xs text-ink-lo">
-            Click <strong>ChatGPT</strong>, <strong>Claude</strong>, or <strong>Gemini</strong> to start immediately with all your syllabus topics and PYQs loaded.
-          </p>
+          {phase === "active" && <ExternalAiHandoff prompt={prompt} />}
 
           <pre className="whitespace-pre-wrap text-xs leading-relaxed text-ink-lo bg-bg-raised rounded-card p-4 max-h-96 overflow-y-auto font-body border border-bg-border/60">
             {prompt}

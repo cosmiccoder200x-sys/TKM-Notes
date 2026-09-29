@@ -237,6 +237,22 @@ describe("session lifecycle regression", () => {
     expect(state.sessions[0].finishedAt).toBeNull();
   });
 
+  it("external AI handoff does not create another session", () => {
+    seed();
+    const a = decideNextAction("ER", "24ERP304", 45);
+    const plan = planSession(a, 45, "ER", "24ERP304");
+    startSession("ER", "24ERP304", plan);
+    expect(getLearningState("ER", "24ERP304").sessions.length).toBe(1);
+    // Opening ChatGPT/Gemini/Claude is a presentation-only copy+redirect.
+    // It must not call startSession or finishSession.
+    expect(getLearningState("ER", "24ERP304").sessions.length).toBe(1);
+    expect(getLearningState("ER", "24ERP304").sessions[0].finishedAt).toBeNull();
+    finishSession({ programId: "ER", subjectCode: "24ERP304", plan, moduleCode: "m1", outcome: "strong" });
+    expect(getLearningState("ER", "24ERP304").sessions.length).toBe(1);
+    finishSession({ programId: "ER", subjectCode: "24ERP304", plan, moduleCode: "m1", outcome: "strong" });
+    expect(getLearningState("ER", "24ERP304").sessions.length).toBe(1);
+  });
+
   it("completing session does not create duplicate session", () => {
     seed();
     const a = decideNextAction("ER", "24ERP304", 45);

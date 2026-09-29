@@ -374,14 +374,27 @@ it is a real past-paper question.
 ## 10. Prompt Engine
 
 `lib/learning/prompts/` — `buildTaskPrompt(task, context)` returns a structured prompt plus its
-text. The student copies it into their preferred assistant; the app calls no LLM.
+text. Shared study instructions live in `lib/learning/prompts/instructions.ts` and are composed
+once into every task prompt (not copied per TEACH/RECALL/PRACTICE/EXAM/FIX). Prompt Lab
+`generatePrompt()` composes the same block.
+
+The student can copy the prompt or use **Study with AI** (`lib/learning/external-ai.ts`): copy,
+then open ChatGPT (`https://chatgpt.com/`), Gemini (`https://gemini.google.com/`), or Claude
+(`https://claude.ai/`) in one new tab. The app never injects prompt text into those URLs and
+never claims the external chat was pre-filled. The app calls no LLM.
+
+When syllabus information is unclear or uncertain, the prompt tells the assistant to verify
+against `https://tkmce.ac.in/` if web access is available — it does not require a search before
+every answer. The assistant may only claim a TKMCE check if it actually accessed that source.
 
 ### Context assembled
 
 ```text
-university · scheme · branch · semester · subject · module · topic
+college · university · program · scheme · semester · course · module · topic
+syllabus source (official | user_pasted | user_edited)
+learning task · available minutes
 syllabusTitles · topics (with mastery / mistakes / revisionDue)
-open mistakes · mapped PYQs · priority · available minutes
+open mistakes · mapped PYQs · priority
 ```
 
 ### The five tasks

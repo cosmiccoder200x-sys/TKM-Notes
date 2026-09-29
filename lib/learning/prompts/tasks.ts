@@ -5,11 +5,15 @@ import {
   getSubjectAnswerStructure,
 } from "@/lib/prompts/context";
 import { buildTaskContext, renderContext } from "./context";
+import { sharedStudyInstructions } from "./instructions";
 import type { BuiltTaskPrompt, LearningTask, TaskPromptContext } from "./types";
 
 function withContext(ctx: TaskPromptContext, body: string): { text: string; contextChars: number } {
   const built = buildTaskContext(ctx);
-  return { text: `${renderContext(built)}\n\n${body}`, contextChars: built.chars };
+  return {
+    text: `${renderContext(built)}\n\n${sharedStudyInstructions()}\n\n${body}`,
+    contextChars: built.chars,
+  };
 }
 
 function teachPrompt(ctx: TaskPromptContext): BuiltTaskPrompt {
@@ -137,5 +141,5 @@ const BUILDERS: Record<LearningTask, (ctx: TaskPromptContext) => BuiltTaskPrompt
 };
 
 export function buildTaskPrompt(task: LearningTask, ctx: TaskPromptContext): BuiltTaskPrompt {
-  return BUILDERS[task](ctx);
+  return BUILDERS[task]({ ...ctx, learningTask: ctx.learningTask ?? task });
 }

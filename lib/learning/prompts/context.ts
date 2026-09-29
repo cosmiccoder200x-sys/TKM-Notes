@@ -1,4 +1,4 @@
-import type { TaskPromptContext, TaskPyq } from "./types";
+import type { LearningTask, TaskPromptContext, TaskPyq } from "./types";
 
 const CAPS = { syllabus: 1200, topics: 1200, mistakes: 800, pyqs: 1500, total: 6000 };
 
@@ -52,19 +52,41 @@ export interface BuiltContext {
   chars: number;
 }
 
-export function buildTaskContext(ctx: TaskPromptContext): BuiltContext {
-  const target = ctx.topic ? `${ctx.topic.title}` : ctx.moduleTitle;
-  const header = [
-    `STUDENT: ${ctx.university} (${ctx.scheme}), ${ctx.branch}, ${ctx.semester}.`,
-    `SUBJECT: ${ctx.subjectName} (${ctx.subjectCode}).`,
-    `FOCUS: ${ctx.moduleTitle}${ctx.topic ? ` → ${ctx.topic.title}` : ""}.`,
-    ctx.topicPriority ? `PRIORITY: ${ctx.topicPriority}.` : "",
-    ctx.timeMinutes ? `TIME AVAILABLE: ${ctx.timeMinutes} minutes — fit everything inside this budget.` : "",
-    ctx.studentLevel ? `STUDENT LEVEL: ${ctx.studentLevel}.` : "",
+const TASK_NAME: Record<LearningTask, string> = {
+  teach: "TEACH",
+  recall: "RECALL",
+  practice: "PRACTICE",
+  exam: "EXAM",
+  fix: "FIX",
+};
+
+function courseHeader(ctx: TaskPromptContext): string {
+  const course =
+    ctx.subjectCode && ctx.subjectName
+      ? `${ctx.subjectCode} ${ctx.subjectName}`
+      : ctx.subjectCode || ctx.subjectName;
+  const moduleLine = [ctx.moduleId, ctx.moduleTitle].filter(Boolean).join(" — ");
+  return [
+    ctx.college ? `College: ${ctx.college}` : "",
+    ctx.university ? `University: ${ctx.university}` : "",
+    ctx.branch ? `Program: ${ctx.branch}` : "",
+    ctx.scheme ? `Scheme: ${ctx.scheme}` : "",
+    ctx.semester ? `Semester: ${ctx.semester}` : "",
+    course ? `Course: ${course}` : "",
+    moduleLine ? `Module: ${moduleLine}` : "",
+    ctx.topic?.title ? `Topic: ${ctx.topic.title}` : "",
+    ctx.syllabusSource ? `Syllabus source: ${ctx.syllabusSource}` : "",
+    ctx.learningTask ? `Learning task: ${TASK_NAME[ctx.learningTask]}` : "",
+    ctx.timeMinutes != null ? `Available time: ${ctx.timeMinutes} minutes` : "",
+    ctx.topicPriority ? `PRIORITY: ${ctx.topicPriority}` : "",
+    ctx.studentLevel ? `STUDENT LEVEL: ${ctx.studentLevel}` : "",
   ]
     .filter(Boolean)
     .join("\n");
-  void target;
+}
+
+export function buildTaskContext(ctx: TaskPromptContext): BuiltContext {
+  const header = courseHeader(ctx);
 
   const syllabus = clip(syllabusBlock(ctx), CAPS.syllabus);
   const topics = clip(topicsBlock(ctx), CAPS.topics);

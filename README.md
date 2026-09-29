@@ -150,7 +150,9 @@ Session Overview   →  (no session created)
    ↓
 Start Session      →  startSession() — exactly one record
    ↓
-Active Session     →  prompt shown for copy/paste
+Active Session     →  contextual prompt generated
+   ↓
+Optional Study with AI → copy prompt, open ChatGPT / Gemini / Claude (same session)
    ↓
 Finish Session     →  completes that same record; records evidence
    ↓
@@ -159,6 +161,7 @@ Mastery updated + next recommendation shown
 
 `startSession()` is idempotent per plan id and `finishSession()` completes the existing record
 rather than appending a second one, so refreshes and double-clicks cannot duplicate records.
+Opening an external AI assistant does not start or finish a session.
 
 ## Mastery Model
 
@@ -174,11 +177,32 @@ Mastery is a 0–6 integer, and it is deliberately hard to move.
 
 Unassessed is a real state and is displayed as such. "0%" means genuinely unassessed, not failed.
 
-## AI Approach
+## External AI Study
 
-TKM Notes currently provides **context-aware AI study prompt generation** rather than an embedded
-LLM tutor. Prompts can be copied into the student's preferred AI assistant (ChatGPT, Gemini,
-Claude), and the student returns to record the outcome.
+TKM Notes generates context-aware study prompts and can hand them off to external AI assistants.
+It does **not** currently run its own LLM.
+
+```text
+TKM Notes
+→ contextual prompt
+→ copy prompt
+→ external AI (ChatGPT, Gemini, or Claude)
+→ study
+→ return to TKM Notes
+→ finish session
+→ evidence
+→ mastery
+```
+
+Choose **Open ChatGPT**, **Open Gemini**, or **Open Claude** in an active session. The prompt is
+copied to the clipboard and the official site opens in a new tab. Paste the prompt into that chat
+to begin. TKM Notes does not insert the prompt into the external conversation.
+
+If clipboard access fails, the assistant still opens; copy the prompt from the session page.
+
+When syllabus information is uncertain, generated prompts instruct the external AI to verify
+against official TKM College of Engineering sources (`https://tkmce.ac.in/`) when web access is
+available. Prompts do **not** tell the assistant to search that site before every answer.
 
 This is a deliberate architectural choice, not a missing feature:
 
@@ -187,8 +211,8 @@ This is a deliberate architectural choice, not a missing feature:
 - the product makes no claim to generate AI answers itself
 - the learning loop stays intact: evidence still comes from the student's own performance
 
-The product is not an AI chatbot and does not call an LLM. `/prompt-lab` remains available as an
-advanced, manual tool for building custom prompts outside the recommended flow.
+`/prompt-lab` remains available as an advanced, manual tool for building custom prompts outside
+the recommended flow.
 
 ## Tech Stack
 

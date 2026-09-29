@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, ReactNode } from "react";
 import { StudyPrompt, StudyPromptVariable, CATEGORIES, IMPORTANCE_META } from "@/lib/prompts/types";
 import { generatePrompt, populatePromptVariables, copyToClipboard, addRecent } from "@/lib/prompts/utils";
 import { StudyContext } from "@/lib/prompts/context";
+import ExternalAiHandoff from "@/components/subject/ExternalAiHandoff";
 
 const IMPORTANCE_STYLES: Record<string, string> = {
   essential: "text-signal border-signal-dim bg-signal/10",
@@ -297,52 +298,19 @@ export default function PromptBuilder({ prompt, initialVariables = {}, onBack, c
           <pre className="bg-bg-raised border border-bg-border rounded-card p-4 text-[12px] text-ink-hi leading-relaxed whitespace-pre-wrap max-h-[55vh] overflow-y-auto font-mono">
             {generatedPrompt}
           </pre>
-          <div className="mt-4 flex flex-wrap gap-2">
+          <div className="mt-4 space-y-4">
             <button
               onClick={handleCopy}
               disabled={copied}
-              className={`flex-1 text-center font-mono text-xs uppercase tracking-wide py-3 px-4 rounded-card transition-colors disabled:cursor-default ${
+              className={`w-full text-center font-mono text-xs uppercase tracking-wide py-3 px-4 rounded-card transition-colors disabled:cursor-default focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal ${
                 copied
                   ? "bg-signal text-bg"
                   : "bg-signal text-bg hover:bg-signal/90 font-semibold"
               }`}
             >
-              {copied ? "Copied ✓" : "📋 Copy Prompt"}
+              {copied ? "Copied" : "Copy prompt"}
             </button>
-            <button
-              onClick={() => {
-                if (generatedPrompt) {
-                  window.open(`https://chatgpt.com/?q=${encodeURIComponent(generatedPrompt)}`, "_blank", "noopener,noreferrer");
-                }
-              }}
-              className="font-mono text-xs uppercase tracking-wide py-3 px-3.5 rounded-card border border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 transition-all inline-flex items-center gap-1.5"
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-              ChatGPT ↗
-            </button>
-            <button
-              onClick={() => {
-                if (generatedPrompt) {
-                  window.open(`https://claude.ai/new?q=${encodeURIComponent(generatedPrompt)}`, "_blank", "noopener,noreferrer");
-                }
-              }}
-              className="font-mono text-xs uppercase tracking-wide py-3 px-3.5 rounded-card border border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-400 transition-all inline-flex items-center gap-1.5"
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-              Claude ↗
-            </button>
-            <button
-              onClick={async () => {
-                if (generatedPrompt) {
-                  await handleCopy();
-                  window.open("https://gemini.google.com/app", "_blank", "noopener,noreferrer");
-                }
-              }}
-              className="font-mono text-xs uppercase tracking-wide py-3 px-3.5 rounded-card border border-blue-500/30 bg-blue-500/10 hover:bg-blue-500/20 text-blue-700 dark:text-blue-400 transition-all inline-flex items-center gap-1.5"
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-              Gemini ↗
-            </button>
+            <ExternalAiHandoff prompt={generatedPrompt} />
           </div>
         </div>
       </div>

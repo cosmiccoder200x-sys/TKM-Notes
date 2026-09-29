@@ -1,4 +1,5 @@
 import type { StudyModeId } from "@/lib/prompts/types";
+import type { SyllabusSource } from "@/lib/syllabus/types";
 
 export type LearningTask = "teach" | "recall" | "practice" | "exam" | "fix";
 
@@ -19,6 +20,7 @@ export interface TaskPyq {
 }
 
 export interface TaskPromptContext {
+  college?: string;
   university: string;
   scheme: string;
   branch: string;
@@ -29,6 +31,8 @@ export interface TaskPromptContext {
   moduleTitle: string;
   topic?: { ref: string; title: string };
   syllabusTitles?: string[];
+  syllabusSource?: SyllabusSource;
+  learningTask?: LearningTask;
   topics?: TaskTopicState[];
   mistakes?: string[];
   pyqs?: TaskPyq[];

@@ -31,3 +31,11 @@ export { mapPyqsToTopics, topicPyqCounts } from "./pyqmap";
 export type { TopicPyqLink } from "./pyqmap";
 export { MODE_FOR_TASK, TASK_LABEL, continueHref, practiceHref, pyqsHref, aiStudyHref, revisionHref } from "./continue";
 export * from "./prompts";
+export {
+  EXTERNAL_AI,
+  EXTERNAL_AI_PROVIDERS,
+  externalAiUrl,
+  handoffToExternalAi,
+  defaultOpenExternalAi,
+} from "./external-ai";
+export type { ExternalAiId, HandoffCopyFn, HandoffOpenFn } from "./external-ai";
