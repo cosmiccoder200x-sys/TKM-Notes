@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import SubjectHeader from "@/components/subject/SubjectHeader";
 import SyllabusSourceStrip from "@/components/subject/SyllabusSourceStrip";
 import ContinueLearning from "@/components/subject/ContinueLearning";
+import DayBeforeExamCard from "@/components/subject/DayBeforeExamCard";
 import SubjectMasteryBar from "@/components/mastery/SubjectMasteryBar";
 import ModuleCard from "@/components/subject/ModuleCard";
 import ModuleAccordion from "@/components/ModuleAccordion";
@@ -76,6 +77,8 @@ export default function SubjectPage({
         subjectSlug={subject.slug}
         subjectName={subject.name}
       />
+
+      <DayBeforeExamCard subject={subject} programId={programId} />
 
       <ContinueLearning
         programId={programId}
