@@ -6,7 +6,7 @@ import BranchPicker from "@/components/BranchPicker";
 import HomeStudyStatus from "@/components/mastery/HomeStudyStatus";
 import QuickPlannerForm from "@/components/planner/QuickPlannerForm";
 import { semesters } from "@/lib/content";
-import { BRANCH_NAME, BRANCH_RANGE } from "@/lib/branch";
+import { BRANCH_RANGE } from "@/lib/branch";
 
 export default function HomePage() {
   return (
@@ -16,13 +16,13 @@ export default function HomePage() {
         <div className="space-y-3">
           <div className="eyebrow flex items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-signal animate-pulse" />
-            {BRANCH_NAME} · {BRANCH_RANGE}
+            TKM College of Engineering · Built for TKM Students · {BRANCH_RANGE}
           </div>
           <h1 className="font-display font-extrabold text-4xl sm:text-5xl md:text-6xl text-ink-hi leading-[1.1] tracking-tight max-w-3xl">
             Prep less. <span className="text-signal">Prioritize better.</span>
           </h1>
           <p className="text-base sm:text-lg text-ink-lo leading-relaxed max-w-2xl font-light">
-            A premium study workspace for Electrical & Computer Engineering — official syllabus,
+            A premium study workspace built for TKM College of Engineering students — official syllabus,
             prioritized practice, a PYQ bank, AI study tools, and progress tracking.
           </p>
           <BranchSelect />
