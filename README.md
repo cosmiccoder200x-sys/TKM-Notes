@@ -2,7 +2,7 @@
 
 > An adaptive university exam-learning platform that transforms syllabus, PYQs, mastery, mistakes, and study time into personalized learning sessions.
 
-Built for TKM College of Engineering, KTU 2024 scheme, Semesters S3–S8.
+Built for TKM College of Engineering, KTU 2024 scheme, Semesters S3–S8
 
 ---
 
